@@ -1,0 +1,8 @@
+{
+  // Cloudflare settings. "name" must match the Worker's name in the Cloudflare dashboard.
+  "name": "30-day-challenge",
+  "compatibility_date": "2026-10-01",
+  "assets": {
+    "directory": "./public"
+  }
+}

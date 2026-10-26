@@ -1,0 +1,1615 @@
+<!doctype html>
+<!-- 30 Day Challenge (Do30DayChallenge.com). © 2026 Stuart Parkins. All rights reserved. Not for reuse, modification or redistribution without written permission. -->
+<html lang="en-GB">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#0f766e">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="30 Day">
+<meta name="description" content="A free, private 30-day exercise challenge tracker with catch-up planning. No accounts, no tracking.">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="icon" href="icons/icon-32.png" sizes="32x32" type="image/png">
+<link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
+<title>30 Day Challenge</title>
+<style>
+:root{--bg:#f4f6f8;--card:#fff;--text:#15202b;--muted:#5b6673;--line:#e2e7ec;--accent:#0f766e;--accent2:#14b8a6;--onAccent:#fff;--soft:#e3f3f1;--ok:#15803d;--okSoft:#dcfce7;--warn:#b45309;--warnSoft:#fef3c7;--catch:#1d4ed8;--catchSoft:#dbeafe;--bad:#b91c1c;--badSoft:#fee2e2;--rest:#64748b;--restSoft:#e2e8f0;--shadow:0 1px 2px rgba(0,0,0,.06),0 2px 8px rgba(0,0,0,.04)}
+@media (prefers-color-scheme:dark){:root:not([data-theme=light]){--bg:#0e1418;--card:#172026;--text:#e7edf2;--muted:#9aa7b3;--line:#27333c;--accent:#2dd4bf;--accent2:#14b8a6;--onAccent:#06201d;--soft:#113330;--ok:#4ade80;--okSoft:#123321;--warn:#fbbf24;--warnSoft:#3a2d0c;--catch:#60a5fa;--catchSoft:#16294a;--bad:#f87171;--badSoft:#3b1616;--rest:#94a3b8;--restSoft:#253039;--shadow:none}}
+:root[data-theme=dark]{--bg:#0e1418;--card:#172026;--text:#e7edf2;--muted:#9aa7b3;--line:#27333c;--accent:#2dd4bf;--accent2:#14b8a6;--onAccent:#06201d;--soft:#113330;--ok:#4ade80;--okSoft:#123321;--warn:#fbbf24;--warnSoft:#3a2d0c;--catch:#60a5fa;--catchSoft:#16294a;--bad:#f87171;--badSoft:#3b1616;--rest:#94a3b8;--restSoft:#253039;--shadow:none}
+*{box-sizing:border-box}
+html,body{margin:0;background:var(--bg);color:var(--text);font:16px/1.45 system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;-webkit-tap-highlight-color:transparent}
+#app{max-width:520px;margin:0 auto;padding:12px 16px calc(96px + env(safe-area-inset-bottom))}
+h1{font-size:1.5rem;margin:0 0 4px;line-height:1.2}
+.appicon{width:28px;height:28px;border-radius:7px;vertical-align:-5px;margin-right:8px}
+h2{font-size:1.1rem;margin:0 0 8px}
+h3{font-size:1rem;margin:0 0 6px}
+p{margin:0 0 8px}
+.muted{color:var(--muted)}.small{font-size:.875rem}.tiny{font-size:.78rem}
+.eyebrow{font-size:.8rem;text-transform:uppercase;letter-spacing:.06em;color:var(--muted);font-weight:600}
+.top{padding:8px 2px 12px}
+.card{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:16px;margin:0 0 12px;box-shadow:var(--shadow)}
+.hero{display:flex;gap:16px;align-items:center}
+.big{font-size:1.9rem;font-weight:700;line-height:1.1}
+.status{border-radius:14px;padding:14px 16px;margin:0 0 12px;border:1px solid transparent}
+.status h3{margin-bottom:4px}
+.s-ok{background:var(--okSoft);border-color:color-mix(in srgb,var(--ok) 25%,transparent)}.s-ok h3{color:var(--ok)}
+.s-warn{background:var(--warnSoft);border-color:color-mix(in srgb,var(--warn) 25%,transparent)}.s-warn h3{color:var(--warn)}
+.s-bad{background:var(--badSoft)}.s-bad h3{color:var(--bad)}
+.s-info{background:var(--soft)}.s-info h3{color:var(--accent)}
+.btn{appearance:none;border:1px solid var(--line);background:var(--card);color:var(--text);border-radius:12px;min-height:48px;padding:10px 16px;font:inherit;font-weight:600;cursor:pointer;display:inline-flex;align-items:center;justify-content:center;gap:8px;text-decoration:none}
+.btn.primary{background:var(--accent);border-color:var(--accent);color:var(--onAccent)}
+.btn.warn{background:var(--warn);border-color:var(--warn);color:#fff}
+.btn.danger{color:var(--bad);border-color:color-mix(in srgb,var(--bad) 40%,var(--line))}
+.btn.ghost{background:transparent;border-color:transparent;color:var(--accent);min-height:40px;padding:6px 8px}
+.btn.block{width:100%}
+.btn.bmc{background:#ffdd00;border-color:#ffdd00;color:#1a1a1a}
+.btn:disabled{opacity:.45;cursor:not-allowed}
+.row{display:flex;gap:8px;flex-wrap:wrap}.row>.btn{flex:1 1 0}
+.stack>*+*{margin-top:8px}
+.exlist{list-style:none;margin:8px 0 12px;padding:0}
+.exlist li{display:flex;justify-content:space-between;gap:12px;padding:10px 0;border-bottom:1px solid var(--line)}
+.exlist li:last-child{border-bottom:0}
+.exlist .t{color:var(--muted);text-align:right;white-space:nowrap}
+.pill{display:inline-block;font-size:.75rem;font-weight:600;border-radius:999px;padding:2px 8px;background:var(--soft);color:var(--accent)}
+.banner{border-radius:12px;padding:10px 12px;margin:0 0 10px;font-size:.9rem;display:flex;gap:8px;align-items:flex-start;justify-content:space-between;background:var(--soft)}
+.banner.test{background:var(--warnSoft);color:var(--text)}
+.banner .x{background:none;border:0;color:var(--muted);font-size:1.2rem;cursor:pointer;padding:0 4px}
+nav#nav{position:fixed;left:0;right:0;bottom:0;background:var(--card);border-top:1px solid var(--line);display:flex;justify-content:center;padding-bottom:env(safe-area-inset-bottom);z-index:20}
+nav#nav .in{display:flex;max-width:520px;width:100%}
+nav#nav button{flex:1;background:none;border:0;color:var(--muted);font:inherit;font-size:.72rem;padding:8px 0 10px;display:flex;flex-direction:column;align-items:center;gap:2px;cursor:pointer;min-height:58px}
+nav#nav button.on{color:var(--accent);font-weight:700}
+nav#nav svg{width:24px;height:24px}
+/* calendar */
+.cal{display:grid;grid-template-columns:repeat(7,1fr);gap:4px}
+.cal .dow{font-size:.72rem;text-align:center;color:var(--muted);font-weight:600;padding-bottom:2px}
+.cell{aspect-ratio:1/1.1;border-radius:10px;border:1px solid var(--line);background:var(--card);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;font-size:.9rem;cursor:pointer;padding:0;color:var(--text);font-family:inherit;position:relative}
+.cell .b{font-size:.7rem;font-weight:700;line-height:1;min-height:.8rem}
+.cell.blank{border:0;background:transparent;cursor:default}
+.cell.out{opacity:.35}
+.cell.done{background:var(--okSoft);border-color:color-mix(in srgb,var(--ok) 35%,transparent)}.cell.done .b{color:var(--ok)}
+.cell.multi{box-shadow:inset 0 0 0 2px var(--ok)}
+.cell.rest{background:var(--restSoft)}.cell.rest .b{color:var(--rest)}
+.cell.caught{background:var(--catchSoft);border-color:color-mix(in srgb,var(--catch) 35%,transparent)}.cell.caught .b{color:var(--catch)}
+.ct{color:var(--catch);font-weight:700}
+.cell.missed{background:var(--warnSoft)}.cell.missed .b{color:var(--warn)}
+.cell.planned{border-style:dashed;border-color:var(--accent2)}.cell.planned .b{color:var(--accent)}
+.cell.prest{border-style:dashed;border-color:var(--rest)}.cell.prest .b{color:var(--rest)}
+.cell.today{outline:2px solid var(--accent);outline-offset:1px;font-weight:700}
+.legend{display:flex;flex-wrap:wrap;gap:6px 14px;margin-top:12px;font-size:.78rem;color:var(--muted)}
+.legend span::before{content:"";display:inline-block;width:10px;height:10px;border-radius:3px;margin-right:5px;vertical-align:-1px;background:var(--c);border:1px solid var(--line)}
+/* sheet */
+#sheet{position:fixed;inset:0;background:rgba(0,0,0,.45);display:none;z-index:40;align-items:flex-end;justify-content:center}
+#sheet.open{display:flex}
+#sheet .panel{background:var(--bg);width:100%;max-width:520px;max-height:88vh;overflow:auto;border-radius:20px 20px 0 0;padding:8px 16px calc(20px + env(safe-area-inset-bottom))}
+#sheet .grab{width:40px;height:4px;border-radius:2px;background:var(--line);margin:4px auto 12px}
+.stats{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin:0 0 12px}
+.stat{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:10px 12px}
+.stat .v{font-size:1.25rem;font-weight:700}
+.stat .l{font-size:.78rem;color:var(--muted)}
+.plan-row{display:flex;align-items:center;gap:8px;padding:8px 0;border-bottom:1px solid var(--line)}
+.plan-row .d{width:74px;font-weight:600;font-size:.9rem}
+.plan-row .w{flex:1;font-size:.9rem}
+.step{width:40px;height:40px;border-radius:10px;border:1px solid var(--line);background:var(--card);color:var(--text);font-size:1.2rem;cursor:pointer}
+.step.on{background:var(--restSoft);color:var(--rest)}
+.check{padding:10px 12px;border-radius:10px;margin:10px 0;font-weight:600;font-size:.9rem}
+.check.good{background:var(--okSoft);color:var(--ok)}.check.bad{background:var(--warnSoft);color:var(--warn)}
+label.f{display:block;font-size:.85rem;color:var(--muted);margin:10px 0 4px}
+input[type=text],input[type=date],select{width:100%;font:inherit;padding:10px 12px;border-radius:10px;border:1px solid var(--line);background:var(--card);color:var(--text);min-height:46px}
+.toggle{display:flex;justify-content:space-between;align-items:center;padding:10px 0;border-bottom:1px solid var(--line)}
+.toggle input{width:22px;height:22px;accent-color:var(--accent)}
+.chips{display:flex;gap:6px;overflow-x:auto;padding-bottom:6px;margin-bottom:6px}
+.chip{border:1px solid var(--line);background:var(--card);color:var(--text);border-radius:999px;padding:6px 12px;font:inherit;font-size:.85rem;white-space:nowrap;cursor:pointer}
+.chip.on{background:var(--accent);color:var(--onAccent);border-color:var(--accent)}
+.listbtn{display:flex;width:100%;text-align:left;justify-content:space-between;align-items:center;gap:10px;background:var(--card);border:1px solid var(--line);border-radius:12px;padding:12px 14px;margin:0 0 8px;font:inherit;color:var(--text);cursor:pointer}
+.dots{letter-spacing:2px;color:var(--accent)}
+.ph.pimg{background:#f4f4f1;border:1px solid var(--line);padding:0;overflow:hidden}
+.ph.pimg img{width:100%;height:100%;object-fit:contain;display:block}
+.ph{border-radius:14px;background:repeating-linear-gradient(135deg,var(--soft),var(--soft) 12px,var(--card) 12px,var(--card) 24px);border:1px dashed var(--line);aspect-ratio:16/9;display:flex;flex-direction:column;align-items:center;justify-content:center;color:var(--muted);text-align:center;gap:4px;margin-bottom:12px}
+.ph .n{font-weight:700;color:var(--accent);font-size:1.1rem}
+.chcard{display:block;width:100%;text-align:left;border:2px solid var(--line);background:var(--card);border-radius:14px;padding:14px;margin-bottom:8px;font:inherit;color:var(--text);cursor:pointer}
+.chcard.on{border-color:var(--accent);background:var(--soft)}
+.chcard[disabled]{opacity:.5;cursor:default}
+.missed-list label{display:flex;align-items:center;gap:10px;padding:10px 0;border-bottom:1px solid var(--line)}
+.missed-list input{width:22px;height:22px;accent-color:var(--accent)}
+/* workout */
+#wk{position:fixed;inset:0;background:var(--bg);z-index:30;display:none;overflow:auto}
+#wk.open{display:block}
+#wk .in{max-width:520px;margin:0 auto;padding:12px 16px calc(24px + env(safe-area-inset-bottom));min-height:100%;display:flex;flex-direction:column}
+.wk-top{display:flex;align-items:center;justify-content:space-between;gap:8px;margin-bottom:8px}
+.bar{height:6px;background:var(--line);border-radius:3px;overflow:hidden;margin-bottom:14px}
+.bar i{display:block;height:100%;background:var(--accent);transition:width .25s}
+.target{font-size:2rem;font-weight:800;color:var(--accent);margin:4px 0 10px}
+.timer{font-size:3.4rem;font-weight:800;text-align:center;font-variant-numeric:tabular-nums;margin:8px 0}
+.timer.lead{color:var(--warn)}
+.instr{padding-left:20px;margin:0 0 12px}.instr li{margin-bottom:4px}
+.spacer{flex:1}
+.celebrate{text-align:center;padding:24px 0}
+.celebrate .big{font-size:2.2rem}
+#toast{position:fixed;left:50%;top:calc(12px + env(safe-area-inset-top));transform:translateX(-50%);background:var(--text);color:var(--bg);padding:10px 16px;border-radius:10px;font-size:.9rem;opacity:0;pointer-events:none;transition:opacity .2s;z-index:60;max-width:90vw}
+#toast.on{opacity:1}
+.foot{text-align:center;font-size:.8rem;color:var(--muted);margin-top:16px}
+.foot a{color:var(--accent)}
+.foot.support{max-width:34em;margin:10px auto 0;line-height:1.5}
+hr{border:0;border-top:1px solid var(--line);margin:12px 0}
+/* activity */
+.actgrid{display:grid;grid-template-columns:repeat(5,1fr);gap:6px}
+.actbtn{border:1px solid var(--line);background:var(--bg);color:var(--text);border-radius:12px;padding:8px 2px;font:inherit;font-size:.7rem;font-weight:600;display:flex;flex-direction:column;align-items:center;gap:2px;cursor:pointer;min-height:58px;line-height:1.1;text-align:center}
+.actbtn span{font-size:1.35rem;line-height:1.2}
+.wkt{display:flex;align-items:center;gap:10px;font-size:.9rem}
+.wkb{flex:1;height:8px;background:var(--line);border-radius:4px;overflow:hidden}.wkb i{display:block;height:100%;background:var(--accent)}
+.cell .ad{position:absolute;top:3px;right:4px;width:7px;height:7px;border-radius:50%;background:var(--accent2)}
+/* help */
+details.hp{background:var(--card);border:1px solid var(--line);border-radius:14px;margin:0 0 8px;padding:0 14px}
+details.hp summary{cursor:pointer;list-style:none;font-weight:700;padding:14px 0;display:flex;justify-content:space-between;gap:8px}
+details.hp summary::-webkit-details-marker{display:none}
+details.hp summary::after{content:"+";color:var(--accent);font-size:1.2rem;line-height:1}
+details.hp[open] summary::after{content:"\2212"}
+details.hp .in{padding:0 0 14px;font-size:.95rem}
+details.hp ol,details.hp ul{padding-left:20px;margin:6px 0}
+details.hp li{margin-bottom:4px}
+details.hp .eg{background:var(--soft);border-radius:10px;padding:8px 10px;font-size:.88rem;margin:8px 0}
+/* badges */
+.medal{display:inline-block;line-height:0}.medal.locked{filter:grayscale(1);opacity:.35}
+.badgeline{margin-bottom:12px}.badgeline .ml{display:flex;align-items:center;gap:12px}
+.bgrid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:12px 0}
+.bcard{border:1px solid var(--line);border-radius:14px;padding:12px 8px;text-align:center;background:var(--card)}
+.bcard h3{font-size:.95rem;margin:6px 0 2px}
+.bcard .btn{min-height:38px;margin-top:8px;font-size:.85rem;padding:6px 10px}
+.pbar{height:8px;background:var(--line);border-radius:4px;overflow:hidden;margin:6px 0}.pbar i{display:block;height:100%;background:var(--accent)}
+.mrow{display:flex;justify-content:space-around;margin:4px 0 10px}
+/* print */
+#print{display:none}
+@page{size:A4 portrait;margin:12mm}
+@media print{
+  html,body{background:#fff!important;color:#000!important}
+  body>*:not(#print){display:none!important}
+  #print{display:block;font:10pt/1.35 system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;color:#000}
+  #print *{-webkit-print-color-adjust:exact;print-color-adjust:exact}
+}
+#print h1{font-size:18pt;margin:0}
+#print .cert{height:184mm;display:flex;flex-direction:column}
+#print .cframe{flex:1;border:2.5pt solid #0f766e;padding:2.2mm;display:flex}
+#print .cin{flex:1;border:.8pt solid #c9962b;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2.2mm;text-align:center;padding:6mm}
+#print .cbrand{display:flex;align-items:center;gap:2.5mm;font-weight:700;color:#0f766e;font-size:11pt}
+#print .cbrand img{width:9mm;height:9mm;border-radius:2mm}
+#print .ctitle{font-size:30pt;font-weight:800;color:#0f766e;letter-spacing:.02em;margin:1mm 0}
+#print .cpre{font-size:12pt;color:#444}
+#print .cname{font-size:26pt;font-weight:700;border-bottom:.8pt solid #999;padding:0 12mm 1mm;min-width:90mm}
+#print .cbadge{font-size:24pt;font-weight:800}
+#print .cfor{font-size:12.5pt}
+#print .cdate{font-size:11pt;color:#333}
+#print .cft{display:flex;align-items:center;justify-content:center;gap:3mm;margin-top:3mm;font-size:8.5pt;color:#444}
+#print .cft img{width:6mm;height:6mm;border-radius:1.3mm}
+#print .ph1{display:flex;align-items:center;gap:3mm;margin:0 0 2mm}
+#print .ph1 img{width:11mm;height:11mm;border-radius:2.4mm}
+#print .ph1 .url{margin-left:auto;font-weight:700;font-size:10pt;color:#0f766e}
+#print .sub{font-size:9.5pt;color:#444;margin:0 0 5mm}
+#print table.pl{width:100%;border-collapse:collapse}
+#print table.pl th{text-align:left;font-size:8.5pt;text-transform:uppercase;letter-spacing:.04em;border-bottom:1.5pt solid #000;padding:1.5mm 2mm}
+#print table.pl td{border-bottom:.5pt solid #999;padding:2mm;vertical-align:top}
+#print table.pl tr{break-inside:avoid}
+#print td.dt{width:24mm;font-weight:700;white-space:nowrap}
+#print td.tk{width:12mm;text-align:center}
+#print .box{display:inline-block;width:5mm;height:5mm;border:1pt solid #000;border-radius:1mm;vertical-align:middle;text-align:center;line-height:5mm;font-size:9pt}
+#print .cd{font-weight:700}
+#print .ex{color:#222}
+#print .rest{font-weight:700;letter-spacing:.05em}
+#print .miss{color:#777;font-style:italic}
+#print .grid{display:grid;grid-template-columns:repeat(5,1fr);border-top:1pt solid #000;border-left:1pt solid #000}
+#print .gc{border-right:1pt solid #000;border-bottom:1pt solid #000;padding:1.8mm 2mm 2mm;min-height:34mm;break-inside:avoid}
+#print .gc .hd{display:flex;justify-content:space-between;align-items:center;font-weight:800;font-size:9.5pt;margin-bottom:1.5mm;background:#000;color:#fff;margin:-1.8mm -2mm 1.8mm;padding:1mm 2mm}
+#print .gc .hd .box{border-color:#fff;background:#fff}
+#print .gc .hd .dd{font-weight:500;font-size:7.5pt;margin-left:1.5mm;opacity:.85;white-space:nowrap}
+#print .gc .hd>span:first-child{white-space:nowrap}
+#print .gc.gr{background:#eee}
+#print .gc .rs{font-size:16pt;font-weight:800;letter-spacing:.12em;text-align:center;margin-top:7mm;color:#333}
+#print .gc div.l{font-size:8.3pt;line-height:1.35}
+#print .gc div.l b{display:inline-block;min-width:8mm;text-align:right;margin-right:1.2mm}
+#print .keys{display:grid;grid-template-columns:repeat(6,1fr);gap:3mm;margin-top:5mm}
+#print .key{border:.7pt dashed #888;border-radius:2mm;height:16mm;display:flex;flex-direction:column;align-items:center;justify-content:flex-end;padding:1mm;font-size:8pt;font-weight:700;text-align:center;overflow:hidden}
+#print .key img{width:100%;flex:1;min-height:0;object-fit:contain}
+#print .ft{margin-top:4mm;font-size:8pt;color:#555;display:flex;justify-content:space-between}
+</style>
+</head>
+<body>
+<div id="app"></div>
+<nav id="nav"><div class="in"></div></nav>
+<div id="wk"><div class="in"></div></div>
+<div id="sheet"><div class="panel"><div class="grab"></div><div class="body"></div></div></div>
+<div id="toast"></div>
+<div id="print"></div>
+<input type="file" id="importFile" accept="application/json,.json" hidden>
+<script>
+/* 30 Day Challenge (Do30DayChallenge.com)
+   © 2026 Stuart Parkins. All rights reserved. Not for reuse, modification or redistribution without written permission. */
+'use strict';
+/* ===================== DATA ===================== */
+const APP_VERSION = '1.9.2';
+const AREAS = {abs:'Abs', obliques:'Obliques', core:'Core', 'hip-flexors':'Hip flexors', shoulders:'Shoulders', chest:'Chest', arms:'Arms', legs:'Legs', cardio:'Cardio'};
+// count: single | total (each side counts 1) | pair (both sides = 1) | eachSide (timed, per side)
+const EXERCISES = [
+ {id:'crunch',name:'Crunch',areas:['abs'],difficulty:1,measure:'reps',count:'single',image:null,alternatives:['heel-touch','dead-bug'],
+  instructions:['Lie on your back, knees bent, feet flat, fingertips lightly behind your head.','Curl your shoulders off the floor using your stomach, not your neck.','Lower slowly with control.']},
+ {id:'sit-up',name:'Sit-up',areas:['abs','hip-flexors'],difficulty:2,measure:'reps',count:'single',image:null,alternatives:['crunch'],
+  instructions:['Lie on your back, knees bent, feet flat or anchored.','Curl all the way up until your chest is close to your knees.','Lower back down slowly, one section of your spine at a time.']},
+ {id:'heel-touch',name:'Heel Touch',areas:['obliques','abs'],difficulty:1,measure:'reps',count:'total',image:null,alternatives:['crunch'],
+  instructions:['Lie on your back, knees bent, feet flat, shoulders just off the floor.','Reach your right hand to your right heel, then your left hand to your left heel.','Keep your shoulders lifted throughout. Each touch counts as 1.']},
+ {id:'dead-bug',name:'Dead Bug',areas:['core','abs'],difficulty:1,measure:'reps',count:'total',image:null,alternatives:['crunch','hollow-hold'],
+  instructions:['Lie on your back, arms up, knees bent at 90° above your hips.','Lower your opposite arm and leg towards the floor, keeping your lower back pressed down.','Return and swap sides. Each side counts as 1.']},
+ {id:'knee-tuck',name:'Knee Tuck',areas:['abs','hip-flexors'],difficulty:2,measure:'reps',count:'single',image:null,alternatives:['reverse-crunch','leg-raise'],
+  instructions:['Start in a high plank, hands under your shoulders, body in a straight line.','Bring both knees in towards your chest, lifting your feet off the floor.','Push your legs back out to the plank and repeat.']},
+ {id:'plank',name:'Plank',areas:['core','abs','shoulders'],difficulty:1,measure:'seconds',count:'single',image:null,alternatives:['plank-shoulder-tap'],
+  instructions:['Forearms on the floor, elbows under your shoulders.','Keep a straight line from head to heels; squeeze your stomach and glutes.','Don\u2019t let your hips sag or lift.']},
+ {id:'leg-raise',name:'Leg Raise',areas:['abs','hip-flexors'],difficulty:2,measure:'reps',count:'single',image:null,alternatives:['knee-tuck','reverse-crunch'],
+  instructions:['Lie flat, arms by your sides (or hands under your hips for extra support).','Keep your legs straight and lift them to vertical.','Lower slowly without touching the floor.']},
+ {id:'double-ds',name:'Double-D\u2019s',areas:['abs','hip-flexors','obliques'],difficulty:2,measure:'reps',count:'pair',image:null,alternatives:['leg-raise','flutter-kicks'],
+  instructions:['Lie flat, hands under your hips, legs straight.','Raise your legs in an outward arc to one side, then lower them straight down.','Repeat on the other side. Both sides together count as 1 rep.']},
+ {id:'reverse-crunch',name:'Reverse Crunch',areas:['abs'],difficulty:2,measure:'reps',count:'single',image:null,alternatives:['knee-tuck','leg-raise'],
+  instructions:['Lie on your back, knees bent at 90° above your hips, arms by your sides.','Curl your hips off the floor, drawing your knees towards your chest.','Lower slowly back to the start.']},
+ {id:'bicycle-crunch',name:'Bicycle Crunch',areas:['obliques','abs'],difficulty:2,measure:'reps',count:'total',image:null,alternatives:['heel-touch','russian-twist'],
+  instructions:['Lie on your back, fingertips behind your head, shoulders lifted.','Bring one elbow towards the opposite knee while straightening the other leg.','Switch sides in a pedalling motion. Each side counts as 1.']},
+ {id:'russian-twist',name:'Russian Twist',areas:['obliques','abs'],difficulty:2,measure:'reps',count:'total',image:null,alternatives:['bicycle-crunch','heel-touch'],
+  instructions:['Sit with knees bent and lean back slightly, back straight.','Keep your feet on the floor (easier) or lifted (harder).','Rotate to touch the floor beside each hip. Each side counts as 1.']},
+ {id:'side-plank',name:'Side Plank',areas:['obliques','core'],difficulty:2,measure:'seconds',count:'eachSide',image:null,alternatives:['plank'],
+  instructions:['Lie on one side, forearm under your shoulder, feet stacked.','Lift your hips so your body forms a straight line.','Hold, then repeat on the other side for the same time.']},
+ {id:'mountain-climber',name:'Mountain Climber',areas:['core','abs','shoulders'],difficulty:2,measure:'reps',count:'total',image:null,alternatives:['spiderman-plank','plank-shoulder-tap'],
+  instructions:['Start in a high plank, hands under your shoulders.','Drive one knee towards your chest, then switch legs quickly.','Keep your hips level. Each knee drive counts as 1.']},
+ {id:'spiderman-plank',name:'Spiderman Plank',areas:['obliques','core'],difficulty:2,measure:'reps',count:'total',image:null,alternatives:['mountain-climber'],
+  instructions:['Start in a high plank, hands under your shoulders.','Bring one knee out to the side towards the same-side elbow.','Return and switch sides. Each side counts as 1.']},
+ {id:'plank-step-up',name:'Plank Step-up',areas:['core','shoulders'],difficulty:2,measure:'reps',count:'total',image:null,alternatives:['plank','plank-shoulder-tap'],
+  instructions:['Start in a forearm plank, body in a straight line.','Step one foot forward next to your hand, keeping your hips low.','Step back to plank and repeat with the other leg. Each step counts as 1.']},
+ {id:'plank-shoulder-tap',name:'Plank Shoulder Tap',areas:['core','shoulders'],difficulty:2,measure:'reps',count:'total',image:null,alternatives:['plank'],
+  instructions:['Start in a high plank, feet slightly apart.','Lift one hand to tap the opposite shoulder, keeping your hips still.','Alternate sides. Each tap counts as 1.']},
+ {id:'v-sit',name:'V-Sit',areas:['abs','hip-flexors'],difficulty:3,measure:'seconds',count:'single',image:null,alternatives:['hollow-hold','knee-tuck'],
+  instructions:['Sit on the floor, knees bent, feet flat, back straight and hands by your sides.','Lean back slightly, lift your feet off the floor and straighten your legs to form a V.','Reach your arms forward, keep your core tight and hold. Bend your knees to make it easier.']},
+ {id:'hollow-hold',name:'Hollow Hold',areas:['abs','core'],difficulty:3,measure:'seconds',count:'single',image:null,alternatives:['dead-bug','v-sit'],
+  instructions:['Lie on your back, arms overhead, legs straight.','Press your lower back into the floor and lift your arms, shoulders and legs slightly.','Hold. Bend your knees or bring your arms forward to make it easier.']},
+ {id:'flutter-kicks',name:'Flutter Kicks',areas:['abs','hip-flexors'],difficulty:2,measure:'reps',count:'total',image:null,alternatives:['leg-raise','dead-bug'],
+  instructions:['Lie flat, hands under your hips, legs straight and just off the floor.','Kick your legs up and down in small, quick alternating movements.','Keep your lower back pressed into the floor. Each kick counts as 1.']},
+ {id:'press-up',name:'Press-ups',areas:['chest','arms','core'],difficulty:2,measure:'reps',count:'single',image:null,alternatives:['plank-shoulder-tap','plank'],
+  instructions:['Start in a high plank, hands slightly wider than your shoulders, body in a straight line.','Bend your arms to lower your chest towards the floor.','Push back up to the start. Drop to your knees to make it easier.']},
+ {id:'squat-thrust',name:'Squat Thrusts',areas:['legs','core','cardio'],difficulty:2,measure:'reps',count:'single',image:null,alternatives:['mountain-climber','knee-tuck'],
+  instructions:['Start in a high plank, hands under your shoulders.','Jump both feet in towards your hands, bending your knees.','Jump your feet back out to the plank. Each in-and-out counts as 1.']},
+ {id:'star-jump',name:'Star Jumps',areas:['cardio','legs'],difficulty:1,measure:'reps',count:'single',image:null,alternatives:['side-step-bounce','squat-thrust'],
+  instructions:['Stand with your feet together and arms by your sides.','Jump your feet out wide as you raise your arms above your head.','Jump back to the start. Each jump out and in counts as 1.']},
+ {id:'leg-swing',name:'Swing Legs Up',areas:['legs','hip-flexors'],difficulty:1,measure:'reps',count:'total',image:null,alternatives:['flutter-kicks','leg-raise'],
+  instructions:['A warm-up. Stand with your feet shoulder-width apart, one foot slightly in front of the other.','Swing your right leg forward, keeping it straight \u2014 first just above knee height, then to waist height. Advanced: head height.','Repeat with your left leg. Each swing counts as 1.']},
+ {id:'side-step-bounce',name:'Side to Side Bounce Stepping',areas:['cardio','legs'],difficulty:1,measure:'seconds',count:'single',image:null,alternatives:['forward-back-bounce','corner-bounce'],
+  instructions:['Stand light on the balls of your feet, knees soft.','Keep a small bounce and step side to side, left then right.','Stay light and keep moving for the set time.']},
+ {id:'forward-back-bounce',name:'Forward and Back Stepping',areas:['cardio','legs'],difficulty:1,measure:'seconds',count:'single',image:null,alternatives:['side-step-bounce','corner-bounce'],
+  instructions:['Stand light on the balls of your feet, one foot slightly forward, knees soft.','Keep a small bounce and step forward, then back.','Stay light and keep moving for the set time.']},
+ {id:'corner-bounce',name:'Corner to Corner Bounce Stepping',areas:['cardio','legs'],difficulty:1,measure:'seconds',count:'single',image:null,alternatives:['side-step-bounce','forward-back-bounce'],
+  instructions:['Stand light on the balls of your feet, knees soft. Picture a square on the floor around you.','Keep a small bounce and step diagonally to one corner, then back across to the opposite corner.','Switch to the other two corners now and again. Keep moving for the set time.']},
+ {id:'bridge-dip',name:'Bridge Dips',areas:['legs','core'],difficulty:1,measure:'reps',count:'single',image:null,alternatives:['windscreen-wiper','dead-bug'],
+  instructions:['Lie on your back with your knees bent, feet flat and hip-width apart, arms resting by your sides.','Push through your heels to lift your hips until your body is straight from shoulders to knees.','Lower slowly until your hips almost touch the floor, then lift again. Each lift counts as 1.']},
+ {id:'windscreen-wiper',name:'Seated Windscreen Wipers',areas:['obliques','hip-flexors'],difficulty:2,measure:'reps',count:'total',image:null,alternatives:['russian-twist','bridge-dip'],
+  instructions:['Sit and lean back onto your forearms (or lie flat to make it easier on your arms).','Lift both legs together, knees slightly bent.','Keeping your legs together, sweep them over to one side, then across to the other, like a windscreen wiper. Each side counts as 1.']},
+ {id:'seated-round-kick',name:'Seated Round Kick',areas:['hip-flexors','obliques','legs'],difficulty:2,measure:'reps',count:'total',image:null,alternatives:['windscreen-wiper','leg-raise'],
+  instructions:['Sit in a straddle with one leg straight out to the side and the other bent to the side behind you.','Lean on your forearm or hand on the side of the bent leg.','Lift the bent leg, bring the knee round to the front, then extend it in an arc like a round kick.','Bring it back to the start. Do the same number on each side. Each kick counts as 1.']},
+ {id:'kneeling-triangle',name:'Kneeling Triangle Bend',areas:['obliques','hip-flexors'],difficulty:1,measure:'seconds',count:'eachSide',image:null,alternatives:['side-plank','windscreen-wiper'],
+  instructions:['Kneel upright, then straighten one leg out to the side with that foot flat on the floor.','Rest that hand on the straight leg and reach the other arm over your head.','Bend sideways towards the straight leg, making a triangle shape, and hold.','Swap sides and hold for the same time.']}
+];
+// Exercise pictures available in images/exercises/<id>.webp (add ids here as new artwork arrives; also list in sw.js)
+const EX_IMAGES=['crunch','sit-up','dead-bug','leg-raise','reverse-crunch','bicycle-crunch','russian-twist','knee-tuck','plank','double-ds','spiderman-plank','plank-step-up','plank-shoulder-tap','side-plank','mountain-climber','v-sit','hollow-hold','flutter-kicks','heel-touch','press-up','squat-thrust','star-jump','leg-swing','side-step-bounce','forward-back-bounce','corner-bounce'];
+EX_IMAGES.forEach(id=>{ const e=EXERCISES.find(x=>x.id===id); if(e) e.image=`images/exercises/${id}.webp`; });
+const EX = Object.fromEntries(EXERCISES.map(e=>[e.id,e]));
+
+const CHALLENGES = [
+ {id:'abs',version:2,name:'ABS',focus:'Abdominals',length:30,restAllowance:8,progression:'daily',
+  exercises:[
+   {id:'crunch',fromDay:1,start:10,end:50},
+   {id:'bicycle-crunch',fromDay:1,start:10,end:50},
+   {id:'plank',fromDay:1,start:20,end:60},
+   {id:'leg-raise',fromDay:8,start:8,end:25},
+   {id:'russian-twist',fromDay:15,start:16,end:40},
+   {id:'reverse-crunch',fromDay:22,start:10,end:20}
+  ],
+  notes:'Rest 20\u201330 seconds between exercises.'}
+];
+const COMING_SOON = ['CORE','LEGS','UPPER BODY','FULL BODY'];
+/* Levels: Easy is the standard programme (default). Set when a month is set up; fixed for that month. */
+const LEVELS={easy:{name:'Easy',mul:1,note:'standard'},moderate:{name:'Moderate',mul:1.25,note:'+25%'},harder:{name:'Harder',mul:1.5,note:'+50%'}};
+function applyLevel(def,lv){ lv=LEVELS[lv]?lv:'easy'; def.level=lv; def.baseName=def.baseName||def.name; def.name = lv==='easy' ? def.baseName : `${LEVELS[lv].name} ${def.baseName}`; return def; }
+function scaleTarget(ex,t,def){ const m=(LEVELS[def&&def.level]||LEVELS.easy).mul; if(m===1||t==null) return t; const v=t*m;
+  if(ex.measure==='seconds') return Math.max(5,Math.round(v/5)*5);
+  if(ex.count==='total') return Math.max(2,2*Math.round(v/2));
+  return Math.max(1,Math.round(v)); }
+/* ABS Mix: a fresh, balanced set of 6 ab exercises each month, built from the library (Stuart's own ranges; Easy level). */
+const MIX_RANGES={'crunch':[10,50],'sit-up':[8,30],'bicycle-crunch':[10,50],'russian-twist':[16,40],'heel-touch':[16,50],'plank':[20,60],'side-plank':[15,40],'hollow-hold':[10,40],'v-sit':[10,30],
+  'leg-raise':[8,25],'reverse-crunch':[10,25],'knee-tuck':[8,25],'double-ds':[6,20],'flutter-kicks':[20,60],'mountain-climber':[16,50],'plank-shoulder-tap':[16,40],'spiderman-plank':[10,30],'plank-step-up':[10,30],'dead-bug':[10,30]};
+const MIX_SLOTS=[{id:'upper',name:'Upper abs',ex:['crunch','sit-up','heel-touch']},{id:'obliques',name:'Obliques',ex:['bicycle-crunch','russian-twist','heel-touch']},
+  {id:'hold',name:'Hold',ex:['plank','side-plank','hollow-hold','v-sit']},{id:'lower',name:'Lower abs',ex:['leg-raise','reverse-crunch','knee-tuck','double-ds','flutter-kicks']},
+  {id:'moving',name:'Moving plank',ex:['mountain-climber','plank-shoulder-tap','spiderman-plank','plank-step-up']},{id:'control',name:'Control',ex:['dead-bug']}];
+const MIX_LATE=['v-sit','hollow-hold','double-ds']; // hardest ones never start on Day 1
+const MIX_DAYS=[1,1,1,8,15,22];
+const rnd=a=>a[Math.floor(Math.random()*a.length)];
+const shuffled=a=>{ const b=a.slice(); for(let i=b.length-1;i>0;i--){ const j=Math.floor(Math.random()*(i+1)); [b[i],b[j]]=[b[j],b[i]]; } return b; };
+function makeMix(prevIds){
+  const prev=new Set(prevIds||[]), used=new Set(), picks=[];
+  MIX_SLOTS.forEach(sl=>{
+    let cands = sl.id==='control' ? (prev.has('dead-bug')||used.has('dead-bug') ? Object.keys(MIX_RANGES).filter(id=>!MIX_LATE.includes(id)) : ['dead-bug']) : sl.ex;
+    cands=cands.filter(id=>!used.has(id)); const fresh=cands.filter(id=>!prev.has(id));
+    const id=rnd(fresh.length?fresh:cands); used.add(id); picks.push({id,slot:sl.id});
+  });
+  const early=shuffled(picks.filter(p=>!MIX_LATE.includes(p.id))), late=picks.filter(p=>MIX_LATE.includes(p.id));
+  const day1=early.slice(0,3), rest=shuffled([...early.slice(3),...late]);
+  return [...day1.map(p=>({...p,fromDay:1})),...rest.map((p,i)=>({...p,fromDay:[8,15,22][i]}))].map(p=>({...p,start:MIX_RANGES[p.id][0],end:MIX_RANGES[p.id][1]}));
+}
+function mixDef(entries){
+  return {id:'abs-mix',version:1,name:'ABS Mix',focus:'Abdominals — a fresh mix each month',length:30,restAllowance:8,progression:'daily',
+    exercises:entries.map(e=>({id:e.id,fromDay:e.fromDay,start:e.start,end:e.end,slot:e.slot})).sort((a,b)=>a.fromDay-b.fromDay),notes:'Rest 20–30 seconds between exercises.'};
+}
+/* ABS Mixed (v1.9.0): a weekly warm-up, the six ABS Mix core exercises, then extras (one a day, two from Day 15). */
+const WARM_RANGES={'leg-swing':[20,40],'star-jump':[20,50],'side-step-bounce':[30,60],'forward-back-bounce':[30,60],'corner-bounce':[30,60]};
+const EXTRA_RANGES={'bridge-dip':[10,30],'windscreen-wiper':[10,30],'seated-round-kick':[10,30],'kneeling-triangle':[15,40],'squat-thrust':[8,25],'press-up':[5,20]};
+const WARM_WEEKS=[[1,7],[8,14],[15,21],[22,30]], EXTRA_DAYS=[1,15];
+const ROLE_ORDER={warmup:0,core:1,extra:2};
+const isMixPick=id=>id==='abs-mix'||id==='abs-mixed';
+function rangeFor(e){ return (e.role==='warmup'?WARM_RANGES:e.role==='extra'?EXTRA_RANGES:MIX_RANGES)[e.id]; }
+function makeMixed(prevIds){
+  const prev=new Set(prevIds||[]);
+  const core=makeMix(prevIds).map(e=>({...e,role:'core'}));
+  const warm=shuffled(Object.keys(WARM_RANGES)).slice(0,4).map((id,i)=>({id,slot:'warmup',role:'warmup',fromDay:WARM_WEEKS[i][0],toDay:WARM_WEEKS[i][1],start:WARM_RANGES[id][0],end:WARM_RANGES[id][1]}));
+  const ex=Object.keys(EXTRA_RANGES), fresh=shuffled(ex.filter(id=>!prev.has(id))), pool=[...fresh,...shuffled(ex.filter(id=>prev.has(id)))];
+  const extra=pool.slice(0,2).map((id,i)=>({id,slot:'extra',role:'extra',fromDay:EXTRA_DAYS[i],start:EXTRA_RANGES[id][0],end:EXTRA_RANGES[id][1]}));
+  return [...warm,...core,...extra];
+}
+function mixedDef(entries){
+  return {id:'abs-mixed',version:1,name:'ABS Mixed',focus:'Warm-up, abs and extras — a fresh mix each month',length:30,restAllowance:8,progression:'daily',
+    exercises:entries.map(e=>{ const o={id:e.id,fromDay:e.fromDay,start:e.start,end:e.end,slot:e.slot,role:e.role||'core'}; if(e.toDay) o.toDay=e.toDay; return o; })
+      .sort((a,b)=>(ROLE_ORDER[a.role]-ROLE_ORDER[b.role])||(a.fromDay-b.fromDay)),notes:'Rest 20–30 seconds between exercises.'};
+}
+function makePending(kind,month){ return kind==='abs-mixed' ? makeMixed(prevExerciseIds(month)) : makeMix(prevExerciseIds(month)); }
+function pendingDef(kind,entries){ return kind==='abs-mixed' ? mixedDef(entries) : mixDef(entries); }
+function prevExerciseIds(month){ // the most recent challenge before this month (ignores months added from earlier records)
+  const all=[...state.history,...(state.active?[state.active]:[]),...(state.upcoming?[state.upcoming]:[])].filter(c=>!c.preApp&&c.month<month).sort((a,b)=>b.month.localeCompare(a.month));
+  return all.length ? all[0].definition.exercises.map(e=>e.id) : [];
+}
+// Other activity types (defined early: load() validates saved activities against these)
+const ACT_TYPES=[
+ {id:'walk',name:'Walk',ic:'\u{1F6B6}',dist:true},{id:'jog',name:'Jog',ic:'\u{1F3C3}',dist:true},{id:'cycle',name:'Cycle',ic:'\u{1F6B4}',dist:true},
+ {id:'weights',name:'Weights',ic:'\u{1F3CB}\uFE0F'},{id:'martial',name:'Martial arts',ic:'\u{1F94B}'},{id:'swim',name:'Swim',ic:'\u{1F3CA}',dist:true},
+ {id:'yoga',name:'Yoga',ic:'\u{1F9D8}'},{id:'pilates',name:'Pilates',ic:'\u{1F938}'},{id:'stretch',name:'Stretch',ic:'\u{1F646}'},{id:'physio',name:'Physio',ic:'\u{1FA7A}'}];
+const ACT_BY_ID=Object.fromEntries(ACT_TYPES.map(a=>[a.id,a]));
+const KM_PER_MI=1.609344;
+
+/* ===================== DATES (local YYYY-MM-DD strings only) ===================== */
+const pad = n => String(n).padStart(2,'0');
+const ymd = d => `${d.getFullYear()}-${pad(d.getMonth()+1)}-${pad(d.getDate())}`;
+const parse = s => { const [y,m,d]=s.split('-').map(Number); return new Date(y,m-1,d); };
+const addDays = (s,n) => { const d=parse(s); d.setDate(d.getDate()+n); return ymd(d); };
+const monthOf = s => s.slice(0,7);
+const monthEnd = m => { const [y,mm]=m.split('-').map(Number); return ymd(new Date(y,mm,0)); };
+const daysBetween = (a,b) => Math.round((parse(b)-parse(a))/864e5);
+const DOW=['Sun','Mon','Tue','Wed','Thu','Fri','Sat'], DOWL=['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'];
+const MON=['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'], MONL=['January','February','March','April','May','June','July','August','September','October','November','December'];
+const fmtShort = s => { const d=parse(s); return `${DOW[d.getDay()]} ${d.getDate()} ${MON[d.getMonth()]}`; };
+const fmtLong = s => { const d=parse(s); return `${DOWL[d.getDay()]} ${d.getDate()} ${MONL[d.getMonth()]}`; };
+const fmtUK = s => { const d=parse(s); return `${DOWL[d.getDay()]} ${pad(d.getDate())}/${pad(d.getMonth()+1)}/${String(d.getFullYear()).slice(2)}`; };
+const listAnd = a => a.length<2 ? a.join('') : a.slice(0,-1).join(', ')+' and '+a[a.length-1];
+const BMC_URL = 'https://buymeacoffee.com/stuartparkins';
+const monthLabel = m => { const [y,mm]=m.split('-').map(Number); return `${MONL[mm-1]} ${y}`; };
+const monthName = m => MONL[Number(m.slice(5,7))-1];
+const TEST_MODE = /[?&]test\b/.test(location.search);
+const today = () => (TEST_MODE && state.settings.testToday) || ymd(new Date());
+
+/* ===================== ENGINE ===================== */
+function dailyTarget(e,n,len){
+  if(Array.isArray(e.targets)) return e.targets[n-1];
+  const f=e.fromDay||1; if(n<f||(e.toDay&&n>e.toDay)) return null;
+  const b=e.role==='warmup'?1:f; // warm-ups change weekly but keep rising across the whole month
+  return len===b ? e.end : Math.round(e.start+(e.end-e.start)*(n-b)/(len-b));
+}
+function resolveDay(def, n, swaps={}){
+  if(n<1||n>def.length) return [];
+  if(def.progression==='daily'){
+    return def.exercises.filter(e=>n>=(e.fromDay||1)&&!(e.toDay&&n>e.toDay)).map(e=>{ const id=swaps[e.id]||e.id; return {id,ex:EX[id],role:e.role||'core',target:evenSide(EX[id],e.role,scaleTarget(EX[id],dailyTarget(e,n,def.length),def))}; }).filter(x=>x.target!=null);
+  }
+  const si = def.stages.findIndex(s=>n>=s.from && n<=s.to);
+  if(si<0) return [];
+  return def.exercises.slice(0, def.stages[si].exerciseCount).map(e=>{
+    const id = swaps[e.id] || e.id;
+    return {id, ex:EX[id], target:scaleTarget(EX[id],e.targets[si],def)};
+  });
+}
+// ABS Mixed warm-ups and extras: two-sided reps always even (same number each side); timed ones in 5-second steps
+function evenSide(ex,role,t){ if(t==null||!(role==='warmup'||role==='extra')) return t;
+  if(ex.measure==='seconds') return Math.max(5,Math.round(t/5)*5); // holds and footwork in steps of 5 seconds
+  return ex.count==='total' ? Math.max(2,2*Math.round(t/2)) : t; }
+function startCount(def){ return def.progression==='daily' ? def.exercises.filter(e=>(e.fromDay||1)===1).length : def.stages[0].exerciseCount; }
+function validateDef(def){
+  if(def.progression==='daily'){
+    const errs=[];
+    def.exercises.forEach(e=>{ if(!EX[e.id]) errs.push(`Unknown exercise ${e.id}`);
+      if(Array.isArray(e.targets)){ if(e.targets.length!==def.length) errs.push(`${e.id} needs ${def.length} targets`); }
+      else if(!(e.start>0&&e.end>0)) errs.push(`${e.id} needs start and end values`);
+      if((e.fromDay||1)<1||(e.fromDay||1)>def.length) errs.push(`${e.id} has a bad first day`);
+      if(e.toDay&&(e.toDay<(e.fromDay||1)||e.toDay>def.length)) errs.push(`${e.id} has a bad last day`); });
+    if(!resolveDay(def,1).length) errs.push('No exercises on Day 1');
+    return errs;
+  }
+  const errs=[]; let expect=1;
+  def.stages.forEach((s,i)=>{ if(s.from!==expect) errs.push(`Stage ${i+1} should start at ${expect}`); expect=s.to+1;
+    if(s.exerciseCount>def.exercises.length) errs.push(`Stage ${i+1} uses more exercises than defined`);
+    def.exercises.slice(0,s.exerciseCount).forEach(e=>{ if(e.targets[i]==null) errs.push(`${e.id} has no target in stage ${i+1}`); });
+  });
+  if(expect-1!==def.length) errs.push('Stages do not cover the challenge length');
+  def.exercises.forEach(e=>{ if(!EX[e.id]) errs.push(`Unknown exercise ${e.id}`); });
+  return errs;
+}
+// Explicitly planned rests take priority, then the user's usual rest weekdays, earliest first, up to the cap.
+function plannedRests(ch,dates,cap){
+  const inRange=new Set(dates), skip=new Set(ch.skipRestDates||[]), wk=(state&&state.settings.restWeekdays)||[];
+  const explicit=ch.plannedRestDates.filter(d=>inRange.has(d)).sort();
+  const auto=dates.filter(d=>wk.includes(parse(d).getDay()) && !skip.has(d) && !explicit.includes(d));
+  const out=explicit.slice(0,cap); for(const d of auto){ if(out.length>=cap) break; out.push(d); }
+  return out.sort();
+}
+function isUsualRestDay(d){ return (state.settings.restWeekdays||[]).includes(parse(d).getDay()); }
+function coveredDates(ch){ const s=new Set(); ch.rests.forEach(r=>s.add(r.date)); ch.completions.forEach(c=>s.add(c.for||c.date)); return s; }
+function caughtFor(ch,d){ return ch.completions.filter(c=>c.for===d); }
+function dateEntries(ch,d){ return {w:ch.completions.filter(c=>c.date===d), r:ch.rests.find(r=>r.date===d)}; }
+function calc(ch, t){
+  const def=ch.definition, len=def.length, allow=def.restAllowance;
+  const W=ch.completions.length, Rt=ch.rests.length, done=W+Rt, R=Math.max(0,len-done), L=Math.max(0,allow-Rt);
+  const end=monthEnd(ch.month);
+  const loggedToday = ch.completions.some(c=>c.date===t) || ch.rests.some(r=>r.date===t);
+  const first = t<ch.startDate ? ch.startDate : (loggedToday ? addDays(t,1) : t);
+  const dates=[]; for(let d=first; d<=end; d=addDays(d,1)) dates.push(d);
+  const D=dates.length;
+  const planned = plannedRests(ch,dates,Math.min(L,R));
+  const P=planned.length, S=D-R, Wn=Math.max(0,R-P), wd=D-P;
+  const pace = R>0 && wd>0 ? Wn/wd : null;
+  // A past date with nothing logged only counts as missed if you're actually behind:
+  // Challenge Days done so far (incl. today's) fewer than calendar days gone. Most recent gaps are marked first.
+  const gaps=[]; const lastPast = t<=end ? addDays(t,-1) : end;
+  const cov=coveredDates(ch);
+  for(let d=ch.startDate; d<=lastPast; d=addDays(d,1)){ if(!cov.has(d)) gaps.push(d); }
+  const elapsed = lastPast>=ch.startDate ? daysBetween(ch.startDate,lastPast)+1 : 0;
+  const behindBy = Math.max(0, elapsed-done);
+  const missed = behindBy ? gaps.slice(-behindBy) : [];
+  let status = R===0 ? 'complete' : D===0 ? 'cannot' : S<0 ? 'behind' : S===0 ? 'onschedule' : 'ahead';
+  const daysLeft = t>end ? 0 : daysBetween(t<ch.startDate?ch.startDate:t, end)+1;
+  return {len,allow,W,Rt,done,R,L,D,S,P,planned,Wn,wd,pace,missed,dates,loggedToday,end,next:nextDue(ch,t),status,daysLeft};
+}
+/* Challenge Days can be done in any order. Outstanding = not yet done or rested.
+   planDays pins chosen day numbers to dates, e.g. {'2026-10-13':[16,23]}. */
+function outstandingDays(ch){ const used=new Set([...ch.completions,...ch.rests].map(x=>x.day)); const o=[]; for(let n=1;n<=ch.definition.length;n++) if(!used.has(n)) o.push(n); return o; }
+function pinnedFrom(ch,fromDate,exceptDate){ const s=new Set(); Object.entries(ch.planDays||{}).forEach(([d,l])=>{ if(d>=fromDate && d!==exceptDate) (l||[]).forEach(n=>s.add(n)); }); return s; }
+function nextDue(ch,t){
+  const outs=outstandingDays(ch); if(!outs.length) return null;
+  const mine=((ch.planDays||{})[t]||[]).filter(n=>outs.includes(n)); if(mine.length) return mine[0];
+  const later=pinnedFrom(ch,addDays(t,1),null); const free=outs.find(n=>!later.has(n));
+  return free!=null ? free : outs[0];
+}
+function restDue(ch,t){
+  const outs=outstandingDays(ch); if(!outs.length) return null;
+  const pinned=pinnedFrom(ch,t,t); const free=outs.find(n=>!pinned.has(n));
+  return free!=null ? free : outs[0];
+}
+function schedule(ch, t){
+  const c=calc(ch,t);
+  const rest=new Set(c.planned);
+  const work=c.dates.filter(d=>!rest.has(d));
+  const outs=outstandingDays(ch), outSet=new Set(outs), taken=new Set(), pins={};
+  const todayExtra = c.loggedToday && t>=ch.startDate ? ((ch.planDays||{})[t]||[]).filter(n=>outSet.has(n)).sort((x,y)=>x-y) : [];
+  todayExtra.forEach(n=>taken.add(n));
+  work.forEach(d=>{ const l=(ch.planDays||{})[d]; if(l&&l.length){ const v=l.filter(n=>outSet.has(n)&&!taken.has(n)); v.forEach(n=>taken.add(n)); if(v.length) pins[d]=v; } });
+  const pool=outs.filter(n=>!taken.has(n));
+  const counts={}; let fixed=0; const unset=[];
+  work.forEach(d=>{ if(pins[d]){ counts[d]=pins[d].length; fixed+=pins[d].length; } else if(ch.plan[d]!=null){ counts[d]=ch.plan[d]; fixed+=ch.plan[d]; } else unset.push(d); });
+  const Wp=Math.max(0,c.Wn-fixed-todayExtra.length);
+  if(unset.length){ const base=Math.floor(Wp/unset.length), extra=Wp%unset.length; unset.forEach((d,i)=>counts[d]=base+(i<extra?1:0)); }
+  const rows=[]; const map={}; let covered=todayExtra.length;
+  for(const d of c.dates){
+    let row;
+    if(rest.has(d)){ row={date:d,rest:true,count:0,days:pool.length?[pool.shift()]:[],custom:false,chosen:false}; }
+    else if(pins[d]){ row={date:d,rest:false,count:pins[d].length,days:pins[d].slice(),custom:true,chosen:true}; }
+    else { const k=counts[d]||0, days=[]; for(let i=0;i<k&&pool.length;i++) days.push(pool.shift()); row={date:d,rest:false,count:k,days,custom:ch.plan[d]!=null,chosen:false}; }
+    covered+=row.days.length; rows.push(row); map[d]=row;
+  }
+  const short=c.R-covered;
+  let finish=todayExtra.length?t:null; rows.forEach(r=>{ if(r.days.length) finish=r.date; });
+  return {rows,map,c,short,finish,todayExtra};
+}
+function summarise(ch){
+  if(ch.preApp) return {score:ch.definition.length,workouts:null,restDays:null,catchUpDays:null,calendarDaysUsed:null,busiest:null,preApp:true};
+  const byDate={}; ch.completions.forEach(c=>byDate[c.date]=(byDate[c.date]||0)+1);
+  const all=[...ch.completions.map(c=>c.date),...ch.rests.map(r=>r.date)].sort();
+  let busiest=null; Object.entries(byDate).sort().forEach(([d,k])=>{ if(!busiest||k>busiest.count) busiest={date:d,count:k}; });
+  return {score:ch.completions.length+ch.rests.length, workouts:ch.completions.length, restDays:ch.rests.length,
+    catchUpDays:Object.values(byDate).filter(k=>k>1).length,
+    calendarDaysUsed: all.length ? daysBetween(all[0],all[all.length-1])+1 : 0, busiest};
+}
+
+/* ===================== STATE ===================== */
+const KEY='thirtyday:v1', PREV='thirtyday:v1:prev';
+const DEFAULT_SETTINGS={name:'',restWeekdays:[],units:'mi',weeklyTarget:0,theme:'auto',leadIn:true,sound:true,vibrate:true,testToday:null,iosTipDismissed:false};
+function freshState(){ return {schemaVersion:1,settings:{...DEFAULT_SETTINGS},lastBackupAt:null,active:null,history:[],badgesSeen:[]}; }
+function load(){
+  try{ const raw=localStorage.getItem(KEY); if(!raw) return freshState();
+    const s=JSON.parse(raw); if(validateState(s).length) throw 0;
+    s.settings={...DEFAULT_SETTINGS,...s.settings}; migrateFlutter(s); return s;
+  }catch(e){ return freshState(); }
+}
+function migrateFlutter(s){ // v1.9.0: Flutter Kicks became reps (total kicks). Convert any saved month still using the old seconds range.
+  [s.active,s.upcoming,...(s.history||[])].forEach(ch=>{ if(!ch||!ch.definition||ch.definition.fkReps) return;
+    (ch.definition.exercises||[]).forEach(e=>{ if(e.id==='flutter-kicks'&&!Array.isArray(e.targets)&&e.end<=45){ e.start=20; e.end=60; } }); ch.definition.fkReps=true; });
+}
+function save(){
+  try{ const cur=localStorage.getItem(KEY); if(cur) localStorage.setItem(PREV,cur); localStorage.setItem(KEY,JSON.stringify(state)); }
+  catch(e){ toast('Couldn\u2019t save \u2014 browser storage may be full or blocked'); }
+}
+function validateChallenge(ch,label){
+  const e=[];
+  if(!ch||typeof ch!=='object') return [label+' is not valid'];
+  if(!/^\d{4}-\d{2}$/.test(ch.month||'')) e.push(label+': bad month');
+  if(!ch.definition||!Array.isArray(ch.definition.exercises)||(ch.definition.progression!=='daily'&&!Array.isArray(ch.definition.stages))) e.push(label+': missing challenge definition');
+  if(!Array.isArray(ch.completions)||!Array.isArray(ch.rests)) e.push(label+': missing entries');
+  else { const days=[...ch.completions,...ch.rests].map(x=>x.day); if(new Set(days).size!==days.length) e.push(label+': duplicate Challenge Days');
+    if([...ch.completions,...ch.rests].some(x=>!/^\d{4}-\d{2}-\d{2}$/.test(x.date||''))) e.push(label+': bad dates'); }
+  return e;
+}
+function validateState(s){
+  if(!s||typeof s!=='object') return ['Not a backup file'];
+  if(s.schemaVersion!==1) return ['Unsupported backup version'];
+  if(!Array.isArray(s.history)) return ['Missing history'];
+  const e=[]; if(s.active) e.push(...validateChallenge(s.active,'Current challenge'));
+  if(s.upcoming) e.push(...validateChallenge(s.upcoming,'Next month’s challenge'));
+  if(s.activities!=null && (!Array.isArray(s.activities) || s.activities.some(a=>!a||!/^\d{4}-\d{2}-\d{2}$/.test(a.date||'')||!ACT_BY_ID[a.type]))) e.push('Activity log is not valid');
+  s.history.forEach((h,i)=>e.push(...validateChallenge(h,'History item '+(i+1))));
+  return e;
+}
+let state=load();
+let startLevel='easy', pendingMix=null, pendingMixKind=null;
+let tab='today', notice=null, exFilter='all', startPick='abs', focus='active', startMonth='this', startMonthChosen=false, setupNext=false, chosenDay=null, pinReturn=null;
+// The challenge the Calendar, planner and print are looking at: this month's or next month's.
+function F(){ return (focus==='upcoming'&&state.upcoming) ? state.upcoming : (state.active||state.upcoming); }
+const nextMonthOf = m => { const [y,mm]=m.split('-').map(Number); return mm===12 ? `${y+1}-01` : `${y}-${pad(mm+1)}`; };
+
+function archive(a){
+  a.summary=summarise(a); a.archivedAt=new Date().toISOString(); state.history.unshift(a);
+  notice=`${monthLabel(a.month)} ${a.definition.name} Challenge finished at ${a.summary.score}/${a.definition.length} and has moved to History.`;
+}
+function ensureCurrent(){
+  const t=today(); let changed=false;
+  if(state.active && t>monthEnd(state.active.month)){ archive(state.active); state.active=null; changed=true; }
+  const u=state.upcoming;
+  if(u && !state.active && t>=u.month+'-01'){
+    state.active=u; state.upcoming=null; changed=true;
+    if(t>monthEnd(u.month)){ archive(state.active); state.active=null; }
+    else if(notice) notice+=` ${monthName(u.month)} ${u.definition.name} has started.`;
+  }
+  if(!state.upcoming && focus==='upcoming') focus='active';
+  if(changed) save();
+}
+
+/* ===================== ACTIONS ===================== */
+let lastCatch=null;
+function canCatchUp(a,d,t){ return !!a && a===state.active && d>=a.startDate && d<t && monthOf(d)===monthOf(t) && a.month===monthOf(t) && !coveredDates(a).has(d) && !dateEntries(a,t).r; }
+function logWorkout(date,day,forDate){
+  const a=state.active, t=today(), c=calc(a,t); lastCatch=null;
+  if(c.R<=0) return false;
+  if(day==null) day=nextDue(a,today());
+  if(!outstandingDays(a).includes(day)){ toast(`Day ${day} is already done`); return false; }
+  if(a.rests.some(r=>r.date===date)){ toast('That date is a rest day. Undo the rest first.'); return false; }
+  // An extra workout today (today's own already done) counts as catch-up for the oldest missed date this month.
+  if(forDate===undefined && date===t && a.completions.some(x=>x.date===t&&!x.for) && c.missed.length){ const cov=coveredDates(a); for(let d=a.startDate; d<t; d=addDays(d,1)) if(!cov.has(d)){ forDate=d; break; } }
+  if(forDate && !(date===t && canCatchUp(a,forDate,t))) forDate=null;
+  const entry={day,date,at:new Date().toISOString(),seq:nextSeq(a)}; if(forDate){ entry.for=forDate; lastCatch=forDate; }
+  a.completions.push(entry);
+  a.plannedRestDates=a.plannedRestDates.filter(d=>d!==date);
+  delete a.plan[date];
+  save(); return true;
+}
+function logRest(date){
+  const a=state.active, c=calc(a,today());
+  if(c.R<=0||c.L<=0) return false;
+  const e=dateEntries(a,date); if(e.w.length||e.r) return false;
+  if(a.planDays) delete a.planDays[date];
+  a.rests.push({day:restDue(a,today()),date,at:new Date().toISOString(),seq:nextSeq(a)});
+  a.plannedRestDates=a.plannedRestDates.filter(d=>d!==date);
+  delete a.plan[date];
+  save(); return true;
+}
+function nextSeq(ch){ return Math.max(0,...ch.completions.map(x=>x.seq||0),...ch.rests.map(x=>x.seq||0))+1; }
+function lastEntry(ch){
+  const all=[...ch.completions.map(x=>({...x,type:'workout'})),...ch.rests.map(x=>({...x,type:'rest'}))];
+  const key=x=>x.at||(x.date+'T12:00:00');
+  return all.sort((x,y)=>((y.seq||0)-(x.seq||0))||key(y).localeCompare(key(x))||y.day-x.day)[0]||null;
+}
+function undoLast(){
+  const a=state.active, le=lastEntry(a); if(!le) return;
+  if(le.type==='workout') a.completions=a.completions.filter(x=>x.day!==le.day); else a.rests=a.rests.filter(x=>x.day!==le.day);
+  save();
+}
+function startChallenge(id,start){
+  const def = isMixPick(id) ? pendingDef(id,(pendingMixKind===id&&pendingMix)||makePending(id,monthOf(start))) : JSON.parse(JSON.stringify(CHALLENGES.find(c=>c.id===id)));
+  applyLevel(def,startLevel); pendingMix=null; startLevel='easy';
+  const errs=validateDef(def); if(errs.length){ toast('Challenge data problem: '+errs[0]); return; }
+  const ch={id:`${monthOf(start)}-${id}`,month:monthOf(start),startDate:start,definition:def,completions:[],rests:[],plannedRestDates:[],skipRestDates:[],plan:{},planDays:{},swaps:{},startedAt:new Date().toISOString()};
+  if(monthOf(start)===monthOf(today())) state.active=ch; else { state.upcoming=ch; focus='upcoming'; }
+  save();
+  if(navigator.storage&&navigator.storage.persist) navigator.storage.persist().catch(()=>{});
+}
+
+/* ===================== HELPERS ===================== */
+const esc = s => String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const pl = (n,w,p) => n===1 ? w : (p||w+'s');
+function targetLabel(ex,t){
+  if(ex.measure==='seconds') return ex.count==='eachSide' ? `${t} sec each side` : `${t} sec`;
+  if(ex.count==='total') return `${t} reps (${Math.floor(t/2)} each side)`;
+  if(ex.count==='pair') return `${t} reps (both sides = 1)`;
+  return `${t} reps`;
+}
+function daysText(days){ if(!days.length) return ''; return (days.length>1?'Days ':'Day ')+days.join(' + '); }
+function toast(msg){ const t=document.getElementById('toast'); t.textContent=msg; t.classList.add('on'); clearTimeout(toast.h); toast.h=setTimeout(()=>t.classList.remove('on'),2600); }
+function ring(done,len){
+  const r=52, C=2*Math.PI*r, f=Math.min(1,done/len);
+  return `<svg width="112" height="112" viewBox="0 0 120 120" aria-hidden="true"><circle cx="60" cy="60" r="${r}" fill="none" stroke="var(--line)" stroke-width="12"/><circle cx="60" cy="60" r="${r}" fill="none" stroke="var(--accent)" stroke-width="12" stroke-linecap="round" stroke-dasharray="${C}" stroke-dashoffset="${C*(1-f)}" transform="rotate(-90 60 60)"/><text x="60" y="68" text-anchor="middle" font-size="26" font-weight="700" fill="var(--text)">${Math.round(f*100)}%</text></svg>`;
+}
+function statusView(c){
+  const L=c.L, restTxt=`${L} rest ${pl(L,'day')} left`;
+  switch(c.status){
+    case 'complete': return {cls:'s-ok',title:'Challenge complete',text:`All ${c.len} Challenge Days done. Brilliant work.`,short:'complete'};
+    case 'ahead': return {cls:'s-ok',title:'You\u2019re ahead',text:`${c.S} ${pl(c.S,'day')} in hand, plus ${restTxt}.`,short:'ahead of schedule'};
+    case 'onschedule': return {cls:'s-ok',title:'You\u2019re on schedule',text:`One Challenge Day a day finishes on time. ${restTxt[0].toUpperCase()+restTxt.slice(1)}.`,short:'on schedule'};
+    case 'behind': {
+      const x=-c.S; let t=`${c.R} Challenge ${pl(c.R,'Day')} left and ${c.D} calendar ${pl(c.D,'day')} to go. You need ${x} extra ${pl(x,'workout')}`;
+      t+= c.pace!=null ? ` \u2014 about ${c.pace.toFixed(1)} workouts per workout day.` : '.';
+      if(c.pace!=null && c.pace>3) t+=' That\u2019s a heavy schedule, so spread it where you can.';
+      return {cls:'s-warn',title:'Catch-up needed',text:t,short:`catching up (${x} behind)`};
+    }
+    case 'cannot': return {cls:'s-bad',title:'Can\u2019t finish this month',text:`${c.R} Challenge ${pl(c.R,'Day')} can\u2019t fit before the month ends.`,short:'out of time'};
+  }
+}
+function bmcBtn(){ return `<a class="btn bmc" href="${BMC_URL}" target="_blank" rel="noopener">☕ Buy me a tea or coffee</a>`; }
+function exIcon(){ return `<svg width="34" height="34" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"><circle cx="12" cy="4.5" r="2"/><path d="M12 7v6m0 0-4 6m4-6 4 6M6 10h12"/></svg>`; }
+function placeholder(ex){ if(ex.image) return `<div class="ph pimg"><img src="${ex.image}" alt="${esc(ex.name)}: start and finish positions" loading="lazy"></div>`; return `<div class="ph">${exIcon()}<div class="n">${esc(ex.name)}</div><div class="tiny">Illustration coming soon</div></div>`; }
+
+/* ===================== BADGES ===================== */
+// A challenge counts once all its Challenge Days are logged (rest days included). Worked out from the data, never stored as a counter.
+const BADGES=[{id:'b30',need:1,name:'30 Day Finisher',num:30,tier:'bronze'},{id:'b90',need:3,name:'90 Day Committed',num:90,tier:'silver'},
+  {id:'b180',need:6,name:'180 Day Hero',num:180,tier:'gold'},{id:'b360',need:12,name:'360 Day Smasher',num:360,tier:'teal'}];
+const TIER={bronze:{rim:'#8a5a2b',face:'#d99a5b',hi:'#f3c99a',dot:'#f6dcbc',txt:'#4a2c10'},silver:{rim:'#66717d',face:'#c3ccd5',hi:'#eef2f6',dot:'#f4f7fa',txt:'#26303a'},
+  gold:{rim:'#946a10',face:'#e6b443',hi:'#fbe39f',dot:'#fdf0c8',txt:'#4a3304'},teal:{rim:'#c9962b',face:'#0f766e',hi:'#2dd4bf',dot:'#f1d48a',txt:'#ffffff'}};
+function isComplete(ch){ return !!ch && (ch.preApp || ch.completions.length+ch.rests.length>=ch.definition.length); }
+function finishedOn(ch){ return ch.preApp ? monthEnd(ch.month) : [...ch.completions,...ch.rests].map(x=>x.date).sort().pop(); }
+function badgeStatus(){
+  const done=[...state.history,...(state.active?[state.active]:[])].filter(isComplete).map(ch=>({ch,on:finishedOn(ch)}))
+    .sort((a,b)=>a.on.localeCompare(b.on)||a.ch.month.localeCompare(b.ch.month));
+  const n=done.length, list=BADGES.map(b=>({...b,earned:n>=b.need,on:n>=b.need?done[b.need-1].on:null}));
+  return {n,list,done,next:list.find(b=>!b.earned)||null};
+}
+const fmtFull = s => { const d=parse(s); return `${d.getDate()} ${MONL[d.getMonth()]} ${d.getFullYear()}`; };
+function medalSvg(b,size,locked){
+  const t=TIER[b.tier], cx=50, cy=74; let dots='';
+  for(let i=0;i<24;i++){ const a=i/24*2*Math.PI; dots+=`<circle cx="${(cx+31*Math.cos(a)).toFixed(1)}" cy="${(cy+31*Math.sin(a)).toFixed(1)}" r="1.5" fill="${t.dot}"/>`; }
+  const fs=String(b.num).length>2?21:26;
+  return `<span class="medal${locked?' locked':''}"><svg width="${size}" height="${size*1.2}" viewBox="0 0 100 120" role="img" aria-label="${b.name} medal">
+   <polygon points="27,0 45,0 60,46 42,46" fill="#0f766e"/><polygon points="73,0 55,0 40,46 58,46" fill="#14b8a6"/><polygon points="45,0 55,0 50,14" fill="#0b5f58"/>
+   <circle cx="${cx}" cy="${cy+1.5}" r="40" fill="rgba(0,0,0,.18)"/><circle cx="${cx}" cy="${cy}" r="40" fill="${t.rim}"/><circle cx="${cx}" cy="${cy}" r="35" fill="${t.face}"/>
+   <path d="M${cx-30} ${cy-8} A31 31 0 0 1 ${cx+14} ${cy-28}" stroke="${t.hi}" stroke-width="5" fill="none" stroke-linecap="round" opacity=".7"/>${dots}
+   <path d="M50 51l2.4 4.9 5.4.8-3.9 3.8.9 5.4-4.8-2.6-4.8 2.6.9-5.4-3.9-3.8 5.4-.8z" fill="${t.txt}" opacity=".85"/>
+   <text x="50" y="${cy+11}" text-anchor="middle" font-size="${fs}" font-weight="800" fill="${t.txt}" font-family="system-ui,-apple-system,Segoe UI,Roboto,sans-serif">${b.num}</text>
+   <text x="50" y="${cy+21}" text-anchor="middle" font-size="7.5" font-weight="700" letter-spacing="1.5" fill="${t.txt}" font-family="system-ui,-apple-system,Segoe UI,Roboto,sans-serif">DAYS</text></svg></span>`;
+}
+function badgeLine(){
+  const bs=badgeStatus(), last=[...bs.list].reverse().find(b=>b.earned), show=last||bs.list[0];
+  const sub = bs.next ? `Next: ${bs.next.name} (${bs.next.need-bs.n} to go)` : 'All four badges earned!';
+  return `<button class="listbtn badgeline" data-act="openBadges"><span class="ml">${medalSvg(show,34,!last)}<span><b>Challenges completed: ${bs.n}</b><br><span class="small muted">${sub}</span></span></span><span>›</span></button>`;
+}
+function badgesHtml(){
+  const bs=badgeStatus(), nx=bs.next, prev=nx?(BADGES[BADGES.indexOf(BADGES.find(b=>b.id===nx.id))-1]||{need:0}).need:0;
+  let h=`<h2>Badges</h2><p>Challenges completed: <b>${bs.n}</b></p>`;
+  if(nx) h+=`<p class="small" style="margin-bottom:0">Next: <b>${nx.name}</b> — ${nx.need-bs.n} more ${pl(nx.need-bs.n,'challenge')} to go</p><div class="pbar"><i style="width:${Math.round((bs.n-prev)/(nx.need-prev)*100)}%"></i></div>`;
+  else h+=`<p class="small">You’ve earned all four badges. Amazing commitment.</p>`;
+  h+=`<div class="bgrid">${bs.list.map(b=>`<div class="bcard">${medalSvg(b,84,!b.earned)}<h3>${b.name}</h3>${b.earned?`<div class="small muted">Earned ${fmtFull(b.on)}</div><button class="btn" data-act="openCert" data-arg="${b.id}">Print certificate</button>`:`<div class="small muted">${b.need} ${pl(b.need,'challenge')} · ${b.need-bs.n} to go</div>`}</div>`).join('')}</div>`;
+  h+=`<p class="tiny muted">A challenge counts when all 30 Challenge Days are logged within its month — rest days included. Months don’t need to be in a row, and unfinished months don’t count against you.</p>`;
+  return h+`<button class="btn block" data-act="closeSheet">Close</button>`;
+}
+// Celebrations: shown once per badge, when nothing else is open.
+let badgeQueue=null, badgeKindNext=null;
+function checkBadges(){
+  const earned=badgeStatus().list.filter(b=>b.earned).map(b=>b.id);
+  if(!Array.isArray(state.badgesSeen)){ state.badgesSeen=earned; save(); if(earned.length) badgeQueue={ids:earned,kind:'welcome'}; return; }
+  const fresh=earned.filter(id=>!state.badgesSeen.includes(id)), lost=state.badgesSeen.some(id=>!earned.includes(id));
+  if(fresh.length||lost){ state.badgesSeen=earned; save(); }
+  if(fresh.length){ badgeQueue={ids:[...new Set([...(badgeQueue?badgeQueue.ids:[]),...fresh])],kind:badgeKindNext||'new'}; }
+  badgeKindNext=null;
+}
+function showBadgeQueue(){
+  if(!badgeQueue || sheetEl.classList.contains('open') || wkEl.classList.contains('open')) return;
+  const q=badgeQueue; badgeQueue=null; const bs=badgeStatus(), bl=bs.list.filter(b=>q.ids.includes(b.id)&&b.earned); if(!bl.length) return;
+  const top=bl[bl.length-1];
+  let h;
+  if(q.kind==='new' && bl.length===1){
+    h=`<div class="celebrate" style="padding:8px 0">${medalSvg(top,120)}<p class="small muted" style="margin:10px 0 0">New badge</p><div class="big">${top.name}</div><p>${bs.n===1?'You’ve completed your first 30 Day Challenge.':`You’ve now completed ${bs.n} 30 Day Challenges.`}</p>${bs.next?`<p class="small muted">Next: ${bs.next.name} (${bs.next.need-bs.n} to go)</p>`:''}</div>`;
+  } else {
+    const intro = q.kind==='welcome' ? 'Badges are new in this version. You’ve already earned:' : q.kind==='added' ? 'Your earlier months are now in History. That means you’ve earned:' : 'You’ve earned:';
+    h=`<h2>${q.kind==='new'?'New badges':'Your badges'}</h2><p class="small">${intro}</p><div class="mrow">${bl.map(b=>`<div style="text-align:center">${medalSvg(b,64)}<div class="tiny"><b>${b.name}</b><br>${fmtFull(b.on)}</div></div>`).join('')}</div><p class="small muted">Challenges completed: ${bs.n}${bs.next?` · next: ${bs.next.name} (${bs.next.need-bs.n} to go)`:''}</p>`;
+  }
+  h+=`<div class="stack"><button class="btn primary block" data-act="shareBadge" data-arg="${top.id}">Share</button><button class="btn block" data-act="openCert" data-arg="${top.id}">Print certificate</button><button class="btn block" data-act="closeSheet">Close</button></div>`;
+  openSheet(h,'badge');
+}
+async function shareBadge(id){
+  const b=BADGES.find(x=>x.id===id); if(!b) return;
+  const text=`I’ve just earned ${b.name} on ${SITE}`, url='https://'+SITE, phone=matchMedia('(pointer: coarse)').matches || /android|iphone|ipad|ipod/i.test(navigator.userAgent);
+  if(phone && navigator.share){ try{ await navigator.share({title:b.name,text,url}); return; }catch(e){ if(e.name==='AbortError') return; } }
+  try{ await navigator.clipboard.writeText(text); toast('Copied — paste it wherever you like'); }
+  catch(e){ openSheet(`<h2>Share your badge</h2><textarea id="shareOut" readonly style="width:100%;min-height:70px;font:inherit;border-radius:10px;border:1px solid var(--line);padding:8px;background:var(--card);color:var(--text)">${esc(text)}</textarea><button class="btn block" data-act="closeSheet" style="margin-top:8px">Done</button>`); }
+}
+function certHtml(id){
+  const b=badgeStatus().list.find(x=>x.id===id); if(!b||!b.earned) return '<p>Not earned yet.</p><button class="btn block" data-act="closeSheet">Close</button>';
+  return `<div style="text-align:center">${medalSvg(b,70)}</div><h2 style="text-align:center">${b.name}</h2><p class="small muted" style="text-align:center">Earned ${fmtFull(b.on)} · ${b.need} ${pl(b.need,'challenge')} completed</p>
+   <label class="f" for="certName">Name on the certificate (optional)</label><input type="text" id="certName" value="${esc(state.settings.name)}" maxlength="40" autocomplete="off">
+   <p class="tiny muted">Kept only on this device. Prints on A4 landscape — choose “Save as PDF” to keep a copy.</p>
+   <div class="row" style="margin-top:8px"><button class="btn" data-act="openBadges">Back</button><button class="btn primary" data-act="printCert" data-arg="${b.id}">Print certificate</button></div>`;
+}
+function printCertificate(id){
+  const b=badgeStatus().list.find(x=>x.id===id); if(!b||!b.earned) return;
+  const el=document.getElementById('certName'); if(el){ state.settings.name=el.value.trim(); save(); }
+  const name=state.settings.name.trim();
+  document.getElementById('print').innerHTML=`<div class="cert"><div class="cframe"><div class="cin">
+    <div class="cbrand"><img src="icons/icon-192.png" alt="">30 Day Challenge</div>
+    <div class="ctitle">Certificate of Achievement</div>
+    ${name?`<div class="cpre">This certifies that</div><div class="cname">${esc(name)}</div><div class="cpre">has earned the badge</div>`:`<div class="cpre">Awarded the badge</div>`}
+    ${medalSvg(b,120)}
+    <div class="cbadge">${b.name}</div>
+    <div class="cfor">for completing ${b.need} monthly 30 Day ${pl(b.need,'Challenge')} — ${b.need*30} Challenge Days</div>
+    <div class="cdate">Earned ${fmtFull(b.on)}</div>
+  </div></div><div class="cft"><img src="icons/icon-192.png" alt=""><span><b>${SITE}</b> · Created by Stuart Parkins · © 2026 Stuart Parkins. All rights reserved.</span></div></div>`;
+  let ps=document.getElementById('pgcert'); if(!ps){ ps=document.createElement('style'); ps.id='pgcert'; document.head.appendChild(ps); }
+  ps.textContent='@page{size:A4 landscape;margin:12mm}';
+  doPrint();
+}
+/* ---------- One-off history link: adds months completed before the app. Merge only; there is no in-app way to add months. ---------- */
+function readHistoryLink(text){
+  const m=String(text||'').trim().match(/#h=([A-Za-z0-9_-]+)/); if(!m) return null;
+  const o=JSON.parse(new TextDecoder().decode(b64u.dec(m[1])));
+  if(o.v!==1||!Array.isArray(o.m)||!o.m.every(x=>/^\d{4}-\d{2}$/.test(x))) throw new Error('That history link isn’t valid');
+  const def=CHALLENGES.find(c=>c.id===o.c); if(!def) throw new Error('That history link uses a challenge this version doesn’t have');
+  return {months:[...new Set(o.m)].sort(),def};
+}
+let pendingHist=null;
+function showHistoryPreview(h){
+  const have=new Set([...state.history,...(state.active?[state.active]:[]),...(state.upcoming?[state.upcoming]:[])].map(c=>c.month+'|'+c.definition.id));
+  const add=h.months.filter(m=>!have.has(m+'|'+h.def.id)&&m<monthOf(today()));
+  if(!add.length) return openSheet(`<h2>Already in History</h2><p class="muted">Those months are already in this app.</p><button class="btn block" data-act="closeSheet">OK</button>`);
+  pendingHist={months:add,def:h.def};
+  openSheet(`<h2>Add earlier months?</h2><p>This adds <b>${add.length} completed ${esc(h.def.name)} ${pl(add.length,'challenge')}</b> (${monthLabel(add[0])}${add.length>1?' to '+monthLabel(add[add.length-1]):''}) to History, marked “completed before the app”.</p><p class="small muted">Nothing else changes — your current challenge, plans, activity and settings stay as they are.</p><div class="row"><button class="btn" data-act="closeSheet">Cancel</button><button class="btn primary" data-act="doAddHist">Add to History</button></div>`);
+}
+function addHistory(){
+  const p=pendingHist; pendingHist=null; if(!p) return;
+  p.months.forEach(m=>{ const def=JSON.parse(JSON.stringify(p.def));
+    const ch={id:`${m}-${def.id}`,month:m,startDate:m+'-01',definition:def,completions:[],rests:[],plannedRestDates:[],skipRestDates:[],plan:{},planDays:{},swaps:{},preApp:true,archivedAt:null};
+    ch.summary=summarise(ch); state.history.push(ch); });
+  state.history.sort((a,b)=>b.month.localeCompare(a.month));
+  if(location.hash.startsWith('#h=')) history.replaceState(null,'',location.pathname+location.search);
+  badgeKindNext='added'; save(); closeSheet(); toast(`${p.months.length} ${pl(p.months.length,'month')} added to History`); render();
+}
+
+/* ===================== VIEWS ===================== */
+function banners(){
+  let h='';
+  if(TEST_MODE && state.settings.testToday) h+=`<div class="banner test"><span><b>Test date:</b> ${fmtLong(state.settings.testToday)} ${state.settings.testToday.slice(0,4)}. Change it in Settings.</span></div>`;
+  if(notice) h+=`<div class="banner"><span>${esc(notice)}</span><button class="x" data-act="dismissNotice" aria-label="Dismiss">\u00d7</button></div>`;
+  const hasData=state.active||state.history.length;
+  const stale=!state.lastBackupAt || (Date.now()-Date.parse(state.lastBackupAt))>14*864e5;
+  if(hasData && stale && state.active && state.active.completions.length+state.active.rests.length>=3) h+=`<div class="banner"><span>No backup for a while. Export one so a phone change can\u2019t lose your history.</span><button class="btn ghost" data-act="goBackup">Back up</button></div>`;
+  const ios=/iphone|ipad|ipod/i.test(navigator.userAgent), standalone=window.navigator.standalone||matchMedia('(display-mode: standalone)').matches;
+  if(ios && !standalone && !state.settings.iosTipDismissed) h+=`<div class="banner"><span><b>iPhone tip:</b> tap Share, then \u201cAdd to Home Screen\u201d. This keeps your progress safe \u2014 Safari can clear data for sites you haven\u2019t opened for a week.</span><button class="x" data-act="dismissIos" aria-label="Dismiss">\u00d7</button></div>`;
+  return h;
+}
+function vStart(){
+  const t=today(), m=monthOf(t), end=monthEnd(m);
+  const nm=nextMonthOf(monthOf(t)), canThis=!state.active, canNext=!state.upcoming;
+  if(!startMonthChosen) startMonth = (canNext && daysBetween(t,monthEnd(monthOf(t)))+1<7) ? 'next' : 'this';
+  if(!canThis) startMonth='next'; if(!canNext) startMonth='this';
+  const sm = startMonth==='next' ? nm : monthOf(t), smStart = startMonth==='next' ? nm+'-01' : t;
+  let h=`<header class="top"><div class="eyebrow">${fmtUK(t)}</div><h1>Choose ${startMonth==='next'?'next':'this'} month\u2019s challenge</h1>${state.history.length||state.active?'':'<p class="small">New here? <button class="btn ghost" style="padding:0;min-height:auto" data-act="tab" data-arg="help">Read the quick guide</button></p>'}<p class="muted small">30 Challenge Days, up to 8 of them rest days, all within ${monthName(sm)}.</p></header>`;
+  if(canThis&&canNext) h+=`<div class="chips"><button class="chip ${startMonth==='this'?'on':''}" data-act="startMonth" data-arg="this">${monthName(monthOf(t))} (now)</button><button class="chip ${startMonth==='next'?'on':''}" data-act="startMonth" data-arg="next">${monthName(nm)} (plan ahead)</button></div>`;
+  CHALLENGES.forEach(c=>{ h+=`<button class="chcard ${startPick===c.id?'on':''}" data-act="pickStart" data-arg="${c.id}"><b>${c.id==='abs'?'Classic ABS':esc(c.name)}</b> <span class="muted small">\u00b7 ${esc(c.focus)}</span><div class="small muted">The same ${c.exercises.length} exercises every month, starting with ${startCount(c)} and building up${c.progression==='daily'?' a little every day':''}. Up to ${c.restAllowance} rest days.</div></button>`; });
+  h+=`<button class="chcard ${startPick==='abs-mix'?'on':''}" data-act="pickStart" data-arg="abs-mix"><b>ABS Mix</b> <span class="muted small">\u00b7 a fresh set each month</span><div class="small muted">6 ab exercises picked from the library \u2014 balanced, and different from last month. Shuffle or swap any before you start.</div></button>`;
+  h+=`<button class="chcard ${startPick==='abs-mixed'?'on':''}" data-act="pickStart" data-arg="abs-mixed"><b>ABS Mixed</b> <span class="muted small">\u00b7 warm-up, abs and extras</span><div class="small muted">A warm-up that changes each week, the 6 ABS Mix exercises, then an extra (two from Day 15) such as Bridge Dips or Seated Round Kick. Shuffle or swap any before you start.</div></button>`;
+  h+=`<div class="card"><label class="f">Level</label><div class="chips" style="flex-wrap:wrap">${Object.entries(LEVELS).map(([k,v])=>`<button class="chip ${startLevel===k?'on':''}" data-act="pickLevel" data-arg="${k}">${v.name} <span class="tiny">(${v.note})</span></button>`).join('')}</div><p class="tiny muted" style="margin:6px 0 0">Set for the whole month. Targets still rise a little every day.</p>${startPreview(sm)}</div>`;
+  const cs=COMING_SOON.map(n=>n[0]+n.slice(1).toLowerCase().replace(/ (\w)/g,(m,c)=>' '+c.toUpperCase()));
+  h+=`<p class="small muted" style="margin:4px 2px 12px">More challenges coming soon: ${cs.slice(0,-1).join(', ')} and ${cs[cs.length-1]}.</p>`;
+  h+=`<div class="card"><label class="f" for="startDate">Start date</label><input type="date" id="startDate" value="${smStart}" min="${sm}-01" max="${monthEnd(sm)}"><div id="startInfo" class="small" style="margin-top:8px">${startInfo(smStart)}</div></div>`;
+  h+=`<button class="btn primary block" data-act="start">${startMonth==='next'?'Set up':'Start'} ${monthName(sm)} challenge</button>`;
+  if(setupNext) h+=`<p style="text-align:center;margin-top:8px"><button class="btn ghost" data-act="cancelSetup">Back to ${monthName(monthOf(t))}</button></p>`;
+  return h;
+}
+function startPreview(month){
+  let def; const isMix=isMixPick(startPick);
+  if(isMix){ if(!pendingMix||pendingMixKind!==startPick){ pendingMix=makePending(startPick,month); pendingMixKind=startPick; } def=pendingDef(startPick,pendingMix); }
+  else def=JSON.parse(JSON.stringify(CHALLENGES.find(c=>c.id===startPick)||CHALLENGES[0]));
+  def.level=startLevel; const prev=new Set(prevExerciseIds(month));
+  const fmtT=(ex,t)=>ex.measure==='seconds'?t+'s':String(t);
+  const HEAD={warmup:'Warm-up (changes each week)',core:'Abs',extra:'Extras'};
+  let h=`<div class="tiny muted" style="margin:12px 0 4px"><b>${isMix?'This month\u2019s mix':'Exercises'}</b> \u00b7 targets from the day added \u2192 Day 30</div>`, lastRole=null;
+  const grouped=startPick==='abs-mixed';
+  if(!grouped) h+='<ul class="exlist">';
+  def.exercises.forEach((e,i)=>{ const ex=EX[e.id], role=e.role||'core', a=evenSide(ex,role,scaleTarget(ex,e.start,def)), b=evenSide(ex,role,scaleTarget(ex,e.end,def));
+    if(grouped&&role!==lastRole){ h+=`${lastRole?'</ul>':''}<div class="tiny" style="margin:10px 0 2px"><b>${HEAD[role]}</b></div><ul class="exlist">`; lastRole=role; }
+    const idx=i;
+    const when = e.toDay ? `Days ${e.fromDay}\u2013${e.toDay}` : `from Day ${e.fromDay}`;
+    h+=`<li><span><b>${esc(ex.name)}</b>${isMix&&!prev.has(e.id)&&prev.size?' <span class="pill">new</span>':''}${ex.areas.includes('arms')||e.id==='squat-thrust'?' <span class="tiny muted">(uses arms)</span>':''}<br><span class="tiny muted">${when} \u00b7 ${fmtT(ex,a)} \u2192 ${fmtT(ex,b)}${ex.count==='total'?' (both sides)':ex.count==='eachSide'?' each side':''}</span></span>${isMix?`<button class="btn ghost" style="min-height:34px;padding:2px 8px" data-act="mixSwap" data-arg="${idx}">Swap</button>`:''}</li>`; });
+  h+='</ul>';
+  if(isMix) h+=`<button class="btn block" data-act="mixShuffle">Shuffle \u2014 suggest another mix</button>`;
+  return h;
+}
+function startTargetMonth(){ const d=document.getElementById('startDate')?.value; if(d) return monthOf(d); const t=today(); return startMonth==='next'?nextMonthOf(monthOf(t)):monthOf(t); }
+function keepStartDate(){ const d=document.getElementById('startDate')?.value; const y=window.scrollY; render(); if(d){ const el=document.getElementById('startDate'); if(el){ el.value=d; document.getElementById('startInfo').innerHTML=startInfo(d); } } window.scrollTo(0,y); }
+function startInfo(start){
+  const t=today(), m=monthOf(start||t), end=monthEnd(m);
+  if(!start||(m!==monthOf(t)&&m!==nextMonthOf(monthOf(t)))||(m===monthOf(t)&&start<m+'-01')) return '<span class="muted">Pick a date in this month or next month.</span>';
+  const D=daysBetween(start,end)+1, spare=D-30;
+  let s=`${D} calendar ${pl(D,'day')} from ${fmtShort(start)}. `;
+  if(spare>0) s+=`You\u2019ll have ${spare} spare ${pl(spare,'day')} on top of your rest days.`;
+  else if(spare===0) s+='Exactly one Challenge Day a day, rest days included.';
+  else s+=`<b>You\u2019ll need ${-spare} doubled-up workout ${pl(-spare,'day')}</b>, even using rest days.`;
+  if(start<t) s+=` Days before today will show as missed; you can turn up to 8 of them into rest days.`;
+  return s;
+}
+function upcomingCard(t){
+  const u=state.upcoming, nm=nextMonthOf(monthOf(t));
+  if(!u) return `<div class="card"><h2>Plan ahead</h2><p class="small muted">Set up ${monthName(nm)}’s challenge now so you can plan rest days and print it before it starts.</p><button class="btn block" data-act="setupNext">Set up ${monthName(nm)}</button></div>`;
+  const k=daysBetween(t,u.startDate);
+  return `<div class="card"><h2>Next: ${monthName(u.month)} ${esc(u.definition.name)}</h2><p class="small muted">Starts ${fmtLong(u.startDate)} — in ${k} ${pl(k,'day')}.</p><div class="row"><button class="btn" data-act="planUpcoming">Plan and print</button><button class="btn danger" data-act="cancelUpcoming">Cancel</button></div></div>`;
+}
+/* ===================== OTHER ACTIVITY LOG ===================== */
+const acts = () => (state.activities=state.activities||[]);
+const unitLbl = () => state.settings.units==='km'?'km':'mi';
+const toDisp = km => state.settings.units==='km' ? km : km/KM_PER_MI;
+const fmtDist = km => `${(Math.round(toDisp(km)*10)/10).toLocaleString('en-GB')} ${unitLbl()}`;
+const fmtMins = m => m>=60 ? `${Math.floor(m/60)} h${m%60?' '+(m%60)+' min':''}` : `${m} min`;
+function actsOn(d){ return acts().filter(a=>a.date===d); }
+function actTotals(list){ const t={n:list.length,mins:0,km:0,byType:{}}; list.forEach(a=>{ t.mins+=a.mins||0; t.km+=a.km||0; t.byType[a.type]=(t.byType[a.type]||0)+1; }); return t; }
+function weekRange(t){ const mon=addDays(t,-((parse(t).getDay()+6)%7)); return [mon,addDays(mon,6)]; }
+function actLine(a,withType=true){ const T=ACT_BY_ID[a.type]; const bits=[]; if(a.mins) bits.push(fmtMins(a.mins)); if(a.km) bits.push(fmtDist(a.km)); return `${withType?T.name:''}${bits.length?(withType?' ':'')+bits.join(', '):''}`; }
+function totalsText(t){ const bits=[`${t.n} ${pl(t.n,'activity','activities')}`]; if(t.mins) bits.push(fmtMins(t.mins)); if(t.km) bits.push(fmtDist(t.km)); return bits.join(' \u00b7 '); }
+function activityCard(){
+  const t=today(), [w0,w1]=weekRange(t), wk=acts().filter(a=>a.date>=w0&&a.date<=w1), tt=actTotals(wk), target=state.settings.weeklyTarget||0, todays=actsOn(t);
+  let h=`<div class="card"><h2>Other activity</h2>`;
+  if(target){ const k=Math.min(tt.n,target); h+=`<div class="wkt"><div class="wkb"><i style="width:${(k/target)*100}%"></i></div><b>${tt.n} of ${target}</b> this week${tt.n>=target?' \u2713':''}</div>`; }
+  h+=`<p class="small muted" style="margin:6px 0 10px">This week: ${tt.n?totalsText(tt):'nothing yet'}</p>`;
+  if(todays.length) h+=`<ul class="exlist" style="margin-top:0">${todays.map(a=>`<li><span>${ACT_BY_ID[a.type].ic} ${esc(actLine(a))}${a.note?` <span class="muted small">\u2014 ${esc(a.note)}</span>`:''}</span><button class="btn ghost" style="min-height:32px;padding:2px 6px" data-act="actDel" data-arg="${a.id}" aria-label="Delete">\u00d7</button></li>`).join('')}</ul>`;
+  h+=`<div class="actgrid">${ACT_TYPES.map(a=>`<button class="actbtn" data-act="actAdd" data-arg="${a.id}"><span>${a.ic}</span>${a.name}</button>`).join('')}</div></div>`;
+  return h;
+}
+const numStyle='width:100%;font:inherit;padding:10px 12px;border-radius:10px;border:1px solid var(--line);background:var(--card);color:var(--text);min-height:46px';
+function actFormHtml(type){
+  const T=ACT_BY_ID[type];
+  return `<h2>${T.ic} ${T.name}</h2><p class="small muted">Everything except the date is optional \u2014 just tap Save if you like.</p>
+   <label class="f" for="aDate">Date</label><input type="date" id="aDate" value="${today()}" max="${today()}">
+   <div class="row" style="gap:8px"><div style="flex:1"><label class="f" for="aMins">Time (minutes)</label><input type="number" inputmode="numeric" min="0" max="1440" id="aMins" placeholder="e.g. 30" style="${numStyle}"></div>
+   ${T.dist?`<div style="flex:1"><label class="f" for="aDist">Distance (${unitLbl()})</label><input type="number" inputmode="decimal" min="0" step="0.1" id="aDist" placeholder="e.g. 3.5" style="${numStyle}"></div>`:''}</div>
+   <label class="f" for="aNote">Note</label><input type="text" id="aNote" maxlength="60" placeholder="optional">
+   <div class="row" style="margin-top:12px"><button class="btn" data-act="closeSheet">Cancel</button><button class="btn primary" data-act="actSave" data-arg="${type}">Save</button></div>`;
+}
+function actListHtml(list,title){
+  const sorted=[...list].sort((x,y)=>y.date.localeCompare(x.date)||(y.at||'').localeCompare(x.at||''));
+  const tt=actTotals(list), by=Object.entries(tt.byType).sort((a,b)=>b[1]-a[1]).map(([k,n])=>`${ACT_BY_ID[k].name} \u00d7${n}`).join(', ');
+  return `<h2>${title}</h2><p class="small">${totalsText(tt)}${by?`<br><span class="muted">${by}</span>`:''}</p><ul class="exlist">${sorted.map(a=>`<li><span>${fmtShort(a.date)} \u00b7 ${ACT_BY_ID[a.type].ic} ${esc(actLine(a))}${a.note?` <span class="muted small">\u2014 ${esc(a.note)}</span>`:''}</span><button class="btn ghost" style="min-height:32px;padding:2px 6px" data-act="actDel" data-arg="${a.id}" aria-label="Delete">\u00d7</button></li>`).join('')}</ul><button class="btn block" data-act="closeSheet">Close</button>`;
+}
+function vToday(){ return vTodayMain()+activityCard(); }
+function vTodayMain(){
+  const t=today(), a=state.active;
+  let h=banners();
+  if(setupNext && !state.upcoming) return h+vStart();
+  setupNext=false;
+  if(!a && state.upcoming){
+    const u=state.upcoming, k=daysBetween(t,u.startDate), items=resolveDay(u.definition,1,u.swaps);
+    h+=`<header class="top"><div class="eyebrow">${fmtUK(t)}</div><h1>${monthName(u.month)} ${esc(u.definition.name)} Challenge</h1><p class="muted">Starts ${fmtLong(u.startDate)} — in ${k} ${pl(k,'day')}.</p></header>`;
+    h+=`<div class="card"><h2>Day 1 preview</h2><ul class="exlist">${items.map(i=>`<li><span>${esc(i.ex.name)}</span><span class="t">${targetLabel(i.ex,i.target)}</span></li>`).join('')}</ul><div class="row"><button class="btn primary" data-act="planUpcoming">Plan and print</button><button class="btn danger" data-act="cancelUpcoming">Cancel</button></div></div>`;
+    startMonth='this';
+    return h+`<hr><p class="small muted">Or start a ${monthName(monthOf(t))} challenge now:</p>`+vStart();
+  }
+  if(!a) return h+vStart();
+  const c=calc(a,t), def=a.definition, sv=statusView(c);
+  h+=`<header class="top"><div class="eyebrow">${fmtUK(t)}</div><h1>${monthName(a.month)} ${esc(def.name)} Challenge</h1></header>`;
+  h+=`<section class="card hero">${ring(c.done,c.len)}<div><div class="big">${c.done} / ${c.len}</div><div class="muted">Challenge Days</div><div class="small">${c.W} ${pl(c.W,'workout')} \u00b7 ${c.Rt} ${pl(c.Rt,'rest')} \u00b7 ${c.L} rest ${pl(c.L,'day')} left</div><div class="small">${c.daysLeft} calendar ${pl(c.daysLeft,'day')} remaining</div></div></section>`;
+  h+=badgeLine();
+  if(c.status!=='complete' && c.missed.length && c.L>0){
+    const k=c.missed.length;
+    h+=`<div class="status s-info"><h3>${k} missed ${pl(k,'day')}</h3><p class="small">Turn ${k>c.L?'up to '+c.L+' of them':pl(k,'it','them')} into rest ${pl(Math.min(k,c.L),'day')}? That\u2019s the easiest way to catch up.</p><button class="btn block" data-act="openMissed">Choose days</button></div>`;
+  }
+  h+=`<div class="status ${sv.cls}"><h3>${sv.title}</h3><p class="small">${sv.text}</p>${c.status==='behind'?'<button class="btn warn block" data-act="openPlanner">Plan catch-up</button>':''}</div>`;
+  if(c.status==='complete'){
+    const s=summarise(a);
+    h+=`<div class="card celebrate"><div class="big">${c.len}/${c.len}</div><p>${monthName(a.month)} ${esc(def.name)} Challenge complete!</p><div class="stats" style="text-align:left">${statsHtml(s)}</div><div class="row"><button class="btn primary" data-act="share">Share update</button></div><div style="margin-top:10px">${bmcBtn()}</div></div>`;
+    if(a.month===monthOf(t) && lastEntry(a)) h+=`<p style="text-align:center;margin-top:8px"><button class="btn ghost" data-act="undo">Undo last entry</button></p>`;
+    return h+upcomingCard(t);
+  }
+  const e=dateEntries(a,t);
+  if(e.r){
+    const le=lastEntry(a);
+    h+=`<div class="card"><h2>Rest day</h2><p class="muted">Today used Challenge Day ${e.r.day} as a rest.</p>${le&&le.type==='rest'&&le.date===t?'<button class="btn block" data-act="undo">Undo rest</button>':''}</div>`;
+  } else if(!e.w.length && c.planned.includes(t) && c.L>0){
+    h+=`<div class="card"><h2>Rest day planned</h2><p class="muted">Today is one of your rest days. Resting uses Challenge Day ${restDue(a,t)} and 1 of your ${c.L} rest ${pl(c.L,'day')}.</p>
+     <div class="stack"><button class="btn primary block" data-act="restToday">Rest today</button><button class="btn block" data-act="workInstead">Work out instead (keep the rest day for later)</button></div></div>`;
+  } else {
+    if(chosenDay!=null && !outstandingDays(a).includes(chosenDay)) chosenDay=null;
+    const n = chosenDay!=null ? chosenDay : c.next, items=resolveDay(def,n,a.swaps);
+    const doneToday=e.w.map(x=>x.day);
+    h+=`<div class="card">`;
+    if(doneToday.length) h+=`<p class="small"><span class="pill">Done today</span> ${daysText(doneToday)} \u2713</p>`;
+    const planToday=((a.planDays||{})[t]||[]).filter(x=>outstandingDays(a).includes(x));
+    if(planToday.length>1 || (planToday.length && doneToday.length)) h+=`<p class="small muted">Planned today: ${daysText(planToday)}</p>`;
+    h+=`<h2>${doneToday.length?'Next up':'Today\u2019s workout'} \u2014 Challenge Day ${n}</h2>${chosenDay!=null&&chosenDay!==c.next?`<p class="small">You picked this day. <button class="btn ghost" data-act="pickDay" data-arg="">Back to Day ${c.next}</button></p>`:''}<ul class="exlist">${items.map(i=>`<li><span>${esc(i.ex.name)}</span><span class="t">${targetLabel(i.ex,i.target)}</span></li>`).join('')}</ul>`;
+    h+=`<div class="stack"><button class="btn primary block" data-act="startWorkout" data-arg="${n}">${doneToday.length?'Do another':'Start workout'}</button>`;
+    h+=`<div class="row"><button class="btn" data-act="markDone" data-arg="${n}">Mark done</button>`;
+    if(!doneToday.length) h+=`<button class="btn" data-act="restToday" ${c.L>0?'':'disabled'}>Rest today</button>`;
+    h+=`</div>`;
+    if(!doneToday.length && c.L===0) h+=`<p class="tiny muted">No rest days left. Skipping today adds one catch-up workout later.</p>`;
+    if(c.R>1) h+=`<button class="btn ghost block" data-act="openPickDay">Do a different day</button>`;
+    h+=`</div></div>`;
+  }
+  h+=`<div class="row"><button class="btn" data-act="openPlanner">Planner</button><button class="btn" data-act="share">Share update</button></div>`;
+  if(lastEntry(a)) h+=`<p style="text-align:center;margin-top:8px"><button class="btn ghost" data-act="undo">Undo last entry</button></p>`;
+  h+=upcomingCard(t);
+  return h;
+}
+function statsHtml(s){
+  const b=s.busiest?`${s.busiest.count} on ${fmtShort(s.busiest.date)}`:'\u2014';
+  return `<div class="stat"><div class="v">${s.score}/30</div><div class="l">Challenge Days</div></div><div class="stat"><div class="v">${s.calendarDaysUsed}</div><div class="l">Calendar days taken</div></div><div class="stat"><div class="v">${s.restDays}</div><div class="l">Rest days</div></div><div class="stat"><div class="v">${s.catchUpDays}</div><div class="l">Catch-up days</div></div><div class="stat" style="grid-column:1/-1"><div class="v">${b}</div><div class="l">Busiest day (workouts)</div></div>`;
+}
+function cellInfo(ch,d,t,sch,miss){
+  if(d<ch.startDate) return {cls:'out',b:''};
+  const e=dateEntries(ch,d);
+  if(e.r) return {cls:'rest',b:'Rest'};
+  const own=e.w.filter(x=>!x.for);
+  if(own.length) return {cls:'done'+(own.length>1?' multi':''),b:own.length>1?'\u00d7'+own.length:'\u2713'};
+  if(caughtFor(ch,d).length) return {cls:'caught',b:'\u2713'};
+  if(d<t) return (miss&&miss.has(d)) ? {cls:'missed',b:'!'} : {cls:'gap',b:''};
+  if(sch&&sch.map[d]){ const r=sch.map[d]; if(r.rest) return {cls:'prest',b:'Rest'}; if(r.days.length) return {cls:'planned',b:r.days.length>1?'\u00d7'+r.days.length:'\u2022'}; }
+  return {cls:'future',b:''};
+}
+function monthGrid(ch,t,interactive){
+  const m=ch.month, first=m+'-01', end=monthEnd(m), lead=(parse(first).getDay()+6)%7;
+  const sch = interactive && t<=end ? schedule(ch,t) : null, miss=new Set(calc(ch,t).missed);
+  let h=`<div class="cal">${['Mon','Tue','Wed','Thu','Fri','Sat','Sun'].map(x=>`<div class="dow">${x}</div>`).join('')}`;
+  for(let i=0;i<lead;i++) h+='<div class="cell blank"></div>';
+  for(let d=first; d<=end; d=addDays(d,1)){
+    const ci=cellInfo(ch,d,t,sch,miss);
+    h+=`<button class="cell ${ci.cls} ${d===t?'today':''}" ${interactive?`data-act="day" data-arg="${d}"`:`data-act="hday" data-arg="${d}"`} aria-label="${fmtLong(d)}">${actsOn(d).length?'<i class="ad" title="Other activity"></i>':''}<span>${Number(d.slice(8))}</span><span class="b">${ci.b}</span></button>`;
+  }
+  return h+'</div>';
+}
+function legend(){ return `<div class="legend"><span style="--c:var(--okSoft)">Done on the day (\u00d7N = more than one)</span><span style="--c:var(--catchSoft)">Caught up later</span><span style="--c:var(--restSoft)">Rest</span><span style="--c:var(--warnSoft)">Missed (!)</span><span style="--c:transparent;">Planned (dashed)</span><span style="--c:var(--accent2)">Other activity (dot)</span></div>`; }
+function vCalendar(){
+  const a=F(); let h=banners();
+  if(!a) return h+`<div class="card"><h2>No challenge set up</h2><p class="muted">Start one, or set up next month, from Today.</p></div><button class="btn block" data-act="printProgramme">Print ABS Programme sheet</button>`;
+  const t=today(), c=calc(a,t), isUp=a===state.upcoming;
+  if(state.active && state.upcoming) h+=`<div class="chips"><button class="chip ${!isUp?'on':''}" data-act="calFocus" data-arg="active">${monthName(state.active.month)}</button><button class="chip ${isUp?'on':''}" data-act="calFocus" data-arg="upcoming">${monthName(state.upcoming.month)} (next)</button></div>`;
+  h+=`<header class="top"><div class="eyebrow">${esc(a.definition.name)} Challenge${isUp?` \u00b7 starts ${fmtShort(a.startDate)}`:''}</div><h1>${monthLabel(a.month)}</h1><p class="small muted">${isUp?`Planning ahead \u00b7 ${c.L} rest days to use`:`${c.done}/${c.len} Challenge Days \u00b7 ${c.L} rest ${pl(c.L,'day')} left`}. Tap a date to see or change it.</p></header>`;
+  h+=`<div class="card">${monthGrid(a,t,true)}${legend()}</div>`;
+  h+=`<div class="row">${c.R>0?`<button class="btn" data-act="openPlanner">${isUp?'Planner':'Catch-up planner'}</button>`:''}<button class="btn" data-act="openPrint">Print</button></div>`;
+  return h;
+}
+function vExercises(){
+  let h=banners()+`<header class="top"><h1>Exercises</h1><p class="small muted">${EXERCISES.length} exercises. Pictures are being added gradually.</p></header>`;
+  const areas=['all',...Object.keys(AREAS)];
+  h+=`<div class="chips">${areas.map(x=>`<button class="chip ${exFilter===x?'on':''}" data-act="exFilter" data-arg="${x}">${x==='all'?'All':AREAS[x]}</button>`).join('')}</div>`;
+  EXERCISES.filter(e=>exFilter==='all'||e.areas.includes(exFilter)).forEach(e=>{
+    const used=CHALLENGES.filter(c=>c.exercises.some(x=>x.id===e.id)).map(c=>c.name);
+    h+=`<button class="listbtn" data-act="exDetail" data-arg="${e.id}"><span><b>${esc(e.name)}</b><br><span class="small muted">${e.areas.map(a=>AREAS[a]).join(', ')} \u00b7 ${e.measure==='seconds'?'timed':'reps'}</span></span><span style="text-align:right"><span class="dots">${'\u25cf'.repeat(e.difficulty)}${'\u25cb'.repeat(3-e.difficulty)}</span>${used.length?`<br><span class="pill">${used.join(', ')}</span>`:''}</span></button>`;
+  });
+  return h;
+}
+function vHistory(){
+  let h=banners()+`<header class="top"><h1>History</h1></header>`;
+  const items=[]; if(state.active) items.push({ch:state.active,live:true}); state.history.forEach((ch,i)=>items.push({ch,i}));
+  const months=[...new Set(acts().map(a=>a.date.slice(0,7)))].sort().reverse();
+  h+=badgeLine();
+  if(!items.length && !months.length) return h+`<div class="card"><p class="muted">Finished challenges and your other activity will appear here.</p></div>`;
+  if(months.length){ h+=`<h2 style="margin:4px 2px 8px">Other activity</h2>`;
+    months.forEach(m=>{ const tt=actTotals(acts().filter(a=>a.date.startsWith(m)));
+      h+=`<button class="listbtn" data-act="actMonth" data-arg="${m}"><span><b>${monthLabel(m)}</b><br><span class="small muted">${totalsText(tt)}</span></span><span>\u203a</span></button>`; });
+    if(items.length) h+=`<h2 style="margin:12px 2px 8px">Challenges</h2>`; }
+  items.forEach(({ch,live,i})=>{ const s=summarise(ch);
+    h+=`<button class="listbtn" data-act="histDetail" data-arg="${live?'active':i}"><span><b>${monthLabel(ch.month)}</b><br><span class="small muted">${esc(ch.definition.name)}${live?' \u00b7 in progress':''}${ch.preApp?' \u00b7 completed before the app':''}</span></span><span class="big" style="font-size:1.2rem">${s.score}/${ch.definition.length}</span></button>`; });
+  return h;
+}
+function footerHtml(){ return `<p class="foot">General exercise guidance, not medical advice. <a href="#" data-act="openDisclaimer">Full disclaimer</a></p><p class="foot support">If this free app has helped you, consider <a href="https://${SITE}" data-act="shareApp">sharing it</a>. A coffee or tea is also really lovely. It shows me support. No pressure.</p><p class="foot" style="margin-top:6px">\u2615 <a href="${BMC_URL}" target="_blank" rel="noopener">Buy me a tea or coffee</a><br>Created by Stuart Parkins \u00b7 \u00a9 2026<br><span class="tiny">${SITE} \u00b7 v${APP_VERSION} \u00b7 No accounts, no cookies, no tracking</span></p>`; }
+function vHelp(){
+  const sec=(t,body,open)=>`<details class="hp"${open?' open':''}><summary>${t}</summary><div class="in">${body}</div></details>`;
+  let h=banners()+`<header class="top"><h1>How to use the app</h1><p class="small muted">Tap a heading to open it.</p></header>`;
+  h+=sec('The idea in one minute',`<p>Each month you follow one challenge (ABS to start with). It has <b>30 Challenge Days</b> that must all be finished inside that calendar month \u2014 the challenge never runs over into the next month.</p>
+   <ul><li>Up to <b>8 of the 30</b> can be rest days, so at least 22 are workouts.</li><li>A rest uses up a Challenge Day, so resting never puts you behind.</li><li>Miss a day and it isn\u2019t skipped \u2014 you catch it up later, doing two or more Challenge Days on one date if needed.</li></ul>`,true);
+  h+=sec('Choosing a challenge and level',`<ul><li><b>Classic ABS</b> is the same six exercises every month.</li><li><b>ABS Mix</b> picks a fresh, balanced set of six from the library each month \u2014 upper abs, obliques, a hold, lower abs, a moving plank and a control exercise \u2014 avoiding last month\u2019s where it can. Tap <b>Shuffle</b> for another suggestion, or <b>Swap</b> any exercise before you start.</li><li><b>ABS Mixed</b> adds a <b>warm-up</b> at the start of each workout (a different one each week \u2014 leg swings, star jumps or footwork) and an <b>extra</b> at the end (two from Day 15), such as Bridge Dips, Seated Windscreen Wipers, Seated Round Kick or Kneeling Triangle Bend. Swap out anything that doesn\u2019t suit you \u2014 for example Press-ups or Squat Thrusts if your arms need a rest. Swapping is only on the setup screen, before you start.</li><li><b>Level:</b> Easy is the standard programme. Moderate is about a quarter more reps and time, Harder about half as much again. You choose it when you set up the month and it stays the same all month \u2014 the targets still rise a little every day.</li><li>Every level counts towards your badges.</li></ul>`);
+  h+=sec('Getting started',`<ol><li><b>Add the app to your home screen</b> (see \u201cKeeping your data safe\u201d below).</li><li>In <b>Settings</b>, tick your <b>usual rest days</b>, e.g. Sat and Sun. They\u2019re planned automatically until your 8 are used.</li><li>Add your name if you want it in the share message.</li><li>On <b>Today</b>, choose the challenge and start date, then tap <b>Start</b>. Near the end of a month you can use <b>Set up [next month]</b> instead.</li></ol>`);
+  h+=sec('Each day',`<ul><li><b>Start workout</b> takes you through each exercise with the reps or a timer. Tap Next after each one.</li><li><b>Mark done</b> ticks the day off if you exercised without the app.</li><li><b>Rest today</b> uses one of your 8 rest days.</li><li>Finished one day and want to catch up? Tap <b>Do another</b> or, at the end of a workout, <b>Continue with Day \u2026</b>.</li><li><b>Do a different day</b> lets you pick any Challenge Day still to do.</li><li>Tapped the wrong thing? <b>Undo last entry</b> is at the bottom of Today.</li></ul>
+   <div class="eg">Two-sided exercises count both sides: Bicycle Crunch 20 = 10 each side. Double-D\u2019s are the exception \u2014 both sides together count as 1.</div>`);
+  h+=sec('Catching up after missed days',`<ol><li>Today shows how many Challenge Days are left and how many days are left in the month.</li><li>If you have rest days left, tap <b>Choose days</b> to turn missed days into rest days first \u2014 it\u2019s the easiest catch-up.</li><li>Open the <b>Planner</b>. It suggests which dates need two workouts. Use <b>\u2212 / +</b> to change how many per date and <b>R</b> to plan a rest.</li><li>Tap a date\u2019s day numbers to <b>choose exactly which Challenge Days</b> to do on it.</li><li><b>Catching up today:</b> tap the missed date on the Calendar and choose <b>Catch up today</b>. The workout is logged today and the missed date gets a <b>blue tick</b>, so you can see it was done later. Catch-up works for missed dates in the current month only.</li><li>Already done today\u2019s workout? Any extra one you do today counts as catch-up for your oldest missed date.</li></ol>
+   <div class="eg">Example scenario: you\u2019re 3 behind with 12 days left. You plan Days 16 + 23 on Tuesday, 17 + 24 on Wednesday and 25 + 26 on Thursday, spreading the harder later days out.</div>`);
+  h+=sec('Calendar and planning ahead',`<ul><li><b>Calendar</b> shows the whole month: green ticks for done on the day (\u00d72 = two Challenge Days that date), blue ticks for missed dates caught up later, grey for rest, amber ! for missed, dashed outlines for the plan.</li><li>Tap any date to see or change it.</li><li>Set up next month from Today, then use the <b>month switch</b> at the top of Calendar to plan it.</li><li>On the 1st, next month starts automatically and the finished month moves to <b>History</b>.</li></ul>`);
+  h+=sec('Printing',`<p>Calendar \u2192 <b>Print</b> (A4, or choose \u201cSave as PDF\u201d):</p><ul><li><b>A week</b> \u2014 Monday to Sunday of the week containing the date you pick.</li><li><b>Whole month</b> \u2014 every date with its exercises and tick boxes.</li><li><b>Programme sheet</b> \u2014 all 30 days on one page with your planned rest days, for the fridge.</li></ul><p class="small muted">Change your plan? Print again \u2014 the sheets follow the plan.</p>`);
+  h+=sec('Sharing how you\u2019re doing',`<p>Tap <b>Share update</b> on Today. It opens your phone\u2019s share menu (WhatsApp, Messages\u2026) with a line like:</p><div class="eg">Stuart \u00b7 Fri 25/09/26 \u00b7 September ABS: D1 and D2 done \u00b7 2/30 \u00b7 on schedule</div>`);
+  h+=sec('Keeping your data safe',`<p>Everything is stored <b>only on this phone, in this browser</b>. No accounts, no cloud, no tracking.</p><ul><li><b>iPhone:</b> in Safari tap Share \u2192 <b>Add to Home Screen</b>, then always open the app from that icon. Safari can clear data for websites you haven\u2019t visited for a week; home-screen apps are kept.</li><li><b>Android:</b> in Chrome tap the menu \u2192 <b>Install app</b>.</li><li>Every few weeks, <b>Settings \u2192 Export backup file</b>.</li></ul>`);
+  h+=sec('Badges and certificates',`<p>Every challenge you finish counts towards a badge. A challenge counts when all 30 Challenge Days are logged within its month \u2014 rest days included. Months don\u2019t need to be in a row, and unfinished months don\u2019t count against you.</p><ul><li><b>30 Day Finisher</b> \u2014 1 challenge</li><li><b>90 Day Committed</b> \u2014 3 challenges</li><li><b>180 Day Hero</b> \u2014 6 challenges</li><li><b>360 Day Smasher</b> \u2014 12 challenges</li></ul><p>The badge arrives the moment you log your 30th Challenge Day, with a Share button. See them all from <b>Challenges completed</b> on Today or History, and tap <b>Print certificate</b> on any badge you\u2019ve earned (A4, with your name if you like).</p>`);
+  h+=sec('Other activity',`<p>Log anything else you do \u2014 walks, jogs, bike rides, weights, martial arts, swimming, yoga, Pilates, stretching or physio. It\u2019s a record, not a challenge: no Challenge Days, rest days or catch-up.</p><ul><li>On <b>Today</b>, tap an activity under <b>Other activity</b>. Time, distance and a note are optional; you can change the date to log something from earlier.</li><li>See this week\u2019s totals on Today, and each month\u2019s in <b>History</b>.</li><li>Set a <b>weekly target</b> (e.g. 3 a week) and <b>miles or km</b> in Settings.</li><li>Dates with activity get a small dot on the Calendar, and it\u2019s included in your share update, printouts and backups.</li><li>Logged something by mistake? Tap the \u00d7 next to it.</li></ul>`);
+  h+=sec('Moving to another phone or device',`<p>The app doesn\u2019t sync by itself, but a backup moves everything \u2014 current challenge, next month, plans, history and settings.</p><p><b>Quickest: a backup link</b></p><ol><li>On the old device: <b>Settings \u2192 Copy backup link</b>.</li><li>Paste it somewhere you can reach from the new device: Notes, an email or a message to yourself.</li><li>On the new device, open the app and go to <b>Settings \u2192 Paste a backup link</b>, paste it and tap <b>Restore</b>.</li></ol><p class="small muted">On iPhone always paste the link inside the app. Tapping the link opens Safari, which keeps its data separately from the home-screen app. On Android, tapping the link usually works too.</p><p><b>Full backup: a file</b></p><ol><li><b>Settings \u2192 Export backup file</b>.</li><li>Save it to <b>iCloud Drive, Google Drive, OneDrive or Dropbox</b>, or email it to yourself.</li><li>On the new device: <b>Settings \u2192 Import backup file</b>.</li></ol><p class="small muted">Restoring replaces what\u2019s on the new device (a safety copy is saved first). A backup is a snapshot, not live syncing \u2014 make a fresh one now and again, and keep using one main device. Anyone with your link can see your progress and name, so keep it to yourself.</p>`);
+  h+=sec('Questions',`<ul><li><b>Why does resting skip a workout?</b> A rest uses up a Challenge Day, so that day\u2019s workout isn\u2019t done. With reps rising a little each day, the next workout is only slightly harder.</li><li><b>February?</b> 28 days for 30 Challenge Days means at least two doubled-up days, even using rest days.</li><li><b>Started late?</b> Days before your start date are ignored; the planner shows the catch-up needed.</li></ul>`);
+  h+=`<p class="tiny muted" style="margin-top:12px">General exercise guidance, not medical advice. Stop if anything hurts. <a href="#" data-act="openDisclaimer">Full disclaimer</a></p>`;
+  return h;
+}
+function vSettings(){
+  const s=state.settings;
+  const lb=state.lastBackupAt?`${Math.floor((Date.now()-Date.parse(state.lastBackupAt))/864e5)} days ago`:'never';
+  let h=banners()+`<header class="top"><h1>Settings</h1></header>`;
+  h+=`<button class="listbtn" data-act="tab" data-arg="help"><span><b>How to use the app</b><br><span class="small muted">Quick guide, catch-up, printing, and moving to another phone</span></span><span>›</span></button>`;
+  h+=`<div class="card"><h2>You</h2><label class="f" for="nameIn">Your name (only used in the share text)</label><input type="text" id="nameIn" value="${esc(s.name)}" maxlength="30" autocomplete="off"></div>`;
+  const wd=s.restWeekdays||[];
+  h+=`<div class="card"><h2>My usual rest days</h2><p class="small muted">The planner marks these as rest days until your 8 are used up. Two a week fits a month. You can still change any single date.</p><div class="chips" style="flex-wrap:wrap">${[1,2,3,4,5,6,0].map(n=>`<button class="chip ${wd.includes(n)?'on':''}" data-act="restWd" data-arg="${n}" aria-pressed="${wd.includes(n)}">${DOW[n]}</button>`).join('')}</div>${wd.length>2?'<p class="tiny muted">More than two a week will use up your 8 rest days early in the month.</p>':''}</div>`;
+  const wt=s.weeklyTarget||0;
+  h+=`<div class="card"><h2>Other activity</h2><label class="f">Distance in</label><div class="chips"><button class="chip ${s.units!=='km'?'on':''}" data-act="units" data-arg="mi">Miles</button><button class="chip ${s.units==='km'?'on':''}" data-act="units" data-arg="km">Kilometres</button></div>
+   <label class="f">Weekly target</label><div class="chips" style="flex-wrap:wrap">${[0,1,2,3,4,5,6,7].map(n=>`<button class="chip ${wt===n?'on':''}" data-act="weekTarget" data-arg="${n}">${n?n+' a week':'Off'}</button>`).join('')}</div><p class="tiny muted">A nudge only \u2014 there\u2019s no catch-up for other activity.</p></div>`;
+  h+=`<div class="card"><h2>Timer</h2>
+   <label class="toggle"><span>3-second lead-in</span><input type="checkbox" data-set="leadIn" ${s.leadIn?'checked':''}></label>
+   <label class="toggle"><span>Sound</span><input type="checkbox" data-set="sound" ${s.sound?'checked':''}></label>
+   <label class="toggle" style="border:0"><span>Vibrate</span><input type="checkbox" data-set="vibrate" ${s.vibrate?'checked':''}></label></div>`;
+  h+=`<div class="card"><h2>Theme</h2><div class="chips">${['auto','light','dark'].map(x=>`<button class="chip ${s.theme===x?'on':''}" data-act="theme" data-arg="${x}">${x[0].toUpperCase()+x.slice(1)}</button>`).join('')}</div></div>`;
+  h+=`<div class="card" id="backupCard"><h2>Backup</h2><p class="small muted">Your data is stored only in this browser. Last backup: <b>${lb}</b>.</p><div class="stack"><button class="btn primary block" data-act="copyLink">Copy backup link</button><button class="btn block" data-act="pasteLink">Paste a backup link</button><hr style="margin:4px 0"><button class="btn block" data-act="export">Export backup file</button><button class="btn block" data-act="import">Import backup file</button></div><p class="tiny muted" style="margin-top:8px">A backup link is quick to paste into Notes, an email or a message to yourself. The file is the full backup to keep in a cloud folder.</p><p class="tiny muted" id="persistInfo" style="margin-top:8px"></p></div>`;
+  h+=`<div class="card"><h2>Sharing</h2><button class="btn block" data-act="share" ${state.active?'':'disabled'}>Share update</button></div>`;
+  if(TEST_MODE) h+=`<div class="card"><h2>Test tools</h2><p class="small muted">Pretend it\u2019s a different date to test catch-up, month end and history. Only shown when the address ends in ?test.</p><label class="f" for="testDate">Pretend today is</label><input type="date" id="testDate" value="${s.testToday||''}"><div class="row" style="margin-top:8px"><button class="btn" data-act="testApply">Use this date</button><button class="btn" data-act="testClear">Real date</button></div><div class="row" style="margin-top:8px"><button class="btn" data-act="testNext">+1 day</button><button class="btn" data-act="testPrev">\u22121 day</button></div></div>`;
+  h+=`<div class="card"><h2>Danger zone</h2><div class="stack"><button class="btn danger block" data-act="abandon" ${state.active?'':'disabled'}>Abandon current challenge</button><button class="btn danger block" data-act="resetAll">Delete all data</button></div></div>`;
+  h+=`<div class="card" style="text-align:center"><h2>Enjoying the app?</h2><p class="small muted">It’s free, with no ads or tracking. If it helps, you can say thanks.</p>${bmcBtn()}</div>`;
+  return h;
+}
+
+/* ===================== SHEETS ===================== */
+const sheetEl=document.getElementById('sheet'); let sheetKind=null;
+function openSheet(html,kind){ sheetEl.querySelector('.body').innerHTML=html; sheetEl.classList.add('open'); sheetKind=kind||null; }
+function closeSheet(){ sheetEl.classList.remove('open'); sheetKind=null; }
+sheetEl.addEventListener('click',e=>{ if(e.target===sheetEl) closeSheet(); });
+function confirmSheet(title,text,okLabel,onOk,danger){
+  confirmSheet.cb=onOk;
+  openSheet(`<h2>${title}</h2><p>${text}</p><div class="row" style="margin-top:12px"><button class="btn" data-act="closeSheet">Cancel</button><button class="btn ${danger?'danger':'primary'}" data-act="confirmOk">${okLabel}</button></div>`);
+}
+function plannerHtml(){
+  const a=F(), t=today(), sch=schedule(a,t), c=sch.c;
+  const futurePlanned=c.planned.length;
+  let h=`<h2>Catch-up planner</h2><div class="stats">
+   <div class="stat"><div class="v">${c.done}/${c.len}</div><div class="l">${c.W} ${pl(c.W,'workout')}, ${c.Rt} ${pl(c.Rt,'rest')}</div></div>
+   <div class="stat"><div class="v">${c.R}</div><div class="l">Challenge Days left</div></div>
+   <div class="stat"><div class="v">${c.D}</div><div class="l">Calendar days available</div></div>
+   <div class="stat"><div class="v">${c.L}</div><div class="l">Rest days left (${futurePlanned} planned)</div></div>
+   <div class="stat"><div class="v">${c.S>0?'+':''}${c.S}</div><div class="l">Spare days</div></div>
+   <div class="stat"><div class="v">${c.pace!=null?c.pace.toFixed(1):'\u2014'}</div><div class="l">Workouts per workout day</div></div></div>`;
+  if(c.R===0) return h+'<p>All done!</p>';
+  if(c.missed.length && c.L>0) h+=`<button class="btn block" data-act="openMissed" style="margin-bottom:8px">Turn missed days into rest (${c.missed.length})</button>`;
+  h+=`<p class="small muted">Tap the day numbers to choose which Challenge Days go on a date (e.g. Days 16 + 23). Use \u2212 and + to change how many, and R to plan a rest. Changes save straight away.</p>`;
+  h+=`<p class="small"><b>Missed days stay to do</b> \u2014 add them to today or any date ahead. To catch one up today, tap it on the Calendar; it gets a blue tick.</p>`;
+  const te=dateEntries(a,t);
+  if(c.loggedToday && !te.r && t>=a.startDate && t<=c.end){
+    const doneT=te.w.map(x=>x.day);
+    h+=`<div class="plan-row"><div class="d">Today</div><div class="w"><span class="small">${daysText(doneT)} \u2713</span>${sch.todayExtra.length?` + <b>${daysText(sch.todayExtra)}</b>`:''}<br><button class="btn ghost" style="padding:4px 0;min-height:36px;font-weight:600;text-align:left" data-act="pinDay" data-arg="${t}">${sch.todayExtra.length?'Change':'Add another today'} \u270e</button></div></div>`;
+  }
+  sch.rows.forEach(r=>{
+    const label = r.rest ? `Rest \u00b7 ${daysText(r.days)}` : (r.days.length ? daysText(r.days) : '<span class="muted">\u2014</span>');
+    h+=`<div class="plan-row"><div class="d">${r.date===t?'Today':fmtShort(r.date)}</div><div class="w">${r.rest?label:`<button class="btn ghost" style="padding:4px 0;min-height:36px;font-weight:600;text-align:left" data-act="pinDay" data-arg="${r.date}">${label} \u270e</button>`}${r.chosen?' <span class="pill">chosen</span>':r.custom?' <span class="pill">set</span>':''}</div>
+     ${r.rest?'':`<button class="step" data-act="plMinus" data-arg="${r.date}" aria-label="Fewer">\u2212</button><button class="step" data-act="plPlus" data-arg="${r.date}" aria-label="More">+</button>`}
+     <button class="step ${r.rest?'on':''}" data-act="plRest" data-arg="${r.date}" aria-label="Rest">R</button></div>`;
+  });
+  if(sch.short>0) h+=`<div class="check bad">Plan is ${sch.short} Challenge ${pl(sch.short,'Day')} short of 30.</div>`;
+  else h+=`<div class="check good">Plan covers all ${c.R} remaining Challenge ${pl(c.R,'Day')}${sch.finish?`, finishing ${sch.finish===t?'today':fmtShort(sch.finish)}`:''}.</div>`;
+  h+=`<div class="row"><button class="btn" data-act="plReset">Reset to suggestion</button><button class="btn primary" data-act="closeSheet">Done</button></div>`;
+  return h;
+}
+function missedHtml(){
+  const a=state.active, c=calc(a,today());
+  let h=`<h2>Turn missed days into rest</h2><p class="small muted">You have ${c.L} rest ${pl(c.L,'day')} left. Each one uses the next Challenge Day. Anything you don\u2019t convert stays as catch-up.</p><div class="missed-list">`;
+  c.missed.forEach((d,i)=>{ h+=`<label><input type="checkbox" value="${d}" ${i<c.L?'checked':''}> ${fmtLong(d)}</label>`; });
+  return h+`</div><div class="row" style="margin-top:12px"><button class="btn" data-act="closeSheet">Cancel</button><button class="btn primary" data-act="convertMissed">Mark as rest</button></div>`;
+}
+function dayHtml(d){
+  const a=F(), t=today(), c=calc(a,t), e=dateEntries(a,d);
+  let h=`<h2>${fmtLong(d)}</h2>`;
+  const oaLine=()=>{ const oa=actsOn(d); return oa.length?`<p class="small" style="margin-top:8px"><b>Other activity:</b> ${oa.map(x=>ACT_BY_ID[x.type].ic+' '+esc(actLine(x))).join(', ')}</p>`:''; };
+  if(d<a.startDate) return h+`<p class="muted">Before this challenge started.</p>${oaLine()}<button class="btn block" data-act="closeSheet">Close</button>`;
+  const cu=caughtFor(a,d);
+  if(cu.length) h+=`<ul class="exlist">${cu.map(w=>`<li><span>Challenge Day ${w.day}</span><span class="t ct">\u2713 caught up on ${fmtShort(w.date)}</span></li>`).join('')}</ul>`;
+  if(e.w.length) h+=`<ul class="exlist">${e.w.map(w=>`<li><span>Challenge Day ${w.day}${w.for?` <span class="small muted">(catch-up for ${fmtShort(w.for)})</span>`:''}</span><span class="t">\u2713 workout</span></li>`).join('')}</ul>`;
+  if(e.r) h+=`<ul class="exlist"><li><span>Challenge Day ${e.r.day}</span><span class="t">Rest</span></li></ul>`;
+  const past = d<t || (d===t);
+  const isFutureSlot = c.dates.includes(d);
+  let acts='';
+  if(c.R>0){
+    if(canCatchUp(a,d,t)){ const n=c.next;
+      acts+=`<button class="btn primary block" data-act="catchStart" data-arg="${d}|${n}">Catch up today \u2014 start Day ${n}</button>`;
+      acts+=`<button class="btn block" data-act="catchMark" data-arg="${d}|${n}">Already done today \u2014 mark Day ${n} as catch-up</button>`;
+      if(c.R>1) acts+=`<button class="btn ghost block" data-act="catchPick" data-arg="${d}">Choose a different Challenge Day</button>`;
+    }
+    if(past && !e.r && d<=t && !cu.length){
+      acts+=`<button class="btn block" data-act="backdatePick" data-arg="${d}">${d<t?'I did it on this date (log it there)':'Log a workout on this date'}</button>`;
+      if(!e.w.length && c.L>0 && d<t) acts+=`<button class="btn block" data-act="restOn" data-arg="${d}">Mark as rest (uses Day ${restDue(a,t)})</button>`;
+    }
+    if(isFutureSlot && d>t){
+      const sch=schedule(a,t), r=sch.map[d];
+      h+=`<p class="muted">Planned: ${r.rest?'Rest \u00b7 ':''}${daysText(r.days)||'nothing'}</p>`;
+      if(!r.rest) acts+=`<button class="btn block" data-act="pinDay" data-arg="${d}">Choose Challenge Days</button>`;
+      if(!r.rest) acts+=`<div class="plan-row" style="border:0"><div class="w">Workouts this day</div><button class="step" data-act="plMinus" data-arg="${d}">\u2212</button><b style="width:24px;text-align:center">${r.count}</b><button class="step" data-act="plPlus" data-arg="${d}">+</button></div>`;
+      acts+=`<button class="btn block" data-act="plRest" data-arg="${d}">${r.rest?'Remove planned rest':'Plan a rest day'}</button>`;
+    }
+  }
+  if(!e.w.length && !e.r && !cu.length && d<t) h+= c.missed.includes(d) ? `<p class="muted">Missed. The Challenge Day wasn\u2019t skipped; it\u2019s still to do \u2014 catch it up today and it gets a blue tick here, or add it to any date ahead.</p>` : `<p class="muted">Nothing logged on this date, but you\u2019re not behind \u2014 you did extra Challenge Days on other dates.</p>`;
+  if(!e.w.length && !e.r && d>=t && !isFutureSlot && c.R>0) h+=`<p class="muted">Today already has entries.</p>`;
+  h+=oaLine();
+  return h+`<div class="stack">${acts}<button class="btn block" data-act="closeSheet">Close</button></div>`;
+}
+function exDetailHtml(id){
+  const e=EX[id];
+  return `${placeholder(e)}<h2>${esc(e.name)}</h2><p class="small muted">${e.areas.map(a=>AREAS[a]).join(', ')} \u00b7 difficulty ${'\u25cf'.repeat(e.difficulty)}${'\u25cb'.repeat(3-e.difficulty)} \u00b7 ${e.measure==='seconds'?(e.count==='eachSide'?'timed, each side':'timed'):(e.count==='total'?'reps, each side counts 1':e.count==='pair'?'reps, both sides = 1':'reps')}</p>
+   <ol class="instr">${e.instructions.map(x=>`<li>${esc(x)}</li>`).join('')}</ol>
+   <p class="small"><b>Alternatives:</b> ${e.alternatives.map(a=>esc(EX[a].name)).join(', ')}</p>
+   <p class="tiny muted">General form guidance, not medical advice. Stop if anything hurts.</p><button class="btn block" data-act="closeSheet">Close</button>`;
+}
+function histHtml(arg){
+  const ch = arg==='active' ? state.active : state.history[Number(arg)];
+  if(ch.preApp) return `<div class="eyebrow">${esc(ch.definition.name)} Challenge</div><h2>${monthLabel(ch.month)}</h2><div class="card"><p><b>${ch.definition.length}/${ch.definition.length}</b> \u2014 completed before the app.</p><p class="small muted">Added from your earlier records, so there\u2019s no day-by-day detail. It counts towards your badges.</p></div><button class="btn block" data-act="closeSheet">Close</button>`;
+  const s=summarise(ch), end=monthEnd(ch.month);
+  const t = arg==='active' ? today() : addDays(end,1);
+  return `<div class="eyebrow">${esc(ch.definition.name)} Challenge</div><h2>${monthLabel(ch.month)}</h2><div class="stats">${statsHtml(s)}</div><div class="card">${monthGrid(ch,t,false)}${legend()}</div><div id="hdayInfo" class="small muted" style="min-height:1.4em;margin-bottom:8px">Tap a date to see its Challenge Days.</div><button class="btn block" data-act="closeSheet">Close</button>`;
+}
+
+/* ===================== WORKOUT ===================== */
+const wkEl=document.getElementById('wk'); let wk=null, tm=null, audioCtx=null;
+function openWorkout(day,catchFor){
+  const a=state.active, c=calc(a,today()); if(c.R<=0) return;
+  const n=(day!=null&&outstandingDays(a).includes(day))?day:c.next;
+  wk={day:n,i:0,items:resolveDay(a.definition,n,a.swaps),finished:false,catchFor:catchFor||undefined,caught:null};
+  resetTimer(); wkEl.classList.add('open'); renderWk();
+}
+function closeWorkout(){ stopTimer(); wk=null; wkEl.classList.remove('open'); render(); }
+function resetTimer(){
+  stopTimer(); if(!wk||wk.finished) { tm=null; return; }
+  const it=wk.items[wk.i]; if(it.ex.measure!=='seconds'){ tm=null; return; }
+  tm={total:it.target,left:it.target,lead:0,running:false,side:1,sides:it.ex.count==='eachSide'?2:1,h:null,finished:false};
+}
+function stopTimer(){ if(tm&&tm.h){ clearInterval(tm.h); tm.h=null; } if(tm) tm.running=false; }
+function beep(freq,dur){
+  if(!state.settings.sound) return;
+  try{ audioCtx=audioCtx||new (window.AudioContext||window.webkitAudioContext)(); const o=audioCtx.createOscillator(), g=audioCtx.createGain();
+    o.frequency.value=freq; o.connect(g); g.connect(audioCtx.destination); g.gain.setValueAtTime(.2,audioCtx.currentTime); g.gain.exponentialRampToValueAtTime(.001,audioCtx.currentTime+dur);
+    o.start(); o.stop(audioCtx.currentTime+dur); }catch(e){}
+}
+function startTimer(){
+  if(!tm||tm.running) return;
+  if(tm.finished){ tm.left=tm.total; tm.finished=false; }
+  tm.running=true; if(state.settings.leadIn && tm.left===tm.total) { tm.lead=3; beep(660,.12); }
+  tm.h=setInterval(()=>{
+    if(tm.lead>0){ tm.lead--; if(tm.lead>0) beep(660,.12); else beep(990,.2); }
+    else { tm.left--; if(tm.left<=3&&tm.left>0) beep(660,.08);
+      if(tm.left<=0){ stopTimer(); beep(880,.5); if(state.settings.vibrate&&navigator.vibrate) navigator.vibrate([200,100,200]);
+        if(tm.side<tm.sides){ tm.side++; tm.left=tm.total; toast('Now the other side'); } else tm.finished=true; } }
+    updTimer();
+  },1000);
+  updTimer();
+}
+function updTimer(){
+  const el=document.getElementById('tmv'); if(!el||!tm) return;
+  el.textContent = tm.lead>0 ? tm.lead : (tm.finished ? 'Done' : `${Math.floor(tm.left/60)}:${pad(tm.left%60)}`);
+  el.classList.toggle('lead',tm.lead>0);
+  const sl=document.getElementById('tmside'); if(sl) sl.textContent = tm.sides>1 ? (tm.side===1?'First side':'Second side') : '';
+  const b=document.getElementById('tmbtn'); if(b) b.textContent = tm.running?'Pause':(tm.finished?'Restart':(tm.left<tm.total||tm.side>1?'Resume':'Start timer'));
+}
+function renderWk(){
+  const box=wkEl.querySelector('.in'); const a=state.active;
+  if(!wk) return;
+  if(wk.finished){
+    const c=calc(a,today()); let h=`<div class="wk-top"><span></span><button class="btn ghost" data-act="wkClose">Close</button></div><div class="celebrate"><div class="big">Day ${wk.day} \u2713</div><p>Challenge Day ${wk.day} complete.</p>${wk.caught?`<p class="ct">Caught up for ${fmtLong(wk.caught)} \u2713</p>`:''}<p class="muted">${c.done}/${c.len} done this month.</p></div><div class="spacer"></div><div class="stack">`;
+    if(c.R>0){ const behind=c.S<0;
+      h+=`${behind?`<p class="small" style="text-align:center">Still ${-c.S} extra ${pl(-c.S,'workout')} to catch up this month.</p>`:''}<button class="btn ${behind?'primary':''} block" data-act="wkContinue">Continue with Day ${c.next}${behind?' (catch-up)':''}</button>`;
+    } else h+=`<p style="text-align:center"><b>That\u2019s all 30 \u2014 challenge complete!</b></p>`;
+    h+=`<button class="btn ${c.R>0&&c.S<0?'':'primary'} block" data-act="wkClose">Done for today</button></div>`;
+    box.innerHTML=h; return;
+  }
+  const it=wk.items[wk.i], n=wk.items.length, last=wk.i===n-1;
+  let h=`<div class="wk-top"><span class="small"><b>Challenge Day ${wk.day}</b> \u00b7 Exercise ${wk.i+1} of ${n}</span><button class="btn ghost" data-act="wkQuit">Exit</button></div><div class="bar"><i style="width:${(wk.i/n)*100}%"></i></div>`;
+  h+=placeholder(it.ex)+`${it.role==='warmup'?'<div class="eyebrow">Warm-up</div>':it.role==='extra'?'<div class="eyebrow">Extra</div>':''}<h1>${esc(it.ex.name)}</h1><div class="target">${targetLabel(it.ex,it.target)}</div>`;
+  if(tm) h+=`<div class="card" style="text-align:center"><div class="tiny muted" id="tmside"></div><div class="timer" id="tmv"></div><button class="btn primary" id="tmbtn" data-act="tmToggle" style="min-width:160px">Start timer</button> <button class="btn" data-act="tmReset">Reset</button></div>`;
+  h+=`<ol class="instr small">${it.ex.instructions.map(x=>`<li>${esc(x)}</li>`).join('')}</ol>`;
+  if(last && a.definition.notes) h+=`<p class="tiny muted">${esc(a.definition.notes)}</p>`;
+  h+=`<div class="spacer"></div><div class="row"><button class="btn" data-act="wkBack" ${wk.i===0?'disabled':''}>Back</button><button class="btn primary" data-act="wkNext">${last?'Finish Day '+wk.day:'Next'}</button></div>`;
+  box.innerHTML=h; updTimer(); box.scrollTop=0; wkEl.scrollTop=0;
+}
+
+/* ===================== BACKUP / SHARE ===================== */
+function exportBackup(silent){
+  const stamp=ymd(new Date());
+  const data={app:'30-day-challenge',appVersion:APP_VERSION,exportedAt:new Date().toISOString(),state};
+  const blob=new Blob([JSON.stringify(data,null,2)],{type:'application/json'});
+  const url=URL.createObjectURL(blob), link=document.createElement('a');
+  link.href=url; link.download=`30-day-challenge-backup-${stamp}${silent?'-before-import':''}.json`;
+  document.body.appendChild(link); link.click(); link.remove(); setTimeout(()=>URL.revokeObjectURL(url),4000);
+  if(!silent){ state.lastBackupAt=new Date().toISOString(); save(); render(); toast('Backup file saved'); }
+}
+let pendingImport=null;
+document.getElementById('importFile').addEventListener('change',async ev=>{
+  const f=ev.target.files[0]; ev.target.value=''; if(!f) return;
+  let s; try{ const j=JSON.parse(await f.text()); s=j.state||j; }catch(e){ return openSheet(`<h2>Can\u2019t read that file</h2><p class="muted">It isn\u2019t a valid backup file.</p><button class="btn block" data-act="closeSheet">OK</button>`); }
+  const errs=validateState(s);
+  if(errs.length) return openSheet(`<h2>Backup not accepted</h2><p class="muted">${esc(errs[0])}.</p><button class="btn block" data-act="closeSheet">OK</button>`);
+  showImportPreview(s,'file');
+});
+function showImportPreview(s,kind){
+  const errs=validateState(s);
+  if(errs.length) return openSheet(`<h2>Backup not accepted</h2><p class="muted">${esc(errs[0])}.</p><button class="btn block" data-act="closeSheet">OK</button>`);
+  pendingImport=s;
+  const all=[...(s.active?[s.active]:[]),...(s.upcoming?[s.upcoming]:[]),...s.history].sort((x,y)=>y.month.localeCompare(x.month));
+  const latest=all[0]; const lt=latest?`latest ${monthLabel(latest.month)} ${esc(latest.definition.name)}, ${summarise(latest).score}/${latest.definition.length}`:'no challenges';
+  const made=s.lastBackupAt?` Made ${fmtShort(s.lastBackupAt.slice(0,10))}.`:'';
+  const safety=(state.active||state.upcoming||state.history.length)?' Your current data is saved to a safety file first.':'';
+  openSheet(`<h2>Restore this backup?</h2><p>This backup ${kind==='link'?'link ':''}has <b>${all.length} ${pl(all.length,'challenge')}</b> (${lt}).${made}</p><p class="small muted">It will replace everything on this device.${safety}</p><div class="row"><button class="btn" data-act="closeSheet">Cancel</button><button class="btn primary" data-act="doImport">Replace and restore</button></div>`);
+}
+/* ---------- Backup link: compact, compressed, kept after the # so it never reaches a server ---------- */
+const b64u={ enc:u8=>{ let b=''; u8.forEach(x=>b+=String.fromCharCode(x)); return btoa(b).replace(/\+/g,'-').replace(/\//g,'_').replace(/=+$/,''); },
+  dec:str=>{ const b=atob(str.replace(/-/g,'+').replace(/_/g,'/')+'==='.slice((str.length+3)%4)); return Uint8Array.from(b,c=>c.charCodeAt(0)); } };
+async function zip(bytes,mode){ const cs=mode==='c'?new CompressionStream('deflate-raw'):new DecompressionStream('deflate-raw'); return new Uint8Array(await new Response(new Blob([bytes]).stream().pipeThrough(cs)).arrayBuffer()); }
+function packCh(ch){
+  if(!ch) return null;
+  const known=CHALLENGES.find(c=>c.id===ch.definition.id&&c.version===ch.definition.version);
+  const dom=d=>Number(d.slice(8)), key=x=>(x.seq||0)*1e14+Date.parse(x.at||x.date+'T12:00:00');
+  const ents=[...ch.completions.map(x=>({...x,t:0})),...ch.rests.map(x=>({...x,t:1}))].sort((a,b)=>key(a)-key(b)).map(x=>x.for&&!x.t?[x.day,dom(x.date),x.t,dom(x.for)]:[x.day,dom(x.date),x.t]);
+  const pd={}; Object.entries(ch.planDays||{}).forEach(([d,l])=>{ if(l&&l.length) pd[dom(d)]=l; });
+  const pl2={}; Object.entries(ch.plan||{}).forEach(([d,k])=>pl2[dom(d)]=k);
+  const o={m:ch.month,s:dom(ch.startDate),d:known?ch.definition.id+'@'+ch.definition.version:ch.definition,e:ents};
+  if(known && ch.definition.level && ch.definition.level!=='easy') o.lv=ch.definition.level;
+  if(ch.plannedRestDates.length) o.r=ch.plannedRestDates.map(dom);
+  if((ch.skipRestDates||[]).length) o.k=ch.skipRestDates.map(dom);
+  if(Object.keys(pl2).length) o.p=pl2; if(Object.keys(pd).length) o.q=pd;
+  if(Object.keys(ch.swaps||{}).length) o.w=ch.swaps;
+  if(ch.preApp) o.pa=1;
+  return o;
+}
+function unpackCh(o,archived){
+  if(!o) return null;
+  let def; if(typeof o.d==='string'){ const [id,v]=o.d.split('@'); const c=CHALLENGES.find(x=>x.id===id&&x.version===Number(v)); if(!c) throw new Error('This backup uses a challenge this version of the app doesn\u2019t have'); def=JSON.parse(JSON.stringify(c)); if(o.lv) applyLevel(def,o.lv); } else def=o.d;
+  const dt=n=>`${o.m}-${pad(n)}`, ch={id:`${o.m}-${def.id}`,month:o.m,startDate:dt(o.s),definition:def,completions:[],rests:[],
+    plannedRestDates:(o.r||[]).map(dt),skipRestDates:(o.k||[]).map(dt),plan:{},planDays:{},swaps:o.w||{}};
+  (o.e||[]).forEach(([day,d,t,f],i)=>{ const x={day,date:dt(d),seq:i+1}; if(f&&!t) x.for=dt(f); (t?ch.rests:ch.completions).push(x); });
+  Object.entries(o.p||{}).forEach(([d,k])=>ch.plan[dt(Number(d))]=k);
+  Object.entries(o.q||{}).forEach(([d,l])=>ch.planDays[dt(Number(d))]=l);
+  if(o.pa) ch.preApp=true;
+  if(archived){ ch.summary=summarise(ch); ch.archivedAt=ch.archivedAt||null; }
+  return ch;
+}
+async function makeBackupLink(){
+  const st=state.settings;
+  const o={v:1,t:new Date().toISOString(),s:{n:st.name,w:st.restWeekdays,th:st.theme,l:st.leadIn,so:st.sound,vi:st.vibrate,un:st.units,wt:st.weeklyTarget},a:packCh(state.active),u:packCh(state.upcoming),h:state.history.map(h=>packCh(h))};
+  if(Array.isArray(state.badgesSeen)) o.bs=state.badgesSeen;
+  if(acts().length) o.x=acts().map(a=>{ const r=[a.date,a.type,a.mins||0,a.km?Math.round(a.km*100):0]; if(a.note) r.push(a.note); return r; });
+  const raw=new TextEncoder().encode(JSON.stringify(o));
+  let body; try{ body='z'+b64u.enc(await zip(raw,'c')); }catch(e){ body='j'+b64u.enc(raw); }
+  return location.origin+location.pathname+'#b='+body;
+}
+async function readBackupLink(text){
+  const m=String(text||'').trim().match(/#b=([zj][A-Za-z0-9_-]+)/); if(!m) throw new Error('That doesn\u2019t look like a backup link');
+  const bytes=b64u.dec(m[1].slice(1)); const raw=m[1][0]==='z'?await zip(bytes,'d'):bytes;
+  const o=JSON.parse(new TextDecoder().decode(raw)); if(o.v!==1) throw new Error('Unsupported backup link');
+  return {schemaVersion:1,settings:{name:o.s.n||'',restWeekdays:o.s.w||[],theme:o.s.th||'auto',leadIn:o.s.l!==false,sound:o.s.so!==false,vibrate:o.s.vi!==false,units:o.s.un||'mi',weeklyTarget:o.s.wt||0},
+    lastBackupAt:o.t,active:unpackCh(o.a),upcoming:unpackCh(o.u),history:(o.h||[]).map(h=>unpackCh(h,true)),badgesSeen:Array.isArray(o.bs)?o.bs:undefined,
+    activities:(o.x||[]).map(([date,type,mins,km100,note],i)=>{ const a={id:'r'+i+'-'+date,date,type,at:date+'T12:00:00.000Z'}; if(mins) a.mins=mins; if(km100) a.km=km100/100; if(note) a.note=note; return a; })};
+}
+async function restoreFromText(text){
+  try{ const hl=readHistoryLink(text); if(hl) return showHistoryPreview(hl); showImportPreview(await readBackupLink(text),'link'); }
+  catch(e){ openSheet(`<h2>Can\u2019t use that link</h2><p class="muted">${esc(e.message||'It may be incomplete. Copy the whole link and try again.')}.</p><button class="btn block" data-act="closeSheet">OK</button>`); }
+}
+function shareText(){
+  const a=state.active; if(!a) return '';
+  const t=today(), c=calc(a,t), sv=statusView(c), n=state.settings.name.trim(), e=dateEntries(a,t);
+  const d=parse(t), date=`${DOW[d.getDay()]} ${pad(d.getDate())}/${pad(d.getMonth()+1)}/${String(d.getFullYear()).slice(2)}`;
+  let todayTxt = 'nothing logged yet today';
+  if(e.r) todayTxt=`D${e.r.day} rest day`;
+  else if(e.w.length) todayTxt=`${listAnd(e.w.map(w=>'D'+w.day))} done`;
+  const oa=actsOn(t).map(x=>'+ '+actLine(x)).join(' \u00b7 ');
+  return `${n?n+' \u00b7 ':''}${date} \u00b7 ${monthName(a.month)} ${a.definition.name}: ${todayTxt} \u00b7 ${c.done}/${c.len} \u00b7 ${sv.short}${oa?' \u00b7 '+oa:''}`;
+}
+function shareActivityOnly(){ const t=today(), oa=actsOn(t); if(!oa.length) return ''; const n=state.settings.name.trim(), d=parse(t);
+  return `${n?n+' \u00b7 ':''}${DOW[d.getDay()]} ${pad(d.getDate())}/${pad(d.getMonth()+1)}/${String(d.getFullYear()).slice(2)} \u00b7 ${oa.map(x=>'+ '+actLine(x)).join(' \u00b7 ')}`; }
+// Share the app itself: phone share menu, or copy to the clipboard on a computer
+const APP_BLURB='30 Day Challenge \u2013 a free app for monthly exercise challenges, with catch-up planning and printable plans. No sign-up.';
+async function shareApp(){
+  const url='https://'+SITE, phone=matchMedia('(pointer: coarse)').matches || /android|iphone|ipad|ipod/i.test(navigator.userAgent);
+  if(phone && navigator.share){ try{ await navigator.share({title:'30 Day Challenge',text:APP_BLURB,url}); return; }catch(e){ if(e.name==='AbortError') return; } }
+  const text=APP_BLURB+' '+url;
+  try{ await navigator.clipboard.writeText(text); toast('Link copied'); }
+  catch(e){ openSheet(`<h2>Share the app</h2><p class="small muted">Copy this and paste it wherever you like.</p><textarea id="shareOut" readonly style="width:100%;min-height:90px;font:inherit;border-radius:10px;border:1px solid var(--line);padding:8px;background:var(--card);color:var(--text)">${esc(text)}</textarea><button class="btn block" data-act="closeSheet" style="margin-top:8px">Done</button>`); setTimeout(()=>{ const t=document.getElementById('shareOut'); t&&t.select(); },50); }
+}
+async function share(){
+  const text=shareText()||shareActivityOnly(); if(!text) return toast('Nothing to share yet today');
+  if(navigator.share){ try{ await navigator.share({text}); return; }catch(e){ if(e.name==='AbortError') return; } }
+  try{ await navigator.clipboard.writeText(text); toast('Copied: '+text); }catch(e){ openSheet(`<h2>Share update</h2><p>${esc(text)}</p><button class="btn block" data-act="closeSheet">Close</button>`); }
+}
+
+/* ===================== PRINT ===================== */
+function printTarget(ex,t){
+  if(ex.measure==='seconds') return ex.count==='eachSide' ? `${t}s each side` : `${t}s`;
+  if(ex.count==='total') return `${t} (${Math.floor(t/2)} each side)`;
+  return String(t);
+}
+function exLine(def,n,swaps){ return resolveDay(def,n,swaps).map(i=>`${esc(i.ex.name)} ${printTarget(i.ex,i.target)}`).join(' · '); }
+function printRows(a,dates){
+  const t=today(), sch = t<=monthEnd(a.month) ? schedule(a,t) : null, def=a.definition, miss=new Set(calc(a,t).missed);
+  let rows='';
+  for(const d of dates){
+    if(d<a.startDate) continue;
+    const e=dateEntries(a,d); let what='', tick='<span class="box"></span>';
+    if(e.r){ what=`<span class="rest">REST</span> <span class="cd">(Day ${e.r.day})</span>`; tick='<span class="box">✓</span>'; }
+    else if(e.w.length||caughtFor(a,d).length){ what=caughtFor(a,d).map(w=>`<div><span class="cd">Day ${w.day}</span> <span class="ex">caught up on ${fmtShort(w.date)}</span></div>`).join('')+e.w.map(w=>`<div><span class="cd">Day ${w.day}</span> <span class="ex">${w.for?`(catch-up for ${fmtShort(w.for)}) `:''}${exLine(def,w.day,a.swaps)}</span></div>`).join(''); tick='<span class="box">✓</span>'; }
+    else if(d<t){ what=miss.has(d)?'<span class="miss">Missed — still to catch up</span>':''; tick=''; }
+    else if(sch&&sch.map[d]){ const r=sch.map[d];
+      if(r.rest) what=`<span class="rest">REST</span> <span class="cd">(Day ${r.days.join(', ')})</span>`;
+      else if(r.days.length){ what=r.days.map(n=>`<div><span class="cd">Day ${n}</span> <span class="ex">${exLine(def,n,a.swaps)}</span></div>`).join(''); tick=r.days.map(()=>'<span class="box"></span>').join('<br>'); }
+      else { what='<span class="miss">Free day</span>'; tick=''; } }
+    else { what=''; tick=''; }
+    const oa=actsOn(d); if(oa.length) what+=`<div class="ex">Other activity: ${oa.map(x=>esc(actLine(x))).join(', ')}</div>`;
+    rows+=`<tr><td class="dt">${fmtShort(d)}</td><td>${what}</td><td class="tk">${tick}</td></tr>`;
+  }
+  return `<table class="pl"><thead><tr><th>Date</th><th>Challenge Day and exercises</th><th>Done</th></tr></thead><tbody>${rows}</tbody></table>`;
+}
+const SITE='Do30DayChallenge.com';
+function printHead(title){ return `<div class="ph1"><img src="icons/icon-192.png" alt=""><h1>${title}</h1><span class="url">${SITE}</span></div>`; }
+function printFooter(){ return `<div class="ft"><span>${esc(state.settings.name)}</span><span>${SITE} · Created by Stuart Parkins · © 2026 Stuart Parkins. All rights reserved.</span></div>`; }
+function buildPrintDates(kind,pick){
+  const a=F(), t=pick||today(), first=a.month+'-01', end=monthEnd(a.month), dates=[];
+  if(kind==='month'){ for(let d=first; d<=end; d=addDays(d,1)) dates.push(d); return {dates,label:monthLabel(a.month)}; }
+  const base = t<first ? first : t>end ? end : t;
+  const mon=addDays(base,-((parse(base).getDay()+6)%7));
+  for(let i=0;i<7;i++){ const d=addDays(mon,i); if(d>=first&&d<=end) dates.push(d); }
+  return {dates,label:`${fmtShort(dates[0])} to ${fmtShort(dates[dates.length-1])}`};
+}
+function printPlan(kind,pickDate){
+  const a=F(), {dates,label}=buildPrintDates(kind,pickDate), c=calc(a,today()), isUp=a===state.upcoming;
+  document.getElementById('print').innerHTML=`${printHead(`${monthName(a.month)} ${esc(a.definition.name)} Challenge`)}<p class="sub">${label} · ${isUp?`starts ${fmtShort(a.startDate)} · ${c.L} rest days planned or to use`:`${c.done}/${c.len} Challenge Days done · ${c.L} rest ${pl(c.L,'day')} left`} · printed ${fmtShort(today())}</p>${printRows(a,dates)}${printFooter()}`;
+  doPrint();
+}
+function printProgramme(){
+  const f=F(), def = f ? f.definition : CHALLENGES[0], swaps = f ? f.swaps : {};
+  // Map each Challenge Day to its date and whether it's a rest: logged entries first, then the plan.
+  const dm={};
+  if(f){
+    f.completions.forEach(w=>dm[w.day]={date:w.date,rest:false});
+    f.rests.forEach(r=>dm[r.day]={date:r.date,rest:true});
+    const t=today(); if(t<=monthEnd(f.month)) schedule(f,t).rows.forEach(r=>r.days.forEach(n=>{ if(!dm[n]) dm[n]={date:r.date,rest:r.rest}; }));
+  }
+  let g='';
+  for(let n=1;n<=def.length;n++){
+    const m=dm[n], dt=m?`<span class="dd">${DOW[parse(m.date).getDay()]} ${Number(m.date.slice(8))}</span>`:'';
+    const body = m&&m.rest ? `<div class="rs">REST</div>` : resolveDay(def,n,swaps).map(i=>`<div class="l"><b>${i.ex.measure==='seconds'?i.target+'s':i.target}</b>${esc(i.ex.name)}</div>`).join('');
+    g+=`<div class="gc${m&&m.rest?' gr':''}"><div class="hd"><span>DAY ${n}${dt}</span><span class="box"></span></div>${body}</div>`;
+  }
+  const ids=[...new Set(def.exercises.map(e=>swaps[e.id]||e.id))];
+  const keys=ids.map(id=>`<div class="key">${EX[id].image?`<img src="${EX[id].image}" alt="">`:''}<span>${esc(EX[id].name)}</span></div>`).join('');
+  document.getElementById('print').innerHTML=`${printHead(`${f?monthName(f.month)+' ':'30 Day '}${esc(def.name)} Challenge`)}<p class="sub">${esc(def.focus)} · tick each day as you go · ${f?'dates and REST days follow your plan, so reprint if you change it':`up to ${def.restAllowance} rest days, each one uses a Challenge Day`} · two-sided reps count both sides (Bicycle Crunch 20 = 10 each side)</p><div class="grid">${g}</div><div class="keys">${keys}</div>${printFooter()}`;
+  doPrint();
+}
+function printDefaultDate(){ const a=F(), t=today(); return t<a.month+'-01' ? a.month+'-01' : t>monthEnd(a.month) ? monthEnd(a.month) : t; }
+function doPrint(){ closeSheet();
+  const imgs=[...document.querySelectorAll('#print img')].map(i=>i.complete?Promise.resolve():new Promise(r=>{ i.onload=i.onerror=r; }));
+  Promise.race([Promise.all(imgs),new Promise(r=>setTimeout(r,1500))]).then(()=>setTimeout(()=>window.print(),50)); }
+window.addEventListener('afterprint',()=>{ document.getElementById('print').innerHTML=''; const ps=document.getElementById('pgcert'); if(ps) ps.textContent=''; });
+
+/* ===================== EVENTS ===================== */
+const A={
+  tab:x=>{ chosenDay=null; if(x!=='calendar') focus='active'; tab=x; closeSheet(); render(); window.scrollTo(0,0); },
+  dismissNotice:()=>{ notice=null; render(); },
+  dismissIos:()=>{ state.settings.iosTipDismissed=true; save(); render(); },
+  goBackup:()=>{ tab='settings'; render(); setTimeout(()=>document.getElementById('backupCard')?.scrollIntoView({behavior:'smooth'}),50); },
+  pickStart:x=>{ startPick=x; const d=document.getElementById('startDate')?.value; render(); if(d) { document.getElementById('startDate').value=d; document.getElementById('startInfo').innerHTML=startInfo(d); } },
+  start:()=>{ const d=document.getElementById('startDate').value, t=today(), nm=nextMonthOf(monthOf(t));
+    if(!d||(monthOf(d)!==monthOf(t)&&monthOf(d)!==nm)) return toast('Pick a start date in this month or next month');
+    if(monthOf(d)===monthOf(t)&&state.active) return toast('This month already has a challenge');
+    if(monthOf(d)===nm&&state.upcoming) return toast(`${monthName(nm)} is already set up`);
+    startChallenge(startPick,d); setupNext=false;
+    if(monthOf(d)===nm){ toast(`${monthName(nm)} set up — plan and print it from Calendar`); }
+    render(); },
+  startMonth:x=>{ startMonth=x; startMonthChosen=true; pendingMix=null; pendingMixKind=null; render(); },
+  pickLevel:x=>{ startLevel=LEVELS[x]?x:'easy'; keepStartDate(); },
+  mixShuffle:()=>{ const cur=pendingMix?pendingMix.map(e=>e.id):[]; const m=startTargetMonth(); let next, tries=0;
+    do{ next=makePending(startPick,m); tries++; } while(tries<8 && next.map(e=>e.id).sort().join()===cur.slice().sort().join());
+    pendingMix=next; pendingMixKind=startPick; keepStartDate(); toast('New mix suggested'); },
+  mixSwap:i=>{ const idx=Number(i), cur=pendingMix&&pendingMix[idx]; if(!cur) return; const role=cur.role||'core';
+    const inSet=new Set(pendingMix.filter(e=>(e.role||'core')===role).map(e=>e.id));
+    const row=id=>`<button class="listbtn" data-act="mixPick" data-arg="${idx}|${id}"><span><b>${esc(EX[id].name)}</b><br><span class="tiny muted">${EX[id].areas.map(a=>AREAS[a]).join(', ')} \u00b7 ${EX[id].measure==='seconds'?'timed':'reps'}</span></span><span>\u203a</span></button>`;
+    let body;
+    if(role==='warmup'){ const opts=Object.keys(WARM_RANGES).filter(id=>id!==cur.id); body=`<p class="small muted">Warm-ups</p>${opts.map(row).join('')}`; }
+    else if(role==='extra'){ const opts=Object.keys(EXTRA_RANGES).filter(id=>!inSet.has(id)); body=`<p class="small muted">Extras</p>${opts.map(row).join('')}`; }
+    else { const slot=MIX_SLOTS.find(s=>s.id===cur.slot), same=(slot?slot.ex:[]).filter(id=>!inSet.has(id)), other=Object.keys(MIX_RANGES).filter(id=>!inSet.has(id)&&!same.includes(id));
+      body=`${same.length?`<p class="small muted">Same type (${esc(slot.name.toLowerCase())})</p>${same.map(row).join('')}`:''}<p class="small muted" style="margin-top:10px">Other ab exercises</p>${other.map(row).join('')}`; }
+    openSheet(`<h2>Swap ${esc(EX[cur.id].name)}</h2>${body}<button class="btn block" data-act="closeSheet">Cancel</button>`); },
+  mixPick:x=>{ const [i,id]=String(x).split('|'), idx=Number(i), e=pendingMix&&pendingMix[idx]; if(!e) return; const r=rangeFor({id,role:e.role}); if(!r) return;
+    e.id=id; e.start=r[0]; e.end=r[1];
+    if((e.role||'core')==='core'&&MIX_LATE.includes(id)&&e.fromDay===1){ const j=pendingMix.findIndex(x=>(x.role||'core')==='core'&&x.fromDay>1&&!MIX_LATE.includes(x.id)); if(j>=0){ const d=pendingMix[j].fromDay; pendingMix[j].fromDay=1; e.fromDay=d; toast(`${EX[id].name} starts from Day ${d}`); } }
+    pendingMix.sort((a,b)=>(ROLE_ORDER[a.role||'core']-ROLE_ORDER[b.role||'core'])||(a.fromDay-b.fromDay)); closeSheet(); keepStartDate(); },
+  setupNext:()=>{ setupNext=true; startMonth='next'; render(); window.scrollTo(0,0); },
+  cancelSetup:()=>{ setupNext=false; startMonth='this'; render(); },
+  planUpcoming:()=>{ focus='upcoming'; tab='calendar'; render(); window.scrollTo(0,0); },
+  calFocus:x=>{ focus=x; render(); },
+  cancelUpcoming:()=>{ const u=state.upcoming; confirmSheet(`Cancel ${monthName(u.month)}’s challenge?`,'Its plan will be deleted. You can set it up again at any time before it starts.','Cancel challenge',()=>{ state.upcoming=null; focus='active'; save(); closeSheet(); render(); },true); },
+  startWorkout:x=>openWorkout(x!==undefined&&x!==''?Number(x):null),
+  markDone:x=>{ const n=(x!==undefined&&x!=='')?Number(x):calc(state.active,today()).next; confirmSheet(`Mark Challenge Day ${n} done?`,'Use this if you did the workout without the app.','Mark done',()=>{ if(logWorkout(today(),n)){ chosenDay=null; toast(lastCatch?`Day ${n} done \u2014 caught up ${fmtShort(lastCatch)}`:`Challenge Day ${n} done`); } closeSheet(); render(); }); },
+  openDisclaimer:()=>openSheet(`<h2>Disclaimer</h2><p>30 Day Challenge gives general exercise information only. It is not medical, health or fitness advice and does not replace advice from a doctor, physiotherapist or qualified instructor.</p><ul class="small"><li>Check with a health professional before starting if you have a medical condition, an injury, back or joint problems, are pregnant, or haven\u2019t exercised for a while.</li><li>Warm up, use good form, and work at your own level. The reps and times are a guide, not a target you must hit.</li><li>Stop straight away if you feel pain, dizziness, chest discomfort or shortness of breath, and seek medical help if needed.</li><li>You take part at your own risk. So far as the law allows, Stuart Parkins accepts no liability for injury, loss or damage arising from use of the app or its printouts.</li><li>Your data stays on your device. Keep your own backups; data lost from your browser can\u2019t be recovered.</li></ul><p class="tiny muted">\u00a9 2026 Stuart Parkins. All rights reserved.</p><button class="btn block" data-act="closeSheet">Close</button>`),
+  openPickDay:()=>{ const a=state.active, t=today(), c=calc(a,t), sch=t<=monthEnd(a.month)?schedule(a,t):null, where={};
+    if(sch) sch.rows.forEach(r=>r.days.forEach(n=>where[n]=(r.rest?'rest ':'')+fmtShort(r.date)));
+    const list=outstandingDays(a).map(n=>{ const ex=resolveDay(a.definition,n,a.swaps).map(i=>`${i.target}${i.ex.measure==='seconds'?'s':''} ${esc(i.ex.name)}`).join(', ');
+      return `<button class="listbtn" data-act="pickDay" data-arg="${n}"><span><b>Day ${n}</b>${n===c.next?' <span class="pill">suggested</span>':''}<br><span class="small muted">${ex}</span></span><span class="small muted" style="text-align:right">${where[n]?'Planned<br>'+where[n]:''}</span></button>`; }).join('');
+    openSheet(`<h2>Do a different day</h2><p class="small muted">Pick any Challenge Day still to do. The others stay outstanding and the plan adjusts.</p>${list}<button class="btn block" data-act="closeSheet">Cancel</button>`); },
+  pickDay:x=>{ chosenDay = (x===''||x==null) ? null : Number(x); closeSheet(); render(); window.scrollTo(0,0); },
+  pinDay:d=>{ pinReturn=sheetKind; const a=F(), t=today(), sch=schedule(a,t), r=sch.map[d], mine=new Set(r?r.days:(d===t?sch.todayExtra:[])), where={};
+    sch.rows.forEach(x=>{ if(x.date!==d) x.days.forEach(n=>where[n]=(x.rest?'rest ':'')+fmtShort(x.date)); });
+    const list=outstandingDays(a).map(n=>`<label><input type="checkbox" value="${n}" ${mine.has(n)?'checked':''}> <b>Day ${n}</b> <span class="small muted">${where[n]?'\u2014 now '+where[n]:''}</span></label>`).join('');
+    openSheet(`<h2>${fmtLong(d)}</h2><p class="small muted">Tick the Challenge Days to do on this date. Days you take from another date are replaced there automatically.</p><div class="missed-list">${list}</div><div class="row" style="margin-top:12px"><button class="btn" data-act="pinAuto" data-arg="${d}">Automatic</button><button class="btn primary" data-act="pinSave" data-arg="${d}">Save</button></div>`,'pin:'+d); },
+  pinSave:d=>{ const a=F(); a.planDays=a.planDays||{};
+    const days=[...sheetEl.querySelectorAll('.missed-list input:checked')].map(i=>Number(i.value)).sort((x,y)=>x-y);
+    Object.keys(a.planDays).forEach(k=>{ if(k!==d){ a.planDays[k]=a.planDays[k].filter(n=>!days.includes(n)); if(!a.planDays[k].length) delete a.planDays[k]; } });
+    if(days.length){ a.planDays[d]=days; delete a.plan[d]; } else { delete a.planDays[d]; a.plan[d]=0; }
+    a.plannedRestDates=a.plannedRestDates.filter(x=>x!==d);
+    save(); backFromPin(d); toast(days.length?`${fmtShort(d)}: ${daysText(days)}`:`${fmtShort(d)}: no workouts`); },
+  pinAuto:d=>{ const a=F(); if(a.planDays) delete a.planDays[d]; delete a.plan[d]; save(); backFromPin(d); },
+  restToday:()=>{ const c=calc(state.active,today()); c.next=restDue(state.active,today());
+    const after = c.S>=0 ? 'No catch-up needed.' : `Your catch-up stays at ${-c.S} extra ${pl(-c.S,'workout')}.`;
+    confirmSheet('Rest today?',`Rest uses Challenge Day ${c.next} and 1 of your ${c.L} rest ${pl(c.L,'day')}. ${after}`,'Rest today',()=>{ logRest(today()); closeSheet(); render(); }); },
+  undo:()=>{ const le=lastEntry(state.active); if(!le) return;
+    confirmSheet('Undo last entry?',`Remove Challenge Day ${le.day} (${le.type} on ${fmtShort(le.date)})?`,'Undo',()=>{ undoLast(); closeSheet(); render(); },true); },
+  openPlanner:()=>openSheet(plannerHtml(),'planner'),
+  openBadges:()=>openSheet(badgesHtml(),'badges'),
+  shareBadge:id=>shareBadge(id),
+  openCert:id=>openSheet(certHtml(id),'cert'),
+  printCert:id=>printCertificate(id),
+  doAddHist:()=>addHistory(),
+  openPrint:()=>openSheet(`<h2>Print</h2><p class="small muted">Prints on A4. To keep a copy, choose “Save as PDF” in the print window.</p><div class="stack">
+    <div class="card" style="margin:0"><b>A week</b><p class="small muted" style="margin:2px 0 8px">Monday to Sunday of the week containing this date, with each day’s exercises and tick boxes</p><input type="date" id="weekDate" value="${printDefaultDate()}" min="${F().month}-01" max="${monthEnd(F().month)}"><button class="btn block" style="margin-top:8px" data-act="printWeek">Print this week</button></div>
+    <button class="listbtn" data-act="printMonth"><span><b>Whole month</b><br><span class="small muted">Every date, with your plan and what’s done so far</span></span></button>
+    <button class="listbtn" data-act="printProgramme"><span><b>Programme sheet</b><br><span class="small muted">All 30 Challenge Days on one page, no dates — for the fridge</span></span></button>
+    <button class="btn block" data-act="closeSheet">Cancel</button></div>`),
+  printWeek:()=>printPlan('week',document.getElementById('weekDate')?.value||null),
+  printMonth:()=>printPlan('month'),
+  printProgramme:()=>printProgramme(),
+  openMissed:()=>openSheet(missedHtml(),'missed'),
+  convertMissed:()=>{ const ds=[...sheetEl.querySelectorAll('.missed-list input:checked')].map(i=>i.value).sort();
+    const c=calc(state.active,today()); if(ds.length>c.L) return toast(`You only have ${c.L} rest ${pl(c.L,'day')} left`);
+    ds.forEach(d=>logRest(d)); closeSheet(); render(); if(ds.length) toast(`${ds.length} ${pl(ds.length,'day')} marked as rest`); },
+  plPlus:d=>{ const a=F(), sch=schedule(a,today()), r=sch.map[d];
+    if(r&&r.chosen){ const used=new Set(); sch.rows.forEach(x=>x.days.forEach(n=>used.add(n))); const add=outstandingDays(a).find(n=>!r.days.includes(n)&&!used.has(n)) ?? outstandingDays(a).find(n=>!r.days.includes(n));
+      if(add==null) return toast('No more Challenge Days to add'); a.planDays[d]=[...r.days,add].sort((x,y)=>x-y);
+      Object.keys(a.planDays).forEach(k=>{ if(k!==d){ a.planDays[k]=a.planDays[k].filter(n=>n!==add); if(!a.planDays[k].length) delete a.planDays[k]; } }); }
+    else a.plan[d]=(r?r.count:0)+1;
+    save(); refreshSheet(d); },
+  plMinus:d=>{ const a=F(), r=schedule(a,today()).map[d];
+    if(r&&r.chosen){ a.planDays[d]=r.days.slice(0,-1); if(!a.planDays[d].length){ delete a.planDays[d]; a.plan[d]=0; } }
+    else a.plan[d]=Math.max(0,(r?r.count:0)-1);
+    save(); refreshSheet(d); },
+  plRest:d=>{ const a=F(), c=calc(a,today()); a.skipRestDates=a.skipRestDates||[];
+    if(c.planned.includes(d)){
+      if(a.plannedRestDates.includes(d)) a.plannedRestDates=a.plannedRestDates.filter(x=>x!==d);
+      if(isUsualRestDay(d) && !a.skipRestDates.includes(d)) a.skipRestDates.push(d);
+    } else {
+      const explicit=a.plannedRestDates.filter(x=>c.dates.includes(x)).length;
+      if(c.L===0||explicit>=c.L) return toast('No rest days left to plan');
+      a.plannedRestDates.push(d); a.skipRestDates=a.skipRestDates.filter(x=>x!==d); delete a.plan[d]; if(a.planDays) delete a.planDays[d];
+      if(c.planned.length>=c.L) toast('Moved a usual rest day to keep within your 8');
+    }
+    save(); refreshSheet(d); },
+  restWd:x=>{ const n=Number(x), w=state.settings.restWeekdays||[]; state.settings.restWeekdays = w.includes(n) ? w.filter(v=>v!==n) : [...w,n].sort(); save(); render(); },
+  workInstead:()=>{ const a=state.active, t=today(); a.skipRestDates=a.skipRestDates||[]; a.plannedRestDates=a.plannedRestDates.filter(x=>x!==t); if(!a.skipRestDates.includes(t)) a.skipRestDates.push(t); save(); render(); },
+  plReset:()=>{ F().plan={}; F().planDays={}; save(); refreshSheet(); toast('Back to the suggested plan'); },
+  day:d=>openSheet(dayHtml(d),'day:'+d),
+  hday:d=>{ const el=document.getElementById('hdayInfo'); if(!el) return; const ch=sheetKind==='hist:active'?state.active:state.history[Number((sheetKind||'').split(':')[1])];
+    if(!ch) return; const e=dateEntries(ch,d); el.textContent=`${fmtLong(d)}: `+(e.r?`rest (Day ${e.r.day})`:e.w.filter(w=>!w.for).length?daysText(e.w.filter(w=>!w.for).map(w=>w.day))+' \u2713':caughtFor(ch,d).length?daysText(caughtFor(ch,d).map(w=>w.day))+` caught up on ${fmtShort(caughtFor(ch,d)[0].date)}`:'nothing logged'); },
+  catchStart:x=>{ const [d,k]=String(x).split('|'); closeSheet(); openWorkout(Number(k),d); },
+  catchMark:x=>{ const [d,k]=String(x).split('|'), n=Number(k);
+    confirmSheet(`Mark Day ${n} as catch-up?`,`It\u2019s logged as done today and ${fmtShort(d)} gets a blue tick.`,'Mark done',()=>{ if(logWorkout(today(),n,d)){ toast(`Day ${n} done \u2014 caught up ${fmtShort(d)}`); } closeSheet(); render(); }); },
+  catchPick:d=>{ const a=state.active, c=calc(a,today());
+    const list=outstandingDays(a).map(n=>{ const ex=resolveDay(a.definition,n,a.swaps).map(i=>`${i.target}${i.ex.measure==='seconds'?'s':''} ${esc(i.ex.name)}`).join(', ');
+      return `<div class="listbtn"><span><b>Day ${n}</b>${n===c.next?' <span class="pill">suggested</span>':''}<br><span class="small muted">${ex}</span></span><span class="row" style="gap:6px;margin:0"><button class="btn" data-act="catchStart" data-arg="${d}|${n}">Start</button><button class="btn" data-act="catchMark" data-arg="${d}|${n}">Done</button></span></div>`; }).join('');
+    openSheet(`<h2>Catch up ${fmtShort(d)} today</h2><p class="small muted">Which Challenge Day? It\u2019s logged today and ${fmtShort(d)} gets a blue tick.</p>${list}<button class="btn block" data-act="day" data-arg="${d}">Back</button>`,'day:'+d); },
+  backdatePick:d=>{ const a=state.active, c=calc(a,today());
+    const list=outstandingDays(a).map(n=>{ const ex=resolveDay(a.definition,n,a.swaps).map(i=>`${i.target}${i.ex.measure==='seconds'?'s':''} ${esc(i.ex.name)}`).join(', ');
+      return `<button class="listbtn" data-act="backdate" data-arg="${d}|${n}"><span><b>Day ${n}</b>${n===c.next?' <span class="pill">suggested</span>':''}<br><span class="small muted">${ex}</span></span></button>`; }).join('');
+    openSheet(`<h2>${fmtLong(d)}</h2><p class="small muted">Which Challenge Day did you do on this date?</p>${list}<button class="btn block" data-act="day" data-arg="${d}">Back</button>`,'day:'+d); },
+  backdate:x=>{ const [d,k]=String(x).split('|'), n=k?Number(k):calc(state.active,today()).next; if(logWorkout(d,n)){ toast(`Day ${n} logged on ${fmtShort(d)}`); refreshSheet(d); } },
+  restOn:d=>{ const c=calc(state.active,today()); c.next=restDue(state.active,today()); if(logRest(d)){ toast(`Day ${c.next} marked as rest`); refreshSheet(d); } },
+  exFilter:x=>{ exFilter=x; render(); },
+  exDetail:id=>openSheet(exDetailHtml(id)),
+  histDetail:x=>openSheet(histHtml(x),'hist:'+x),
+  closeSheet:()=>{ closeSheet(); render(); },
+  confirmOk:()=>{ const cb=confirmSheet.cb; confirmSheet.cb=null; if(cb) cb(); },
+  theme:x=>{ state.settings.theme=x; save(); applyTheme(); render(); },
+  actAdd:type=>openSheet(actFormHtml(type),'act'),
+  actSave:type=>{ const d=document.getElementById('aDate').value||today(); if(d>today()) return toast('That date is in the future');
+    const mins=Math.max(0,Math.round(Number(document.getElementById('aMins').value)||0)), de=document.getElementById('aDist'), dv=de?Math.max(0,Number(de.value)||0):0, note=document.getElementById('aNote').value.trim();
+    const a={id:Date.now().toString(36)+Math.random().toString(36).slice(2,6),date:d,type,at:new Date().toISOString()}; if(mins) a.mins=mins; if(dv) a.km=Math.round((state.settings.units==='km'?dv:dv*KM_PER_MI)*100)/100; if(note) a.note=note;
+    acts().push(a); save(); closeSheet(); render(); toast(`${ACT_BY_ID[type].name} logged${d!==today()?' for '+fmtShort(d):''}`); },
+  actDel:id=>{ const a=acts().find(x=>x.id===id); if(!a) return; const reopen=sheetKind;
+    confirmSheet('Delete this activity?',`${fmtShort(a.date)} \u00b7 ${esc(actLine(a))}`,'Delete',()=>{ state.activities=acts().filter(x=>x.id!==id); save(); closeSheet(); render(); if(reopen&&reopen.startsWith('actm:')) A.actMonth(reopen.slice(5)); },true); },
+  actMonth:m=>{ const list=acts().filter(a=>a.date.startsWith(m)); if(!list.length) return closeSheet(); openSheet(actListHtml(list,`${monthLabel(m)} \u2014 other activity`),'actm:'+m); },
+  units:x=>{ state.settings.units=x; save(); render(); },
+  weekTarget:x=>{ state.settings.weeklyTarget=Number(x); save(); render(); },
+  export:()=>exportBackup(false),
+  copyLink:async()=>{ let link; try{ link=await makeBackupLink(); }catch(e){ return toast('Couldn\u2019t make a backup link'); }
+    state.lastBackupAt=new Date().toISOString(); save();
+    try{ await navigator.clipboard.writeText(link); render(); toast(`Backup link copied (${link.length.toLocaleString('en-GB')} characters). Paste it somewhere safe.`); }
+    catch(e){ render(); openSheet(`<h2>Your backup link</h2><p class="small muted">Select it all and copy it somewhere safe.</p><textarea id="linkOut" readonly style="width:100%;min-height:140px;font:12px monospace;border-radius:10px;border:1px solid var(--line);padding:8px;background:var(--card);color:var(--text)">${esc(link)}</textarea><button class="btn block" data-act="closeSheet" style="margin-top:8px">Done</button>`); setTimeout(()=>{ const t=document.getElementById('linkOut'); t&&t.select(); },50); } },
+  pasteLink:()=>openSheet(`<h2>Paste a backup link</h2><p class="small muted">Paste the whole link you saved, then tap Restore. On iPhone, use this rather than tapping the link, so it restores into this app.</p><textarea id="linkIn" placeholder="https://Do30DayChallenge.com/#b=\u2026" style="width:100%;min-height:120px;font:12px monospace;border-radius:10px;border:1px solid var(--line);padding:8px;background:var(--card);color:var(--text)"></textarea><div class="row" style="margin-top:8px"><button class="btn" data-act="closeSheet">Cancel</button><button class="btn primary" data-act="restoreLink">Restore</button></div>`),
+  restoreLink:()=>restoreFromText(document.getElementById('linkIn')?.value),
+  import:()=>document.getElementById('importFile').click(),
+  doImport:()=>{ if(!pendingImport) return; if(state.active||state.history.length) exportBackup(true);
+    const keepTest=state.settings.testToday, keepTip=state.settings.iosTipDismissed; state=pendingImport; migrateFlutter(state); state.settings={...DEFAULT_SETTINGS,...state.settings,testToday:keepTest,iosTipDismissed:keepTip}; pendingImport=null;
+    if(location.hash.startsWith('#b=')) history.replaceState(null,'',location.pathname+location.search);
+    save(); closeSheet(); applyTheme(); render(); toast('Backup imported'); },
+  share:()=>share(),
+  shareApp:()=>shareApp(),
+  testApply:()=>{ const v=document.getElementById('testDate').value; if(!v) return; state.settings.testToday=v; save(); render(); toast('Test date set'); },
+  testClear:()=>{ state.settings.testToday=null; save(); render(); toast('Using the real date'); },
+  testNext:()=>{ state.settings.testToday=addDays(today(),1); save(); render(); },
+  testPrev:()=>{ state.settings.testToday=addDays(today(),-1); save(); render(); },
+  abandon:()=>confirmSheet('Abandon this challenge?','It will be deleted, not saved to History. Export a backup first if unsure.','Abandon',()=>{ state.active=null; save(); closeSheet(); tab='today'; render(); },true),
+  resetAll:()=>confirmSheet('Delete all data?','Everything on this device, including History, will be deleted. This can\u2019t be undone.','Delete everything',()=>{ const t=state.settings.testToday; state=freshState(); state.settings.testToday=t; save(); closeSheet(); tab='today'; render(); },true),
+  wkNext:()=>{ stopTimer(); if(wk.i<wk.items.length-1){ wk.i++; resetTimer(); renderWk(); } else {
+      if(!outstandingDays(state.active).includes(wk.day)){ toast('That day was already logged'); return closeWorkout(); }
+      logWorkout(today(),wk.day,wk.catchFor); wk.caught=lastCatch; chosenDay=null; wk.finished=true; tm=null; renderWk(); } },
+  wkBack:()=>{ stopTimer(); if(wk.i>0){ wk.i--; resetTimer(); renderWk(); } },
+  wkQuit:()=>confirmSheet('Leave this workout?','Nothing will be logged for this Challenge Day.','Leave',()=>{ closeSheet(); closeWorkout(); }),
+  wkClose:()=>closeWorkout(),
+  wkContinue:()=>{ closeWorkout(); openWorkout(); },
+  tmToggle:()=>{ if(!tm) return; if(tm.running){ stopTimer(); updTimer(); } else startTimer(); },
+  tmReset:()=>{ resetTimer(); updTimer(); }
+};
+function backFromPin(d){ const k=pinReturn; pinReturn=null; if(k==='planner') openSheet(plannerHtml(),'planner'); else if(k&&k.startsWith('day:')) openSheet(dayHtml(k.slice(4)),k); else closeSheet(); render(); }
+function refreshSheet(d){
+  if(sheetKind==='planner') openSheet(plannerHtml(),'planner');
+  else if(sheetKind&&sheetKind.startsWith('day:')) openSheet(dayHtml(sheetKind.slice(4)),sheetKind);
+  render();
+}
+document.addEventListener('click',e=>{ const b=e.target.closest('[data-act]'); if(!b||b.disabled) return; const f=A[b.dataset.act]; if(f){ e.preventDefault(); f(b.dataset.arg,b); } });
+document.addEventListener('change',e=>{
+  const t=e.target;
+  if(t.dataset&&t.dataset.set){ state.settings[t.dataset.set]=t.checked; save(); }
+  if(t.id==='startDate'){ document.getElementById('startInfo').innerHTML=startInfo(t.value); }
+});
+document.addEventListener('input',e=>{ if(e.target.id==='nameIn'){ state.settings.name=e.target.value; save(); } });
+
+/* ===================== RENDER ===================== */
+const NAV=[['today','Today','<path d="M12 3v2m0 14v2M3 12h2m14 0h2M5.6 5.6 7 7m10 10 1.4 1.4M5.6 18.4 7 17M17 7l1.4-1.4"/><circle cx="12" cy="12" r="4"/>'],
+ ['calendar','Calendar','<rect x="3" y="5" width="18" height="16" rx="2"/><path d="M3 10h18M8 3v4m8-4v4"/>'],
+ ['exercises','Exercises','<path d="M4 9v6m16-6v6M7 7v10m10-10v10M7 12h10"/>'],
+ ['history','History','<path d="M3 12a9 9 0 1 0 3-6.7L3 8"/><path d="M3 3v5h5M12 7v5l3 2"/>'],
+ ['settings','Settings','<circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.7 1.7 0 0 0 .3 1.8l.1.1a2 2 0 1 1-2.8 2.8l-.1-.1a1.7 1.7 0 0 0-1.8-.3 1.7 1.7 0 0 0-1 1.5V21a2 2 0 1 1-4 0v-.1a1.7 1.7 0 0 0-1.1-1.5 1.7 1.7 0 0 0-1.8.3l-.1.1a2 2 0 1 1-2.8-2.8l.1-.1a1.7 1.7 0 0 0 .3-1.8 1.7 1.7 0 0 0-1.5-1H3a2 2 0 1 1 0-4h.1a1.7 1.7 0 0 0 1.5-1.1 1.7 1.7 0 0 0-.3-1.8l-.1-.1a2 2 0 1 1 2.8-2.8l.1.1a1.7 1.7 0 0 0 1.8.3H9a1.7 1.7 0 0 0 1-1.5V3a2 2 0 1 1 4 0v.1a1.7 1.7 0 0 0 1 1.5 1.7 1.7 0 0 0 1.8-.3l.1-.1a2 2 0 1 1 2.8 2.8l-.1.1a1.7 1.7 0 0 0-.3 1.8V9a1.7 1.7 0 0 0 1.5 1H21a2 2 0 1 1 0 4h-.1a1.7 1.7 0 0 0-1.5 1z"/>'],
+ ['help','Help','<circle cx="12" cy="12" r="9"/><path d="M9.5 9.2a2.6 2.6 0 0 1 5 .9c0 1.7-2.5 2.3-2.5 3.9"/><circle cx="12" cy="17" r=".6" fill="currentColor"/>']];
+function applyTheme(){ const t=state.settings.theme; if(t==='auto') delete document.documentElement.dataset.theme; else document.documentElement.dataset.theme=t; }
+function render(){
+  ensureCurrent();
+  const v={today:vToday,calendar:vCalendar,exercises:vExercises,history:vHistory,settings:vSettings,help:vHelp}[tab];
+  document.getElementById('app').innerHTML=v()+footerHtml();
+  const h1=document.querySelector('#app header.top h1'); if(h1) h1.insertAdjacentHTML('afterbegin','<img class="appicon" src="icons/icon-192.png" alt="">');
+  document.querySelector('#nav .in').innerHTML=NAV.map(([k,l,p])=>`<button class="${tab===k?'on':''}" data-act="tab" data-arg="${k}" aria-label="${l}"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">${p}</svg>${l}</button>`).join('');
+  if(tab==='settings'){ const pi=document.getElementById('persistInfo');
+    if(pi&&navigator.storage&&navigator.storage.persisted) navigator.storage.persisted().then(p=>{ pi.textContent=p?'This browser has agreed to keep your data.':'Storage isn\u2019t marked permanent in this browser, so keep backups.'; }).catch(()=>{}); }
+  checkBadges(); setTimeout(showBadgeQueue,250);
+}
+applyTheme(); render();
+if(location.hash.startsWith('#b=')||location.hash.startsWith('#h=')) restoreFromText(location.href);
+/* ===================== OFFLINE / UPDATES ===================== */
+if('serviceWorker' in navigator && location.protocol!=='file:'){
+  window.addEventListener('load',()=>{
+    navigator.serviceWorker.register('sw.js').then(reg=>{
+      const offer=()=>{ const b=document.createElement('div'); b.className='banner'; b.id='updBanner';
+        b.style.cssText='position:fixed;left:12px;right:12px;bottom:calc(72px + env(safe-area-inset-bottom));z-index:50;max-width:496px;margin:0 auto;box-shadow:0 4px 16px rgba(0,0,0,.15)';
+        b.innerHTML='<span>A new version of the app is ready.</span><button class="btn ghost" id="updBtn">Refresh</button>';
+        if(!document.getElementById('updBanner')){ document.body.appendChild(b);
+          document.getElementById('updBtn').onclick=()=>{ reg.waiting&&reg.waiting.postMessage('skipWaiting'); }; } };
+      if(reg.waiting && navigator.serviceWorker.controller) offer();
+      reg.addEventListener('updatefound',()=>{ const w=reg.installing; w&&w.addEventListener('statechange',()=>{ if(w.state==='installed'&&navigator.serviceWorker.controller) offer(); }); });
+      setInterval(()=>reg.update().catch(()=>{}),60*60*1000);
+    }).catch(()=>{});
+    let reloaded=false; const hadController=!!navigator.serviceWorker.controller;
+    navigator.serviceWorker.addEventListener('controllerchange',()=>{ if(hadController && !reloaded){ reloaded=true; location.reload(); } });
+  });
+}
+window.__engine={calc,schedule,summarise,resolveDay,validateDef,addDays,monthEnd,CHALLENGES,EX,printPlan,printProgramme,shareText};
+</script>
+</body>
+</html>
