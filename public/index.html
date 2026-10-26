@@ -13,9 +13,9 @@
 <link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
 <title>30 Day Challenge</title>
 <style>
-:root{--bg:#f4f6f8;--card:#fff;--text:#15202b;--muted:#5b6673;--line:#e2e7ec;--accent:#0f766e;--accent2:#14b8a6;--onAccent:#fff;--soft:#e3f3f1;--ok:#15803d;--okSoft:#dcfce7;--warn:#b45309;--warnSoft:#fef3c7;--catch:#1d4ed8;--catchSoft:#dbeafe;--bad:#b91c1c;--badSoft:#fee2e2;--rest:#64748b;--restSoft:#e2e8f0;--shadow:0 1px 2px rgba(0,0,0,.06),0 2px 8px rgba(0,0,0,.04)}
-@media (prefers-color-scheme:dark){:root:not([data-theme=light]){--bg:#0e1418;--card:#172026;--text:#e7edf2;--muted:#9aa7b3;--line:#27333c;--accent:#2dd4bf;--accent2:#14b8a6;--onAccent:#06201d;--soft:#113330;--ok:#4ade80;--okSoft:#123321;--warn:#fbbf24;--warnSoft:#3a2d0c;--catch:#60a5fa;--catchSoft:#16294a;--bad:#f87171;--badSoft:#3b1616;--rest:#94a3b8;--restSoft:#253039;--shadow:none}}
-:root[data-theme=dark]{--bg:#0e1418;--card:#172026;--text:#e7edf2;--muted:#9aa7b3;--line:#27333c;--accent:#2dd4bf;--accent2:#14b8a6;--onAccent:#06201d;--soft:#113330;--ok:#4ade80;--okSoft:#123321;--warn:#fbbf24;--warnSoft:#3a2d0c;--catch:#60a5fa;--catchSoft:#16294a;--bad:#f87171;--badSoft:#3b1616;--rest:#94a3b8;--restSoft:#253039;--shadow:none}
+:root{--bg:#f4f6f8;--card:#fff;--text:#15202b;--muted:#5b6673;--line:#e2e7ec;--accent:#0f766e;--accent2:#14b8a6;--onAccent:#fff;--soft:#e3f3f1;--ok:#15803d;--okSoft:#dcfce7;--warn:#b45309;--warnSoft:#fef3c7;--catch:#c2410c;--catchSoft:#ffedd5;--bad:#b91c1c;--badSoft:#fee2e2;--rest:#64748b;--restSoft:#e2e8f0;--shadow:0 1px 2px rgba(0,0,0,.06),0 2px 8px rgba(0,0,0,.04)}
+@media (prefers-color-scheme:dark){:root:not([data-theme=light]){--bg:#0e1418;--card:#172026;--text:#e7edf2;--muted:#9aa7b3;--line:#27333c;--accent:#2dd4bf;--accent2:#14b8a6;--onAccent:#06201d;--soft:#113330;--ok:#4ade80;--okSoft:#123321;--warn:#fbbf24;--warnSoft:#3a2d0c;--catch:#fb923c;--catchSoft:#3a1f0e;--bad:#f87171;--badSoft:#3b1616;--rest:#94a3b8;--restSoft:#253039;--shadow:none}}
+:root[data-theme=dark]{--bg:#0e1418;--card:#172026;--text:#e7edf2;--muted:#9aa7b3;--line:#27333c;--accent:#2dd4bf;--accent2:#14b8a6;--onAccent:#06201d;--soft:#113330;--ok:#4ade80;--okSoft:#123321;--warn:#fbbf24;--warnSoft:#3a2d0c;--catch:#fb923c;--catchSoft:#3a1f0e;--bad:#f87171;--badSoft:#3b1616;--rest:#94a3b8;--restSoft:#253039;--shadow:none}
 *{box-sizing:border-box}
 html,body{margin:0;background:var(--bg);color:var(--text);font:16px/1.45 system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;-webkit-tap-highlight-color:transparent}
 #app{max-width:520px;margin:0 auto;padding:12px 16px calc(96px + env(safe-area-inset-bottom))}
@@ -69,7 +69,8 @@ nav#nav svg{width:24px;height:24px}
 .cell.done{background:var(--okSoft);border-color:color-mix(in srgb,var(--ok) 35%,transparent)}.cell.done .b{color:var(--ok)}
 .cell.multi{box-shadow:inset 0 0 0 2px var(--ok)}
 .cell.rest{background:var(--restSoft)}.cell.rest .b{color:var(--rest)}
-.cell.caught{background:var(--catchSoft);border-color:color-mix(in srgb,var(--catch) 35%,transparent)}.cell.caught .b{color:var(--catch)}
+.cell.caught{background:var(--card);border:2px solid var(--catch)}.cell.caught .b{color:var(--text)}.cell .b .ctk{color:var(--catch);font-style:normal}.cell .b .mk{color:var(--warn)}
+.legend .lgc::before{background:var(--card);border:2px solid var(--catch)}.cell.tcount .b{color:var(--accent)}.cell.tcount.multi{box-shadow:inset 0 0 0 2px var(--accent2)}.legend .nos::before{display:none}
 .ct{color:var(--catch);font-weight:700}
 .cell.missed{background:var(--warnSoft)}.cell.missed .b{color:var(--warn)}
 .cell.planned{border-style:dashed;border-color:var(--accent2)}.cell.planned .b{color:var(--accent)}
@@ -224,7 +225,7 @@ details.hp .eg{background:var(--soft);border-radius:10px;padding:8px 10px;font-s
    © 2026 Stuart Parkins. All rights reserved. Not for reuse, modification or redistribution without written permission. */
 'use strict';
 /* ===================== DATA ===================== */
-const APP_VERSION = '1.9.2';
+const APP_VERSION = '1.9.3';
 const AREAS = {abs:'Abs', obliques:'Obliques', core:'Core', 'hip-flexors':'Hip flexors', shoulders:'Shoulders', chest:'Chest', arms:'Arms', legs:'Legs', cardio:'Cardio'};
 // count: single | total (each side counts 1) | pair (both sides = 1) | eachSide (timed, per side)
 const EXERCISES = [
@@ -446,8 +447,15 @@ function plannedRests(ch,dates,cap){
   return out.sort();
 }
 function isUsualRestDay(d){ return (state.settings.restWeekdays||[]).includes(parse(d).getDay()); }
-function coveredDates(ch){ const s=new Set(); ch.rests.forEach(r=>s.add(r.date)); ch.completions.forEach(c=>s.add(c.for||c.date)); return s; }
-function caughtFor(ch,d){ return ch.completions.filter(c=>c.for===d); }
+function dayOfDate(ch,d){ if(d<ch.startDate||d>monthEnd(ch.month)) return null; const n=daysBetween(ch.startDate,d)+1; return n<=ch.definition.length?n:null; }
+function trueDate(ch,n){ const d=addDays(ch.startDate,n-1); return d<=monthEnd(ch.month)?d:null; }
+// Status of the Challenge Day that belongs to date d: done (on the day or early), caught (done later), rested, or open.
+function ownStatus(ch,d){ const n=dayOfDate(ch,d); if(n==null) return null;
+  const w=ch.completions.find(c=>c.day===n); if(w) return w.date<=d?{s:'done',w,n}:{s:'caught',w,n};
+  const r=ch.rests.find(x=>x.day===n); if(r) return {s:'rested',r,n};
+  return {s:'open',n}; }
+function caughtFor(ch,d){ const o=ownStatus(ch,d); return o&&o.s==='caught'?[o.w]:[]; }
+function isCatchUp(ch,w){ const td=trueDate(ch,w.day); return !!td && w.date>td; }
 function dateEntries(ch,d){ return {w:ch.completions.filter(c=>c.date===d), r:ch.rests.find(r=>r.date===d)}; }
 function calc(ch, t){
   const def=ch.definition, len=def.length, allow=def.restAllowance;
@@ -460,14 +468,9 @@ function calc(ch, t){
   const planned = plannedRests(ch,dates,Math.min(L,R));
   const P=planned.length, S=D-R, Wn=Math.max(0,R-P), wd=D-P;
   const pace = R>0 && wd>0 ? Wn/wd : null;
-  // A past date with nothing logged only counts as missed if you're actually behind:
-  // Challenge Days done so far (incl. today's) fewer than calendar days gone. Most recent gaps are marked first.
-  const gaps=[]; const lastPast = t<=end ? addDays(t,-1) : end;
-  const cov=coveredDates(ch);
-  for(let d=ch.startDate; d<=lastPast; d=addDays(d,1)){ if(!cov.has(d)) gaps.push(d); }
-  const elapsed = lastPast>=ch.startDate ? daysBetween(ch.startDate,lastPast)+1 : 0;
-  const behindBy = Math.max(0, elapsed-done);
-  const missed = behindBy ? gaps.slice(-behindBy) : [];
+  // Missed = a past date (not a rest day) whose own Challenge Day hasn't been done or rested yet.
+  const lastPast = t<=end ? addDays(t,-1) : end, missed=[];
+  for(let d=ch.startDate; d<=lastPast; d=addDays(d,1)){ if(ch.rests.some(r=>r.date===d)) continue; const o=ownStatus(ch,d); if(o&&o.s==='open') missed.push(d); }
   let status = R===0 ? 'complete' : D===0 ? 'cannot' : S<0 ? 'behind' : S===0 ? 'onschedule' : 'ahead';
   const daysLeft = t>end ? 0 : daysBetween(t<ch.startDate?ch.startDate:t, end)+1;
   return {len,allow,W,Rt,done,R,L,D,S,P,planned,Wn,wd,pace,missed,dates,loggedToday,end,next:nextDue(ch,t),status,daysLeft};
@@ -586,17 +589,15 @@ function ensureCurrent(){
 
 /* ===================== ACTIONS ===================== */
 let lastCatch=null;
-function canCatchUp(a,d,t){ return !!a && a===state.active && d>=a.startDate && d<t && monthOf(d)===monthOf(t) && a.month===monthOf(t) && !coveredDates(a).has(d) && !dateEntries(a,t).r; }
+function canCatchUp(a,d,t){ if(!a||a!==state.active||d<a.startDate||d>=t||monthOf(d)!==monthOf(t)||a.month!==monthOf(t)||dateEntries(a,t).r||a.rests.some(r=>r.date===d)) return false; const o=ownStatus(a,d); return !!o&&o.s==='open'; }
 function logWorkout(date,day,forDate){
   const a=state.active, t=today(), c=calc(a,t); lastCatch=null;
   if(c.R<=0) return false;
   if(day==null) day=nextDue(a,today());
   if(!outstandingDays(a).includes(day)){ toast(`Day ${day} is already done`); return false; }
   if(a.rests.some(r=>r.date===date)){ toast('That date is a rest day. Undo the rest first.'); return false; }
-  // An extra workout today (today's own already done) counts as catch-up for the oldest missed date this month.
-  if(forDate===undefined && date===t && a.completions.some(x=>x.date===t&&!x.for) && c.missed.length){ const cov=coveredDates(a); for(let d=a.startDate; d<t; d=addDays(d,1)) if(!cov.has(d)){ forDate=d; break; } }
-  if(forDate && !(date===t && canCatchUp(a,forDate,t))) forDate=null;
-  const entry={day,date,at:new Date().toISOString(),seq:nextSeq(a)}; if(forDate){ entry.for=forDate; lastCatch=forDate; }
+  const entry={day,date,at:new Date().toISOString(),seq:nextSeq(a)};
+  if(isCatchUp(a,entry)) lastCatch=trueDate(a,day);
   a.completions.push(entry);
   a.plannedRestDates=a.plannedRestDates.filter(d=>d!==date);
   delete a.plan[date];
@@ -607,7 +608,8 @@ function logRest(date){
   if(c.R<=0||c.L<=0) return false;
   const e=dateEntries(a,date); if(e.w.length||e.r) return false;
   if(a.planDays) delete a.planDays[date];
-  a.rests.push({day:restDue(a,today()),date,at:new Date().toISOString(),seq:nextSeq(a)});
+  const own=ownStatus(a,date);
+  a.rests.push({day:own&&own.s==='open'?own.n:restDue(a,today()),date,at:new Date().toISOString(),seq:nextSeq(a)});
   a.plannedRestDates=a.plannedRestDates.filter(d=>d!==date);
   delete a.plan[date];
   save(); return true;
@@ -957,13 +959,21 @@ function statsHtml(s){
 }
 function cellInfo(ch,d,t,sch,miss){
   if(d<ch.startDate) return {cls:'out',b:''};
-  const e=dateEntries(ch,d);
+  const e=dateEntries(ch,d), o=ownStatus(ch,d), n=e.w.length;
   if(e.r) return {cls:'rest',b:'Rest'};
-  const own=e.w.filter(x=>!x.for);
-  if(own.length) return {cls:'done'+(own.length>1?' multi':''),b:own.length>1?'\u00d7'+own.length:'\u2713'};
-  if(caughtFor(ch,d).length) return {cls:'caught',b:'\u2713'};
-  if(d<t) return (miss&&miss.has(d)) ? {cls:'missed',b:'!'} : {cls:'gap',b:''};
+  const onlyOwn = n===1 && o && o.w && o.w.date===d;
+  const cnt = n && !onlyOwn ? '\u00d7'+n : '';
+  const multi = n>1 ? ' multi' : '';
+  if(o&&o.s==='caught') return {cls:'caught'+multi,b:(cnt?cnt+' ':'')+'<i class="ctk">\u2713</i>'};
+  if(d<t){
+    if(o&&o.s==='open') return {cls:'missed'+multi,b:(cnt?cnt+' ':'')+'<i class="mk">!</i>'};
+    if(n) return {cls:'done'+multi,b:cnt||'\u2713'};
+    if(o&&o.s==='done') return {cls:'done',b:'\u2713'};
+    return {cls:'gap',b:''};
+  }
+  if(d===t && n) return (o&&o.s==='done') ? {cls:'done'+multi,b:cnt||'\u2713'} : {cls:'tcount'+multi,b:cnt};
   if(sch&&sch.map[d]){ const r=sch.map[d]; if(r.rest) return {cls:'prest',b:'Rest'}; if(r.days.length) return {cls:'planned',b:r.days.length>1?'\u00d7'+r.days.length:'\u2022'}; }
+  if(o&&o.s==='done') return {cls:'done',b:'\u2713'};
   return {cls:'future',b:''};
 }
 function monthGrid(ch,t,interactive){
@@ -977,7 +987,7 @@ function monthGrid(ch,t,interactive){
   }
   return h+'</div>';
 }
-function legend(){ return `<div class="legend"><span style="--c:var(--okSoft)">Done on the day (\u00d7N = more than one)</span><span style="--c:var(--catchSoft)">Caught up later</span><span style="--c:var(--restSoft)">Rest</span><span style="--c:var(--warnSoft)">Missed (!)</span><span style="--c:transparent;">Planned (dashed)</span><span style="--c:var(--accent2)">Other activity (dot)</span></div>`; }
+function legend(){ return `<div class="legend"><span style="--c:var(--okSoft)">Done on the day (\u2713)</span><span class="lgc">Caught up later (orange \u2713)</span><span style="--c:var(--warnSoft)">Missed (!)</span><span style="--c:var(--restSoft)">Rest</span><span class="nos"><b>\u00d7N</b> = workouts done that date</span><span style="--c:transparent;">Planned (dashed)</span><span style="--c:var(--accent2)">Other activity (dot)</span></div>`; }
 function vCalendar(){
   const a=F(); let h=banners();
   if(!a) return h+`<div class="card"><h2>No challenge set up</h2><p class="muted">Start one, or set up next month, from Today.</p></div><button class="btn block" data-act="printProgramme">Print ABS Programme sheet</button>`;
@@ -1022,9 +1032,9 @@ function vHelp(){
   h+=sec('Getting started',`<ol><li><b>Add the app to your home screen</b> (see \u201cKeeping your data safe\u201d below).</li><li>In <b>Settings</b>, tick your <b>usual rest days</b>, e.g. Sat and Sun. They\u2019re planned automatically until your 8 are used.</li><li>Add your name if you want it in the share message.</li><li>On <b>Today</b>, choose the challenge and start date, then tap <b>Start</b>. Near the end of a month you can use <b>Set up [next month]</b> instead.</li></ol>`);
   h+=sec('Each day',`<ul><li><b>Start workout</b> takes you through each exercise with the reps or a timer. Tap Next after each one.</li><li><b>Mark done</b> ticks the day off if you exercised without the app.</li><li><b>Rest today</b> uses one of your 8 rest days.</li><li>Finished one day and want to catch up? Tap <b>Do another</b> or, at the end of a workout, <b>Continue with Day \u2026</b>.</li><li><b>Do a different day</b> lets you pick any Challenge Day still to do.</li><li>Tapped the wrong thing? <b>Undo last entry</b> is at the bottom of Today.</li></ul>
    <div class="eg">Two-sided exercises count both sides: Bicycle Crunch 20 = 10 each side. Double-D\u2019s are the exception \u2014 both sides together count as 1.</div>`);
-  h+=sec('Catching up after missed days',`<ol><li>Today shows how many Challenge Days are left and how many days are left in the month.</li><li>If you have rest days left, tap <b>Choose days</b> to turn missed days into rest days first \u2014 it\u2019s the easiest catch-up.</li><li>Open the <b>Planner</b>. It suggests which dates need two workouts. Use <b>\u2212 / +</b> to change how many per date and <b>R</b> to plan a rest.</li><li>Tap a date\u2019s day numbers to <b>choose exactly which Challenge Days</b> to do on it.</li><li><b>Catching up today:</b> tap the missed date on the Calendar and choose <b>Catch up today</b>. The workout is logged today and the missed date gets a <b>blue tick</b>, so you can see it was done later. Catch-up works for missed dates in the current month only.</li><li>Already done today\u2019s workout? Any extra one you do today counts as catch-up for your oldest missed date.</li></ol>
+  h+=sec('Catching up after missed days',`<ol><li>Today shows how many Challenge Days are left and how many days are left in the month.</li><li>If you have rest days left, tap <b>Choose days</b> to turn missed days into rest days first \u2014 it\u2019s the easiest catch-up.</li><li>Open the <b>Planner</b>. It suggests which dates need two workouts. Use <b>\u2212 / +</b> to change how many per date and <b>R</b> to plan a rest.</li><li>Tap a date\u2019s day numbers to <b>choose exactly which Challenge Days</b> to do on it.</li><li><b>Each Challenge Day belongs to its own date</b>, counting from your start date (Day 17 is the 17th if you started on the 1st). Do Days 17 and 18 on the 19th and the 17th and 18th get an <b>orange tick</b>, while the 19th shows <b>\u00d72</b>.</li><li>To catch up a particular date, tap it on the Calendar and choose <b>Catch up today</b>. Catch-up works in the current month only.</li><li>Logged a workout on the wrong date? Tap the date on the Calendar and use <b>Move</b>.</li></ol>
    <div class="eg">Example scenario: you\u2019re 3 behind with 12 days left. You plan Days 16 + 23 on Tuesday, 17 + 24 on Wednesday and 25 + 26 on Thursday, spreading the harder later days out.</div>`);
-  h+=sec('Calendar and planning ahead',`<ul><li><b>Calendar</b> shows the whole month: green ticks for done on the day (\u00d72 = two Challenge Days that date), blue ticks for missed dates caught up later, grey for rest, amber ! for missed, dashed outlines for the plan.</li><li>Tap any date to see or change it.</li><li>Set up next month from Today, then use the <b>month switch</b> at the top of Calendar to plan it.</li><li>On the 1st, next month starts automatically and the finished month moves to <b>History</b>.</li></ul>`);
+  h+=sec('Calendar and planning ahead',`<ul><li><b>Calendar</b> shows the whole month: a green tick when a date\u2019s Challenge Day was done on the day, an orange tick when it was caught up later, amber ! when it\u2019s still to do, \u00d72 or \u00d73 for how many workouts were done on a date, grey for rest, dashed outlines for the plan.</li><li>Tap any date to see or change it.</li><li>Set up next month from Today, then use the <b>month switch</b> at the top of Calendar to plan it.</li><li>On the 1st, next month starts automatically and the finished month moves to <b>History</b>.</li></ul>`);
   h+=sec('Printing',`<p>Calendar \u2192 <b>Print</b> (A4, or choose \u201cSave as PDF\u201d):</p><ul><li><b>A week</b> \u2014 Monday to Sunday of the week containing the date you pick.</li><li><b>Whole month</b> \u2014 every date with its exercises and tick boxes.</li><li><b>Programme sheet</b> \u2014 all 30 days on one page with your planned rest days, for the fridge.</li></ul><p class="small muted">Change your plan? Print again \u2014 the sheets follow the plan.</p>`);
   h+=sec('Sharing how you\u2019re doing',`<p>Tap <b>Share update</b> on Today. It opens your phone\u2019s share menu (WhatsApp, Messages\u2026) with a line like:</p><div class="eg">Stuart \u00b7 Fri 25/09/26 \u00b7 September ABS: D1 and D2 done \u00b7 2/30 \u00b7 on schedule</div>`);
   h+=sec('Keeping your data safe',`<p>Everything is stored <b>only on this phone, in this browser</b>. No accounts, no cloud, no tracking.</p><ul><li><b>iPhone:</b> in Safari tap Share \u2192 <b>Add to Home Screen</b>, then always open the app from that icon. Safari can clear data for websites you haven\u2019t visited for a week; home-screen apps are kept.</li><li><b>Android:</b> in Chrome tap the menu \u2192 <b>Install app</b>.</li><li>Every few weeks, <b>Settings \u2192 Export backup file</b>.</li></ul>`);
@@ -1081,7 +1091,7 @@ function plannerHtml(){
   if(c.R===0) return h+'<p>All done!</p>';
   if(c.missed.length && c.L>0) h+=`<button class="btn block" data-act="openMissed" style="margin-bottom:8px">Turn missed days into rest (${c.missed.length})</button>`;
   h+=`<p class="small muted">Tap the day numbers to choose which Challenge Days go on a date (e.g. Days 16 + 23). Use \u2212 and + to change how many, and R to plan a rest. Changes save straight away.</p>`;
-  h+=`<p class="small"><b>Missed days stay to do</b> \u2014 add them to today or any date ahead. To catch one up today, tap it on the Calendar; it gets a blue tick.</p>`;
+  h+=`<p class="small"><b>Missed days stay to do</b> \u2014 add them to today or any date ahead. To catch one up today, tap it on the Calendar; it gets an orange tick.</p>`;
   const te=dateEntries(a,t);
   if(c.loggedToday && !te.r && t>=a.startDate && t<=c.end){
     const doneT=te.w.map(x=>x.day);
@@ -1101,7 +1111,7 @@ function plannerHtml(){
 function missedHtml(){
   const a=state.active, c=calc(a,today());
   let h=`<h2>Turn missed days into rest</h2><p class="small muted">You have ${c.L} rest ${pl(c.L,'day')} left. Each one uses the next Challenge Day. Anything you don\u2019t convert stays as catch-up.</p><div class="missed-list">`;
-  c.missed.forEach((d,i)=>{ h+=`<label><input type="checkbox" value="${d}" ${i<c.L?'checked':''}> ${fmtLong(d)}</label>`; });
+  c.missed.filter(d=>!dateEntries(a,d).w.length).forEach((d,i)=>{ h+=`<label><input type="checkbox" value="${d}" ${i<c.L?'checked':''}> ${fmtLong(d)}</label>`; });
   return h+`</div><div class="row" style="margin-top:12px"><button class="btn" data-act="closeSheet">Cancel</button><button class="btn primary" data-act="convertMissed">Mark as rest</button></div>`;
 }
 function dayHtml(d){
@@ -1109,22 +1119,22 @@ function dayHtml(d){
   let h=`<h2>${fmtLong(d)}</h2>`;
   const oaLine=()=>{ const oa=actsOn(d); return oa.length?`<p class="small" style="margin-top:8px"><b>Other activity:</b> ${oa.map(x=>ACT_BY_ID[x.type].ic+' '+esc(actLine(x))).join(', ')}</p>`:''; };
   if(d<a.startDate) return h+`<p class="muted">Before this challenge started.</p>${oaLine()}<button class="btn block" data-act="closeSheet">Close</button>`;
-  const cu=caughtFor(a,d);
+  const o=ownStatus(a,d), cu=caughtFor(a,d), editable=a===state.active&&a.month===monthOf(t);
   if(cu.length) h+=`<ul class="exlist">${cu.map(w=>`<li><span>Challenge Day ${w.day}</span><span class="t ct">\u2713 caught up on ${fmtShort(w.date)}</span></li>`).join('')}</ul>`;
-  if(e.w.length) h+=`<ul class="exlist">${e.w.map(w=>`<li><span>Challenge Day ${w.day}${w.for?` <span class="small muted">(catch-up for ${fmtShort(w.for)})</span>`:''}</span><span class="t">\u2713 workout</span></li>`).join('')}</ul>`;
+  if(o&&o.s==='done'&&o.w.date<d) h+=`<ul class="exlist"><li><span>Challenge Day ${o.n}</span><span class="t">\u2713 done early, on ${fmtShort(o.w.date)}</span></li></ul>`;
+  if(e.w.length) h+=`<p class="small muted" style="margin:8px 0 0">Done on this date${e.w.length>1?` (\u00d7${e.w.length})`:''}:</p><ul class="exlist">${e.w.map(w=>`<li><span>Challenge Day ${w.day}${isCatchUp(a,w)?` <span class="small muted">(catch-up for ${fmtShort(trueDate(a,w.day))})</span>`:''}</span><span class="t">\u2713${editable?` <button class="btn ghost" style="min-height:32px;padding:2px 8px" data-act="movePick" data-arg="${d}|${w.day}">Move</button>`:''}</span></li>`).join('')}</ul>`;
   if(e.r) h+=`<ul class="exlist"><li><span>Challenge Day ${e.r.day}</span><span class="t">Rest</span></li></ul>`;
   const past = d<t || (d===t);
   const isFutureSlot = c.dates.includes(d);
   let acts='';
   if(c.R>0){
-    if(canCatchUp(a,d,t)){ const n=c.next;
+    if(canCatchUp(a,d,t)){ const n=o.n;
       acts+=`<button class="btn primary block" data-act="catchStart" data-arg="${d}|${n}">Catch up today \u2014 start Day ${n}</button>`;
-      acts+=`<button class="btn block" data-act="catchMark" data-arg="${d}|${n}">Already done today \u2014 mark Day ${n} as catch-up</button>`;
-      if(c.R>1) acts+=`<button class="btn ghost block" data-act="catchPick" data-arg="${d}">Choose a different Challenge Day</button>`;
+      acts+=`<button class="btn block" data-act="catchMark" data-arg="${d}|${n}">Already done today \u2014 mark Day ${n} done</button>`;
     }
     if(past && !e.r && d<=t && !cu.length){
       acts+=`<button class="btn block" data-act="backdatePick" data-arg="${d}">${d<t?'I did it on this date (log it there)':'Log a workout on this date'}</button>`;
-      if(!e.w.length && c.L>0 && d<t) acts+=`<button class="btn block" data-act="restOn" data-arg="${d}">Mark as rest (uses Day ${restDue(a,t)})</button>`;
+      if(!e.w.length && c.L>0 && d<t) acts+=`<button class="btn block" data-act="restOn" data-arg="${d}">Mark as rest (uses Day ${o&&o.s==='open'?o.n:restDue(a,t)})</button>`;
     }
     if(isFutureSlot && d>t){
       const sch=schedule(a,t), r=sch.map[d];
@@ -1134,7 +1144,8 @@ function dayHtml(d){
       acts+=`<button class="btn block" data-act="plRest" data-arg="${d}">${r.rest?'Remove planned rest':'Plan a rest day'}</button>`;
     }
   }
-  if(!e.w.length && !e.r && !cu.length && d<t) h+= c.missed.includes(d) ? `<p class="muted">Missed. The Challenge Day wasn\u2019t skipped; it\u2019s still to do \u2014 catch it up today and it gets a blue tick here, or add it to any date ahead.</p>` : `<p class="muted">Nothing logged on this date, but you\u2019re not behind \u2014 you did extra Challenge Days on other dates.</p>`;
+  if(d<t && !e.r && c.missed.includes(d)) h+=`<p class="muted">Missed \u2014 Challenge Day ${o.n} is still to do. Catch it up and it gets an orange tick here.</p>`;
+  else if(!e.w.length && !e.r && !cu.length && d<t && !(o&&o.s==='done')) h+=`<p class="muted">Nothing logged on this date.</p>`;
   if(!e.w.length && !e.r && d>=t && !isFutureSlot && c.R>0) h+=`<p class="muted">Today already has entries.</p>`;
   h+=oaLine();
   return h+`<div class="stack">${acts}<button class="btn block" data-act="closeSheet">Close</button></div>`;
@@ -1338,7 +1349,7 @@ function printRows(a,dates){
     if(d<a.startDate) continue;
     const e=dateEntries(a,d); let what='', tick='<span class="box"></span>';
     if(e.r){ what=`<span class="rest">REST</span> <span class="cd">(Day ${e.r.day})</span>`; tick='<span class="box">✓</span>'; }
-    else if(e.w.length||caughtFor(a,d).length){ what=caughtFor(a,d).map(w=>`<div><span class="cd">Day ${w.day}</span> <span class="ex">caught up on ${fmtShort(w.date)}</span></div>`).join('')+e.w.map(w=>`<div><span class="cd">Day ${w.day}</span> <span class="ex">${w.for?`(catch-up for ${fmtShort(w.for)}) `:''}${exLine(def,w.day,a.swaps)}</span></div>`).join(''); tick='<span class="box">✓</span>'; }
+    else if(e.w.length||caughtFor(a,d).length){ what=caughtFor(a,d).map(w=>`<div><span class="cd">Day ${w.day}</span> <span class="ex">caught up on ${fmtShort(w.date)}</span></div>`).join('')+e.w.map(w=>`<div><span class="cd">Day ${w.day}</span> <span class="ex">${isCatchUp(a,w)?`(catch-up for ${fmtShort(trueDate(a,w.day))}) `:''}${exLine(def,w.day,a.swaps)}</span></div>`).join(''); tick='<span class="box">✓</span>'; }
     else if(d<t){ what=miss.has(d)?'<span class="miss">Missed — still to catch up</span>':''; tick=''; }
     else if(sch&&sch.map[d]){ const r=sch.map[d];
       if(r.rest) what=`<span class="rest">REST</span> <span class="cd">(Day ${r.days.join(', ')})</span>`;
@@ -1498,7 +1509,7 @@ const A={
   plReset:()=>{ F().plan={}; F().planDays={}; save(); refreshSheet(); toast('Back to the suggested plan'); },
   day:d=>openSheet(dayHtml(d),'day:'+d),
   hday:d=>{ const el=document.getElementById('hdayInfo'); if(!el) return; const ch=sheetKind==='hist:active'?state.active:state.history[Number((sheetKind||'').split(':')[1])];
-    if(!ch) return; const e=dateEntries(ch,d); el.textContent=`${fmtLong(d)}: `+(e.r?`rest (Day ${e.r.day})`:e.w.filter(w=>!w.for).length?daysText(e.w.filter(w=>!w.for).map(w=>w.day))+' \u2713':caughtFor(ch,d).length?daysText(caughtFor(ch,d).map(w=>w.day))+` caught up on ${fmtShort(caughtFor(ch,d)[0].date)}`:'nothing logged'); },
+    if(!ch) return; const e=dateEntries(ch,d); el.textContent=`${fmtLong(d)}: `+(e.r?`rest (Day ${e.r.day})`:[e.w.length?daysText(e.w.map(w=>w.day))+' done':'',caughtFor(ch,d).length?`Day ${caughtFor(ch,d)[0].day} caught up on ${fmtShort(caughtFor(ch,d)[0].date)}`:''].filter(Boolean).join(' \u00b7 ')||'nothing logged'); },
   catchStart:x=>{ const [d,k]=String(x).split('|'); closeSheet(); openWorkout(Number(k),d); },
   catchMark:x=>{ const [d,k]=String(x).split('|'), n=Number(k);
     confirmSheet(`Mark Day ${n} as catch-up?`,`It\u2019s logged as done today and ${fmtShort(d)} gets a blue tick.`,'Mark done',()=>{ if(logWorkout(today(),n,d)){ toast(`Day ${n} done \u2014 caught up ${fmtShort(d)}`); } closeSheet(); render(); }); },
@@ -1506,6 +1517,15 @@ const A={
     const list=outstandingDays(a).map(n=>{ const ex=resolveDay(a.definition,n,a.swaps).map(i=>`${i.target}${i.ex.measure==='seconds'?'s':''} ${esc(i.ex.name)}`).join(', ');
       return `<div class="listbtn"><span><b>Day ${n}</b>${n===c.next?' <span class="pill">suggested</span>':''}<br><span class="small muted">${ex}</span></span><span class="row" style="gap:6px;margin:0"><button class="btn" data-act="catchStart" data-arg="${d}|${n}">Start</button><button class="btn" data-act="catchMark" data-arg="${d}|${n}">Done</button></span></div>`; }).join('');
     openSheet(`<h2>Catch up ${fmtShort(d)} today</h2><p class="small muted">Which Challenge Day? It\u2019s logged today and ${fmtShort(d)} gets a blue tick.</p>${list}<button class="btn block" data-act="day" data-arg="${d}">Back</button>`,'day:'+d); },
+  movePick:x=>{ const [d,k]=String(x).split('|'), a=state.active, t=today(), max=t<monthEnd(a.month)?t:monthEnd(a.month);
+    openSheet(`<h2>Move Challenge Day ${k}</h2><p class="small muted">Logged on ${fmtLong(d)}. Pick the date you actually did it.</p><label class="f" for="moveDate">Date done</label><input type="date" id="moveDate" value="${d}" min="${a.startDate}" max="${max}"><div class="row" style="margin-top:12px"><button class="btn" data-act="day" data-arg="${d}">Cancel</button><button class="btn primary" data-act="moveDo" data-arg="${d}|${k}">Move</button></div>`,'day:'+d); },
+  moveDo:x=>{ const [d,k]=String(x).split('|'), a=state.active, n=Number(k), t=today(), to=(document.getElementById('moveDate')||{}).value;
+    const w=a.completions.find(c=>c.day===n&&c.date===d); if(!w||!to) return;
+    if(to===d) return openSheet(dayHtml(d),'day:'+d);
+    if(to<a.startDate||to>t||monthOf(to)!==a.month) return toast('Pick a date in this challenge, up to today');
+    if(a.rests.some(r=>r.date===to)) return toast('That date is a rest day. Undo the rest first.');
+    w.date=to; delete w.for; a.plannedRestDates=a.plannedRestDates.filter(x=>x!==to); delete a.plan[to];
+    save(); toast(`Day ${n} moved to ${fmtShort(to)}`); openSheet(dayHtml(to),'day:'+to); render(); },
   backdatePick:d=>{ const a=state.active, c=calc(a,today());
     const list=outstandingDays(a).map(n=>{ const ex=resolveDay(a.definition,n,a.swaps).map(i=>`${i.target}${i.ex.measure==='seconds'?'s':''} ${esc(i.ex.name)}`).join(', ');
       return `<button class="listbtn" data-act="backdate" data-arg="${d}|${n}"><span><b>Day ${n}</b>${n===c.next?' <span class="pill">suggested</span>':''}<br><span class="small muted">${ex}</span></span></button>`; }).join('');
