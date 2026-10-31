@@ -50,6 +50,7 @@ p{margin:0 0 8px}
 .exlist li{display:flex;justify-content:space-between;gap:12px;padding:10px 0;border-bottom:1px solid var(--line)}
 .exlist li:last-child{border-bottom:0}
 .exlist .t{color:var(--muted);text-align:right;white-space:nowrap}
+.btn.club{border-color:var(--accent);color:var(--accent)}.clubcard a{color:var(--accent)}.btn.clubdone{color:var(--ok);border-color:var(--line);opacity:1}
 .pill{display:inline-block;font-size:.75rem;font-weight:600;border-radius:999px;padding:2px 8px;background:var(--soft);color:var(--accent)}
 .banner{border-radius:12px;padding:10px 12px;margin:0 0 10px;font-size:.9rem;display:flex;gap:8px;align-items:flex-start;justify-content:space-between;background:var(--soft)}
 .banner.test{background:var(--warnSoft);color:var(--text)}
@@ -225,7 +226,7 @@ details.hp .eg{background:var(--soft);border-radius:10px;padding:8px 10px;font-s
    © 2026 Stuart Parkins. All rights reserved. Not for reuse, modification or redistribution without written permission. */
 'use strict';
 /* ===================== DATA ===================== */
-const APP_VERSION = '1.9.3';
+const APP_VERSION = '1.10.0';
 const AREAS = {abs:'Abs', obliques:'Obliques', core:'Core', 'hip-flexors':'Hip flexors', shoulders:'Shoulders', chest:'Chest', arms:'Arms', legs:'Legs', cardio:'Cardio'};
 // count: single | total (each side counts 1) | pair (both sides = 1) | eachSide (timed, per side)
 const EXERCISES = [
@@ -527,7 +528,7 @@ function summarise(ch){
 
 /* ===================== STATE ===================== */
 const KEY='thirtyday:v1', PREV='thirtyday:v1:prev';
-const DEFAULT_SETTINGS={name:'',restWeekdays:[],units:'mi',weeklyTarget:0,theme:'auto',leadIn:true,sound:true,vibrate:true,testToday:null,iosTipDismissed:false};
+const DEFAULT_SETTINGS={name:'',restWeekdays:[],units:'mi',weeklyTarget:0,theme:'auto',leadIn:true,sound:true,vibrate:true,testToday:null,iosTipDismissed:false,clubNick:'',clubTeam:''};
 function freshState(){ return {schemaVersion:1,settings:{...DEFAULT_SETTINGS},lastBackupAt:null,active:null,history:[],badgesSeen:[]}; }
 function load(){
   try{ const raw=localStorage.getItem(KEY); if(!raw) return freshState();
@@ -706,7 +707,7 @@ function badgesHtml(){
   let h=`<h2>Badges</h2><p>Challenges completed: <b>${bs.n}</b></p>`;
   if(nx) h+=`<p class="small" style="margin-bottom:0">Next: <b>${nx.name}</b> — ${nx.need-bs.n} more ${pl(nx.need-bs.n,'challenge')} to go</p><div class="pbar"><i style="width:${Math.round((bs.n-prev)/(nx.need-prev)*100)}%"></i></div>`;
   else h+=`<p class="small">You’ve earned all four badges. Amazing commitment.</p>`;
-  h+=`<div class="bgrid">${bs.list.map(b=>`<div class="bcard">${medalSvg(b,84,!b.earned)}<h3>${b.name}</h3>${b.earned?`<div class="small muted">Earned ${fmtFull(b.on)}</div><button class="btn" data-act="openCert" data-arg="${b.id}">Print certificate</button>`:`<div class="small muted">${b.need} ${pl(b.need,'challenge')} · ${b.need-bs.n} to go</div>`}</div>`).join('')}</div>`;
+  h+=`<div class="bgrid">${bs.list.map(b=>`<div class="bcard">${medalSvg(b,84,!b.earned)}<h3>${b.name}</h3>${b.earned?`<div class="small muted">Earned ${fmtFull(b.on)}</div><button class="btn" data-act="openCert" data-arg="${b.id}">Print certificate</button>${clubBtn(b.id.toUpperCase(),'Share with Club')}`:`<div class="small muted">${b.need} ${pl(b.need,'challenge')} · ${b.need-bs.n} to go</div>`}</div>`).join('')}</div>`;
   h+=`<p class="tiny muted">A challenge counts when all 30 Challenge Days are logged within its month — rest days included. Months don’t need to be in a row, and unfinished months don’t count against you.</p>`;
   return h+`<button class="btn block" data-act="closeSheet">Close</button>`;
 }
@@ -731,7 +732,7 @@ function showBadgeQueue(){
     const intro = q.kind==='welcome' ? 'Badges are new in this version. You’ve already earned:' : q.kind==='added' ? 'Your earlier months are now in History. That means you’ve earned:' : 'You’ve earned:';
     h=`<h2>${q.kind==='new'?'New badges':'Your badges'}</h2><p class="small">${intro}</p><div class="mrow">${bl.map(b=>`<div style="text-align:center">${medalSvg(b,64)}<div class="tiny"><b>${b.name}</b><br>${fmtFull(b.on)}</div></div>`).join('')}</div><p class="small muted">Challenges completed: ${bs.n}${bs.next?` · next: ${bs.next.name} (${bs.next.need-bs.n} to go)`:''}</p>`;
   }
-  h+=`<div class="stack"><button class="btn primary block" data-act="shareBadge" data-arg="${top.id}">Share</button><button class="btn block" data-act="openCert" data-arg="${top.id}">Print certificate</button><button class="btn block" data-act="closeSheet">Close</button></div>`;
+  h+=`<div class="stack"><button class="btn primary block" data-act="shareBadge" data-arg="${top.id}">Share</button>${clubBtn(top.id.toUpperCase())}<button class="btn block" data-act="openCert" data-arg="${top.id}">Print certificate</button><button class="btn block" data-act="closeSheet">Close</button></div>`;
   openSheet(h,'badge');
 }
 async function shareBadge(id){
@@ -740,6 +741,93 @@ async function shareBadge(id){
   if(phone && navigator.share){ try{ await navigator.share({title:b.name,text,url}); return; }catch(e){ if(e.name==='AbortError') return; } }
   try{ await navigator.clipboard.writeText(text); toast('Copied — paste it wherever you like'); }
   catch(e){ openSheet(`<h2>Share your badge</h2><textarea id="shareOut" readonly style="width:100%;min-height:70px;font:inherit;border-radius:10px;border:1px solid var(--line);padding:8px;background:var(--card);color:var(--text)">${esc(text)}</textarea><button class="btn block" data-act="closeSheet" style="margin-top:8px">Done</button>`); }
+}
+/* ---------- Challenge Club (v1.10.0): share an achievement, by choice, to club.do30daychallenge.com ---------- */
+const CLUB_URL='https://club.do30daychallenge.com';
+// Same codes as the club service's master list (app-clubs: src/codes.js). Pocket Karate will use PK-…
+const CLUB_CODES={START:'Started a challenge',DONE:'Challenge completed',B30:'30 Day Finisher',B90:'90 Day Committed',B180:'180 Day Hero',B360:'360 Day Smasher'};
+const CLUB_SHARE_DAYS=60; // older achievements can't be shared
+function clubShared(key){ return (state.clubShared||[]).includes(key); }
+function clubDevice(){
+  if(!state.clubDevice){ const u=new Uint8Array(16); crypto.getRandomValues(u); state.clubDevice=b64u.enc(u); save(); }
+  return state.clubDevice;
+}
+function checkClubName(v){ // mirrors the club's own rules; the club also checks names before they appear
+  v=String(v||'').replace(/\s+/g,' ').trim(); if(!v) return {ok:true,v:''};
+  if(v.length<2||v.length>20) return {ok:false,msg:'Use 2 to 20 characters.'};
+  if(!/^[\p{L}\p{N} '’\-_.!&]+$/u.test(v)) return {ok:false,msg:'Use letters, numbers and spaces only.'};
+  if((v.match(/\d/g)||[]).length>=5) return {ok:false,msg:'Please don’t include long numbers.'};
+  return {ok:true,v};
+}
+function onTheDay(ch){ // Challenge Days done (or rested) on or before their own date: the green ticks
+  let n=0; for(let d=1; d<=ch.definition.length; d++){ const td=trueDate(ch,d); if(!td) continue;
+    const e=ch.completions.find(c=>c.day===d)||ch.rests.find(r=>r.day===d); if(e&&e.date<=td) n++; }
+  return n;
+}
+// What a share would send, or null if it can't be shared.
+function clubItem(code){
+  const t=today(), a=state.active;
+  if(code==='START'){ if(!a||a.month!==monthOf(t)) return null;
+    return {code,key:'START|'+a.month,ch:a,date:a.startDate<=t?a.startDate:t,what:`Started the ${monthName(a.month)} ${a.definition.name} Challenge`}; }
+  if(code==='DONE'){ if(!a||!isComplete(a)) return null; const od=onTheDay(a);
+    return {code,key:'DONE|'+a.month,ch:a,date:finishedOn(a),onDay:od,what:`Completed the ${monthName(a.month)} ${a.definition.name} Challenge · ${od}/30 on the day`}; }
+  const bs=badgeStatus(), b=bs.list.find(x=>x.id===code.toLowerCase());
+  if(!b||!b.earned||daysBetween(b.on,t)>CLUB_SHARE_DAYS) return null;
+  return {code,key:code,ch:bs.done[b.need-1].ch,date:b.on,what:`Earned ${b.name}`};
+}
+function clubBtn(code,label){
+  const it=clubItem(code); if(!it) return '';
+  return clubShared(it.key) ? `<button class="btn block clubdone" disabled>✓ Shared with Challenge Club</button>`
+    : `<button class="btn block club" data-act="clubOpen" data-arg="${code}">${label||'Share with Challenge Club'}</button>`;
+}
+function clubSheetHtml(code,err){
+  const it=clubItem(code); if(!it) return '<p>This can’t be shared now.</p><button class="btn block" data-act="closeSheet">Close</button>';
+  const s=state.settings;
+  return `<h2>Share with Challenge Club</h2><p class="small">${esc(it.what)}</p>
+   <label class="f" for="clubNick">Club nickname</label><input type="text" id="clubNick" value="${esc(s.clubNick)}" maxlength="20" autocomplete="off" placeholder="e.g. a nickname, not your full name">
+   <label class="f" for="clubTeam">Team name (optional)</label><input type="text" id="clubTeam" value="${esc(s.clubTeam)}" maxlength="20" autocomplete="off" placeholder="Family, friends or group">
+   <p class="tiny muted">Doing it with others? Use the same team name and you’ll be celebrated together. Leave the nickname empty to be counted without a name.</p>
+   ${err?`<p class="small" style="color:var(--bad)">${esc(err)}</p>`:''}
+   <div class="stack" style="margin-top:8px"><button class="btn primary block" data-act="clubSend" data-arg="${code}">Share</button><button class="btn block" data-act="closeSheet">Cancel</button></div>
+   ${clubPrivacy()}`;
+}
+function clubPrivacy(){
+  return `<details class="hp" style="margin-top:10px"><summary>What’s shared</summary><div class="in small"><p>Tapping Share sends your Club nickname and Team name (if set), the achievement, the challenge and level, and the date — and, for a finished challenge, how many days you did on their own date. A random code made on this phone stops repeats being counted twice. No email, real name or location is sent, and nothing is shared unless you tap Share.</p><p>Your nickname may appear on the public club page. New nicknames are checked first. Shares are deleted after 12 months.</p><p><b>Children:</b> nickname only, never a real name or school, and only with a parent’s or guardian’s agreement.</p><p><a href="${CLUB_URL}/privacy" target="_blank" rel="noopener">Full privacy note</a></p></div></details>`;
+}
+async function clubSend(code){
+  const it=clubItem(code); if(!it) return;
+  const nk=checkClubName(document.getElementById('clubNick')?.value), tm=checkClubName(document.getElementById('clubTeam')?.value);
+  if(!nk.ok) return openSheet(clubSheetHtml(code,'Club nickname: '+nk.msg),'club');
+  if(!tm.ok) return openSheet(clubSheetHtml(code,'Team name: '+tm.msg),'club');
+  state.settings.clubNick=nk.v; state.settings.clubTeam=tm.v; save();
+  if(navigator.onLine===false) return openSheet(clubSheetHtml(code,'You’re offline, so nothing was sent. Try again when you’re connected.'),'club');
+  const body={app:'30DC',code,challenge:it.ch.definition.id,level:it.ch.definition.level||'easy',date:it.date,device:clubDevice(),nick:nk.v||null,team:tm.v||null};
+  if(it.onDay!=null) body.onDay=it.onDay;
+  let res, j;
+  try{ res=await fetch(CLUB_URL+'/api/share',{method:'POST',headers:{'content-type':'application/json'},body:JSON.stringify(body)}); j=await res.json().catch(()=>({})); }
+  catch(e){ return openSheet(clubSheetHtml(code,'You’re offline, so nothing was sent. Try again when you’re connected.'),'club'); }
+  if(!res.ok||!j.ok) return openSheet(clubSheetHtml(code,j.message||'The club couldn’t take that share just now. Please try again later.'),'club');
+  state.clubShared=[...new Set([...(state.clubShared||[]),it.key])]; save();
+  openSheet(`<div class="celebrate" style="padding:8px 0"><div class="big">✓</div><p><b>Shared with Challenge Club</b></p><p class="small">${code==='START'?'You’ll be welcomed in Friday’s starters.':'You’ll be celebrated in the monthly roundup on the 5th.'}${nk.v&&j.name==='pending'?' New nicknames are checked first, so yours will show once it’s approved.':''}</p></div>
+   <div class="stack">${code==='START'?'<button class="btn block" data-act="clubInvite">Invite someone to join you</button>':''}<a class="btn block" href="${CLUB_URL}" target="_blank" rel="noopener">See the Challenge Club</a><button class="btn block" data-act="closeSheet">Close</button></div>`,'club');
+  render();
+}
+async function clubInvite(){
+  const a=state.active||state.upcoming, team=state.settings.clubTeam;
+  const what=a?`the ${monthName(a.month)} ${a.definition.name} Challenge`:'a 30 Day Challenge';
+  const text=`I’m doing ${what} on ${SITE}. Do it with me? It’s free, with no sign-up.${team?` Join our team in the Challenge Club: ${team}.`:''}`;
+  const url='https://'+SITE, phone=matchMedia('(pointer: coarse)').matches || /android|iphone|ipad|ipod/i.test(navigator.userAgent);
+  if(phone && navigator.share){ try{ await navigator.share({title:'30 Day Challenge',text,url}); return; }catch(e){ if(e.name==='AbortError') return; } }
+  try{ await navigator.clipboard.writeText(text+' '+url); toast('Invite copied — paste it in a message'); }
+  catch(e){ openSheet(`<h2>Invite someone</h2><textarea readonly style="width:100%;min-height:90px;font:inherit;border-radius:10px;border:1px solid var(--line);padding:8px;background:var(--card);color:var(--text)">${esc(text+' '+url)}</textarea><button class="btn block" data-act="closeSheet" style="margin-top:8px">Done</button>`); }
+}
+// Today: the club card while a challenge is running
+function clubCard(){
+  const a=state.active; if(!a||isComplete(a)||a.month!==monthOf(today())) return '';
+  const shared=clubShared('START|'+a.month);
+  return `<div class="card clubcard"><h2>Do it together</h2><p class="small">Doing a challenge with someone helps you both keep going. Invite a friend or family member, and tell the Challenge Club you’ve started.</p>
+   <div class="stack"><button class="btn block" data-act="clubInvite">Invite someone to join you</button>${clubBtn('START','Tell the Challenge Club I’ve started')}</div>
+   <p class="tiny muted" style="margin:8px 0 0">${shared?'You’re in this week’s welcome. ':''}<a href="${CLUB_URL}" target="_blank" rel="noopener">See the Challenge Club</a></p></div>`;
 }
 function certHtml(id){
   const b=badgeStatus().list.find(x=>x.id===id); if(!b||!b.earned) return '<p>Not earned yet.</p><button class="btn block" data-act="closeSheet">Close</button>';
@@ -920,7 +1008,7 @@ function vTodayMain(){
   h+=`<div class="status ${sv.cls}"><h3>${sv.title}</h3><p class="small">${sv.text}</p>${c.status==='behind'?'<button class="btn warn block" data-act="openPlanner">Plan catch-up</button>':''}</div>`;
   if(c.status==='complete'){
     const s=summarise(a);
-    h+=`<div class="card celebrate"><div class="big">${c.len}/${c.len}</div><p>${monthName(a.month)} ${esc(def.name)} Challenge complete!</p><div class="stats" style="text-align:left">${statsHtml(s)}</div><div class="row"><button class="btn primary" data-act="share">Share update</button></div><div style="margin-top:10px">${bmcBtn()}</div></div>`;
+    h+=`<div class="card celebrate"><div class="big">${c.len}/${c.len}</div><p>${monthName(a.month)} ${esc(def.name)} Challenge complete!</p><div class="stats" style="text-align:left">${statsHtml(s)}</div><div class="row"><button class="btn primary" data-act="share">Share update</button></div><div style="margin-top:8px">${clubBtn('DONE')}</div><div style="margin-top:10px">${bmcBtn()}</div></div>`;
     if(a.month===monthOf(t) && lastEntry(a)) h+=`<p style="text-align:center;margin-top:8px"><button class="btn ghost" data-act="undo">Undo last entry</button></p>`;
     return h+upcomingCard(t);
   }
@@ -950,6 +1038,7 @@ function vTodayMain(){
   }
   h+=`<div class="row"><button class="btn" data-act="openPlanner">Planner</button><button class="btn" data-act="share">Share update</button></div>`;
   if(lastEntry(a)) h+=`<p style="text-align:center;margin-top:8px"><button class="btn ghost" data-act="undo">Undo last entry</button></p>`;
+  h+=clubCard();
   h+=upcomingCard(t);
   return h;
 }
@@ -1022,7 +1111,7 @@ function vHistory(){
     h+=`<button class="listbtn" data-act="histDetail" data-arg="${live?'active':i}"><span><b>${monthLabel(ch.month)}</b><br><span class="small muted">${esc(ch.definition.name)}${live?' \u00b7 in progress':''}${ch.preApp?' \u00b7 completed before the app':''}</span></span><span class="big" style="font-size:1.2rem">${s.score}/${ch.definition.length}</span></button>`; });
   return h;
 }
-function footerHtml(){ return `<p class="foot">General exercise guidance, not medical advice. <a href="#" data-act="openDisclaimer">Full disclaimer</a></p><p class="foot support">If this free app has helped you, consider <a href="https://${SITE}" data-act="shareApp">sharing it</a>. A coffee or tea is also really lovely. It shows me support. No pressure.</p><p class="foot" style="margin-top:6px">\u2615 <a href="${BMC_URL}" target="_blank" rel="noopener">Buy me a tea or coffee</a><br>Created by Stuart Parkins \u00b7 \u00a9 2026<br><span class="tiny">${SITE} \u00b7 v${APP_VERSION} \u00b7 No accounts, no cookies, no tracking</span></p>`; }
+function footerHtml(){ return `<p class="foot">General exercise guidance, not medical advice. <a href="#" data-act="openDisclaimer">Full disclaimer</a></p><p class="foot support">If this free app has helped you, consider <a href="https://${SITE}" data-act="shareApp">sharing it</a>. A coffee or tea is also really lovely. It shows me support. No pressure.</p><p class="foot" style="margin-top:6px">\u2615 <a href="${BMC_URL}" target="_blank" rel="noopener">Buy me a tea or coffee</a><br>Created by Stuart Parkins \u00b7 \u00a9 2026<br><a href="${CLUB_URL}" target="_blank" rel="noopener">Challenge Club</a><br><span class="tiny">${SITE} \u00b7 v${APP_VERSION} \u00b7 No accounts, no cookies, no tracking</span></p>`; }
 function vHelp(){
   const sec=(t,body,open)=>`<details class="hp"${open?' open':''}><summary>${t}</summary><div class="in">${body}</div></details>`;
   let h=banners()+`<header class="top"><h1>How to use the app</h1><p class="small muted">Tap a heading to open it.</p></header>`;
@@ -1039,6 +1128,7 @@ function vHelp(){
   h+=sec('Sharing how you\u2019re doing',`<p>Tap <b>Share update</b> on Today. It opens your phone\u2019s share menu (WhatsApp, Messages\u2026) with a line like:</p><div class="eg">Stuart \u00b7 Fri 25/09/26 \u00b7 September ABS: D1 and D2 done \u00b7 2/30 \u00b7 on schedule</div>`);
   h+=sec('Keeping your data safe',`<p>Everything is stored <b>only on this phone, in this browser</b>. No accounts, no cloud, no tracking.</p><ul><li><b>iPhone:</b> in Safari tap Share \u2192 <b>Add to Home Screen</b>, then always open the app from that icon. Safari can clear data for websites you haven\u2019t visited for a week; home-screen apps are kept.</li><li><b>Android:</b> in Chrome tap the menu \u2192 <b>Install app</b>.</li><li>Every few weeks, <b>Settings \u2192 Export backup file</b>.</li></ul>`);
   h+=sec('Badges and certificates',`<p>Every challenge you finish counts towards a badge. A challenge counts when all 30 Challenge Days are logged within its month \u2014 rest days included. Months don\u2019t need to be in a row, and unfinished months don\u2019t count against you.</p><ul><li><b>30 Day Finisher</b> \u2014 1 challenge</li><li><b>90 Day Committed</b> \u2014 3 challenges</li><li><b>180 Day Hero</b> \u2014 6 challenges</li><li><b>360 Day Smasher</b> \u2014 12 challenges</li></ul><p>The badge arrives the moment you log your 30th Challenge Day, with a Share button. See them all from <b>Challenges completed</b> on Today or History, and tap <b>Print certificate</b> on any badge you\u2019ve earned (A4, with your name if you like).</p>`);
+  h+=sec('Challenge Club',`<p>The <b>Challenge Club</b> celebrates everyone who starts and finishes a challenge. It\u2019s optional and free, with no account.</p><ul><li><b>Do it together:</b> tap <b>Invite someone to join you</b> on Today or in Settings to send a friend or family member the app. Use the same <b>Team name</b> and you\u2019re celebrated together.</li><li>Add a <b>Club nickname</b> in Settings (not your full name). Leave it empty to be counted without a name.</li><li>Tap <b>Share with Challenge Club</b> when you start a month, finish it, or earn a badge. Each can be shared once, within two months.</li><li>Starters are welcomed every Friday, and finishers are in the monthly roundup on the 5th, with how many days you did on the day. 30 out of 30 is a <b>Perfect month</b>.</li><li>Nothing is sent unless you tap Share. If you\u2019re offline, nothing is sent \u2014 just try again later.</li><li>Children: nickname only, never a real name or school, and only with a parent\u2019s or guardian\u2019s agreement.</li></ul><p><a href="${CLUB_URL}" target="_blank" rel="noopener">Visit the Challenge Club</a> \u00b7 <a href="${CLUB_URL}/privacy" target="_blank" rel="noopener">Club privacy note</a></p>`);
   h+=sec('Other activity',`<p>Log anything else you do \u2014 walks, jogs, bike rides, weights, martial arts, swimming, yoga, Pilates, stretching or physio. It\u2019s a record, not a challenge: no Challenge Days, rest days or catch-up.</p><ul><li>On <b>Today</b>, tap an activity under <b>Other activity</b>. Time, distance and a note are optional; you can change the date to log something from earlier.</li><li>See this week\u2019s totals on Today, and each month\u2019s in <b>History</b>.</li><li>Set a <b>weekly target</b> (e.g. 3 a week) and <b>miles or km</b> in Settings.</li><li>Dates with activity get a small dot on the Calendar, and it\u2019s included in your share update, printouts and backups.</li><li>Logged something by mistake? Tap the \u00d7 next to it.</li></ul>`);
   h+=sec('Moving to another phone or device',`<p>The app doesn\u2019t sync by itself, but a backup moves everything \u2014 current challenge, next month, plans, history and settings.</p><p><b>Quickest: a backup link</b></p><ol><li>On the old device: <b>Settings \u2192 Copy backup link</b>.</li><li>Paste it somewhere you can reach from the new device: Notes, an email or a message to yourself.</li><li>On the new device, open the app and go to <b>Settings \u2192 Paste a backup link</b>, paste it and tap <b>Restore</b>.</li></ol><p class="small muted">On iPhone always paste the link inside the app. Tapping the link opens Safari, which keeps its data separately from the home-screen app. On Android, tapping the link usually works too.</p><p><b>Full backup: a file</b></p><ol><li><b>Settings \u2192 Export backup file</b>.</li><li>Save it to <b>iCloud Drive, Google Drive, OneDrive or Dropbox</b>, or email it to yourself.</li><li>On the new device: <b>Settings \u2192 Import backup file</b>.</li></ol><p class="small muted">Restoring replaces what\u2019s on the new device (a safety copy is saved first). A backup is a snapshot, not live syncing \u2014 make a fresh one now and again, and keep using one main device. Anyone with your link can see your progress and name, so keep it to yourself.</p>`);
   h+=sec('Questions',`<ul><li><b>Why does resting skip a workout?</b> A rest uses up a Challenge Day, so that day\u2019s workout isn\u2019t done. With reps rising a little each day, the next workout is only slightly harder.</li><li><b>February?</b> 28 days for 30 Challenge Days means at least two doubled-up days, even using rest days.</li><li><b>Started late?</b> Days before your start date are ignored; the planner shows the catch-up needed.</li></ul>`);
@@ -1051,6 +1141,12 @@ function vSettings(){
   let h=banners()+`<header class="top"><h1>Settings</h1></header>`;
   h+=`<button class="listbtn" data-act="tab" data-arg="help"><span><b>How to use the app</b><br><span class="small muted">Quick guide, catch-up, printing, and moving to another phone</span></span><span>›</span></button>`;
   h+=`<div class="card"><h2>You</h2><label class="f" for="nameIn">Your name (only used in the share text)</label><input type="text" id="nameIn" value="${esc(s.name)}" maxlength="30" autocomplete="off"></div>`;
+  h+=`<div class="card"><h2>Challenge Club</h2><p class="small muted">Share when you start, finish or earn a badge, and be celebrated on the club page. Optional, free, no account.</p>
+   <label class="f" for="clubTeamIn">Team name (optional)</label><input type="text" id="clubTeamIn" value="${esc(s.clubTeam)}" maxlength="20" autocomplete="off" placeholder="Family, friends or group">
+   <p class="tiny muted">Doing it with others? Everyone uses the same team name and you\u2019re celebrated together.</p>
+   <label class="f" for="clubNickIn">Club nickname</label><input type="text" id="clubNickIn" value="${esc(s.clubNick)}" maxlength="20" autocomplete="off">
+   <p class="tiny muted">Shown in the Challenge Club. Don\u2019t use your full name. Children: nickname only, with a parent\u2019s or guardian\u2019s agreement. Both are kept on this device until you share.</p>
+   <div class="stack" style="margin-top:8px"><button class="btn block" data-act="clubInvite">Invite someone to join you</button><a class="btn block" href="${CLUB_URL}" target="_blank" rel="noopener">See the Challenge Club</a></div></div>`;
   const wd=s.restWeekdays||[];
   h+=`<div class="card"><h2>My usual rest days</h2><p class="small muted">The planner marks these as rest days until your 8 are used up. Two a week fits a month. You can still change any single date.</p><div class="chips" style="flex-wrap:wrap">${[1,2,3,4,5,6,0].map(n=>`<button class="chip ${wd.includes(n)?'on':''}" data-act="restWd" data-arg="${n}" aria-pressed="${wd.includes(n)}">${DOW[n]}</button>`).join('')}</div>${wd.length>2?'<p class="tiny muted">More than two a week will use up your 8 rest days early in the month.</p>':''}</div>`;
   const wt=s.weeklyTarget||0;
@@ -1291,6 +1387,7 @@ async function makeBackupLink(){
   const st=state.settings;
   const o={v:1,t:new Date().toISOString(),s:{n:st.name,w:st.restWeekdays,th:st.theme,l:st.leadIn,so:st.sound,vi:st.vibrate,un:st.units,wt:st.weeklyTarget},a:packCh(state.active),u:packCh(state.upcoming),h:state.history.map(h=>packCh(h))};
   if(Array.isArray(state.badgesSeen)) o.bs=state.badgesSeen;
+  if(st.clubNick||st.clubTeam||state.clubDevice||(state.clubShared||[]).length) o.c={n:st.clubNick||'',t:st.clubTeam||'',d:state.clubDevice||'',s:state.clubShared||[]};
   if(acts().length) o.x=acts().map(a=>{ const r=[a.date,a.type,a.mins||0,a.km?Math.round(a.km*100):0]; if(a.note) r.push(a.note); return r; });
   const raw=new TextEncoder().encode(JSON.stringify(o));
   let body; try{ body='z'+b64u.enc(await zip(raw,'c')); }catch(e){ body='j'+b64u.enc(raw); }
@@ -1300,7 +1397,7 @@ async function readBackupLink(text){
   const m=String(text||'').trim().match(/#b=([zj][A-Za-z0-9_-]+)/); if(!m) throw new Error('That doesn\u2019t look like a backup link');
   const bytes=b64u.dec(m[1].slice(1)); const raw=m[1][0]==='z'?await zip(bytes,'d'):bytes;
   const o=JSON.parse(new TextDecoder().decode(raw)); if(o.v!==1) throw new Error('Unsupported backup link');
-  return {schemaVersion:1,settings:{name:o.s.n||'',restWeekdays:o.s.w||[],theme:o.s.th||'auto',leadIn:o.s.l!==false,sound:o.s.so!==false,vibrate:o.s.vi!==false,units:o.s.un||'mi',weeklyTarget:o.s.wt||0},
+  return {schemaVersion:1,settings:{name:o.s.n||'',restWeekdays:o.s.w||[],theme:o.s.th||'auto',leadIn:o.s.l!==false,sound:o.s.so!==false,vibrate:o.s.vi!==false,units:o.s.un||'mi',weeklyTarget:o.s.wt||0,clubNick:(o.c&&o.c.n)||'',clubTeam:(o.c&&o.c.t)||''},clubDevice:(o.c&&o.c.d)||undefined,clubShared:(o.c&&o.c.s)||[],
     lastBackupAt:o.t,active:unpackCh(o.a),upcoming:unpackCh(o.u),history:(o.h||[]).map(h=>unpackCh(h,true)),badgesSeen:Array.isArray(o.bs)?o.bs:undefined,
     activities:(o.x||[]).map(([date,type,mins,km100,note],i)=>{ const a={id:'r'+i+'-'+date,date,type,at:date+'T12:00:00.000Z'}; if(mins) a.mins=mins; if(km100) a.km=km100/100; if(note) a.note=note; return a; })};
 }
@@ -1468,6 +1565,9 @@ const A={
   openPlanner:()=>openSheet(plannerHtml(),'planner'),
   openBadges:()=>openSheet(badgesHtml(),'badges'),
   shareBadge:id=>shareBadge(id),
+  clubOpen:code=>openSheet(clubSheetHtml(code),'club'),
+  clubSend:code=>clubSend(code),
+  clubInvite:()=>clubInvite(),
   openCert:id=>openSheet(certHtml(id),'cert'),
   printCert:id=>printCertificate(id),
   doAddHist:()=>addHistory(),
@@ -1590,7 +1690,9 @@ document.addEventListener('change',e=>{
   if(t.dataset&&t.dataset.set){ state.settings[t.dataset.set]=t.checked; save(); }
   if(t.id==='startDate'){ document.getElementById('startInfo').innerHTML=startInfo(t.value); }
 });
-document.addEventListener('input',e=>{ if(e.target.id==='nameIn'){ state.settings.name=e.target.value; save(); } });
+document.addEventListener('input',e=>{ const id=e.target.id; if(id==='nameIn'){ state.settings.name=e.target.value; save(); }
+  if(id==='clubNickIn'||id==='clubTeamIn'){ state.settings[id==='clubNickIn'?'clubNick':'clubTeam']=e.target.value.slice(0,20); save(); } });
+document.addEventListener('focusout',e=>{ const id=e.target.id; if(id==='clubNickIn'||id==='clubTeamIn'){ const r=checkClubName(e.target.value); if(!r.ok) toast((id==='clubNickIn'?'Club nickname: ':'Team name: ')+r.msg); else { state.settings[id==='clubNickIn'?'clubNick':'clubTeam']=r.v; save(); } } });
 
 /* ===================== RENDER ===================== */
 const NAV=[['today','Today','<path d="M12 3v2m0 14v2M3 12h2m14 0h2M5.6 5.6 7 7m10 10 1.4 1.4M5.6 18.4 7 17M17 7l1.4-1.4"/><circle cx="12" cy="12" r="4"/>'],

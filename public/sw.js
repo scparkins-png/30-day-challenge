@@ -1,6 +1,6 @@
 // 30 Day Challenge service worker: keeps the app working offline.
 // Change VERSION whenever any file changes, so phones pick up the new copy.
-const VERSION = '30day-v1.9.3';
+const VERSION = '30day-v1.10.0';
 const FILES = [
   './',
   'index.html',
